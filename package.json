@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "django-react-csrftoken": "^1.0.3",
     "pixi.js": "^4.5.6",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

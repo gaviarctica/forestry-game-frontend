@@ -5,7 +5,7 @@ import LoginSignupForm from './LoginSignupForm';
 import './MainMenu.css';
 import { FadeInFadeOut, TranslateDown, TranslateRight, TranslateLeft } from './animation';
 import './animation.css';
-import { login } from './api'
+import { API } from './api';
 
 export default class MainMenu extends Component {
   constructor(props) {
@@ -31,31 +31,62 @@ export default class MainMenu extends Component {
     }
   }
 
-  handleFormClick(username, password) {
-    // Set loggedIn for testing purposes
-    // TODO: connect to backend
+  handleFormSuccess(username) {
     this.setState({
-      formMsg: undefined
+      centerElementAnimation: false
     });
+
     var self = this;
-    login(username, password, (message) => function() {
+    setTimeout(function() {
+      self.props.setLoggedIn(username);
+      self.setState({
+        centerElementAnimation: true
+      });
+    }, 350) // Exit animation duration
+  }
+
+  handleRegister(username, password, email) {
+    var self = this;
+    API.register(username, password, email, (err, message) => function() {
+      if (err) throw err;
+
+      // Registering was not successful
       if (message) {
         self.setState({
           formMsg: message
         });
       } else {
-        self.setState({
-          centerElementAnimation: false
-        });
-
-        setTimeout(function() {
-          self.props.login(username);
-          self.setState({
-            centerElementAnimation: true
-          });
-        }, 350) // Exit animation duration
+        self.handleFormSuccess(username);
       }
-    });   
+    });
+  }
+
+  handleLogin(username, password) {
+    var self = this;
+    API.login(username, password, (err, message) => function() {
+      if (err) throw err;
+
+      // Login was not successful
+      if (message) {
+        self.setState({
+          formMsg: message
+        });
+      } else {
+        self.handleFormSuccess(username);
+      }
+    });
+  }
+
+  handleFormSubmit(formId, username, password, email) {
+    this.setState({
+      formMsg: undefined
+    });
+
+    if (formId === 'signup-form') {
+      this.handleSignup(username, password, email);
+    } else if (formId === 'login-form') {
+      this.handleLogin(username, password);
+    }  
   }
 
   render() {
@@ -94,7 +125,9 @@ export default class MainMenu extends Component {
 
     } else {
 
-      centerElement = <LoginSignupForm message={this.state.formMsg} handleClick={this.handleFormClick.bind(this)} />;
+      centerElement = <LoginSignupForm
+                        message={this.state.formMsg}
+                        handleSubmit={this.handleFormSubmit.bind(this)} />;
       startButtonText = 'Play as guest';
     }
 

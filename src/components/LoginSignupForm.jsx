@@ -4,6 +4,7 @@ import './LoginSignupForm.css';
 import { FadeInFadeOut, TranslateDown } from './animation';
 import './animation.css';
 import './api';
+import DjangoCSRFToken from 'django-react-csrftoken'
 
 
 export default class LoginSignupForm extends Component {
@@ -49,13 +50,15 @@ export default class LoginSignupForm extends Component {
           self.setState({
             currentView: 'signup',
             viewAnimation: true,
-            formSwitchAnimationInProgress: false
+            formSwitchAnimationInProgress: false,
+            message: undefined
           });
         } else {
           self.setState({
             currentView: 'login',
             viewAnimation: true,
-            formSwitchAnimationInProgress: false
+            formSwitchAnimationInProgress: false,
+            message: undefined
           });
         }
       }, 350); // Exit animation duration
@@ -64,7 +67,8 @@ export default class LoginSignupForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.handleClick(this.state.username, this.state.password);
+    console.log(e.target.id);
+    this.props.handleSubmit(e.target.id, this.state.username, this.state.password, this.state.email);
   }
 
   render() {
@@ -97,7 +101,7 @@ export default class LoginSignupForm extends Component {
           id="button-sign-up"
           text="Sign up"
           style={buttonStyle}
-          handleClick={() => this.props.handleClick(this.state.username, this.state.password)} />
+          handleClick={() => document.getElementById('form-submit').click()} />
       );
 
     } else {
@@ -107,7 +111,7 @@ export default class LoginSignupForm extends Component {
           id="button-log-in"
           text="Log in"
           style={buttonStyle}
-          handleClick={() => this.props.handleClick(this.state.username, this.state.password)} />
+          handleClick={() => document.getElementById('form-submit').click()} />
       );
     }
 
@@ -116,11 +120,12 @@ export default class LoginSignupForm extends Component {
       <FadeInFadeOut in={this.state.viewAnimation}>
         <div className="LoginForm">
 
-          <div id="login-form">
+          <div id="component-form">
 
             {this.state.message ? <div id="message">{this.state.message}</div> : ''}
 
-            <form onSubmit={this.handleSubmit.bind(this)}>
+            <form id={this.state.currentView + '-form'} onSubmit={this.handleSubmit.bind(this)}>
+              <DjangoCSRFToken />
 
               <input 
                 type="text"
@@ -140,7 +145,7 @@ export default class LoginSignupForm extends Component {
                 value={this.state.password}
                 onChange={this.handleInputChange.bind(this)} />
 
-              <input type="submit" style={hiddenSubmit} />
+              <input id="form-submit" type="submit" style={hiddenSubmit} />
 
             </form>
 

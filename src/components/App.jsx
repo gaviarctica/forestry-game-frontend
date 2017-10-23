@@ -5,6 +5,7 @@ import MapMenu from './MapMenu';
 import Game from './Game';
 import { FadeInFadeOut } from './animation';
 import './animation.css';
+import { API } from './api';
 
 export default class App extends Component {
   constructor(props) {
@@ -16,6 +17,13 @@ export default class App extends Component {
       lang: 'fi',
       viewAnimation: false
     }
+  }
+
+  componentWillMount() {
+    // Get CSRF token from Django for forms
+    API.getCSRFCookie((err) => function() {
+      if (err) throw err;
+    });
   }
 
   componentDidMount() {
@@ -31,7 +39,7 @@ export default class App extends Component {
     });
   }
 
-  login(username) {
+  setLoggedIn(username) {
     this.setState({
       loggedIn: true,
       username: username
@@ -64,7 +72,7 @@ export default class App extends Component {
           <MainMenu
             switchView={this.switchView.bind(this)}
             loggedIn={this.state.loggedIn}
-            login={this.login.bind(this)}
+            setLoggedIn={this.setLoggedIn.bind(this)}
             username={this.state.username}
             lang={this.state.lang}
             changeLanguage={this.changeLanguage.bind(this)} />
