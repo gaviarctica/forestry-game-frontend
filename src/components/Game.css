@@ -1,0 +1,101 @@
+#canvas-game {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+html {
+	overflow-y: hidden;
+}
+
+.Game {  
+  width: 100vw;
+  height: 100vh;
+  z-index: auto;
+}
+
+#game-stats:hover, #logs-remaining:hover {
+  opacity: 1.0;
+}
+
+#game-info {
+  position: fixed;
+	padding: 20px;
+  z-index: 10;
+}
+
+#game-stats {
+	background-color: rgb(136,136,136);
+  opacity: 0.5;
+  width: 180px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#game-stats-grouped {
+  padding: 10px;
+}
+
+#user, #time, #distance, #unload-count {
+  padding-bottom: 10px;
+  color: white;
+  font-size: 24px;
+  text-align: right;
+}
+
+#logs-remaining {
+	background-color: rgb(136,136,136);
+	color: black;
+  width: 180px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+#logs-remaining-row {
+	padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#logs-remaining-count {
+	border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  padding: 9px;
+  background-color: yellow;
+  border: 1px solid #666;
+  color: #666;
+  text-align: center;
+  font: 16px Arial, sans-serif;
+	display: inline-block;
+}
+
+#log-load {
+  border: 8px solid #888;
+  border-top: none !important; 
+	background-color: transparent;
+	color: black;
+  width: 180px;
+}
+
+#log-load-row {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#log-load-fill {
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  padding: 9px;
+  background: transparent;
+  border: 1px solid #666;
+  color: #666;
+  text-align: center;
+  font: 16px Arial, sans-serif;
+  display: inline-block;
+}

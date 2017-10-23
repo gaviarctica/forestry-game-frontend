@@ -1,0 +1,30 @@
+:root {
+  /* Variables */
+  --lang-sel-height: 30px;
+}
+
+.LangSelection:hover {
+  cursor: pointer;
+}
+
+.lang-sel-flag, .lang-sel-text {
+  display: inline-block;
+}
+
+.lang-sel-flag {
+  width: 50px;
+  height: var(--lang-sel-height);
+  box-shadow: var(--menu-shadow);
+  background-position: center;
+  background-size: cover;
+}
+
+.lang-sel-text {
+  color: var(--jd-gray);
+  height: var(--lang-sel-height);
+  line-height: var(--lang-sel-height);
+  vertical-align: top;
+  padding-left: 5px;
+  font-size: 1.2em;
+  text-shadow: var(--menu-shadow);
+}

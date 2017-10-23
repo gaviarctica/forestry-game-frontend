@@ -1,0 +1,44 @@
+:root {
+  /* Variables */
+  --button-height: 60px;
+}
+
+.Button {
+  width: 250px;
+  height: var(--button-height);
+
+  /* Default color */
+  background-color: var(--jd-gray);
+
+  text-align: center;
+  line-height: var(--button-height);
+  vertical-align: middle;
+  font-size: 1.5em;
+  color: rgba(10, 10, 10, 0.9);
+  box-shadow: var(--menu-shadow);
+
+  transition: background-color 150ms ease;
+}
+
+.Button:hover {
+  cursor: pointer;
+  background-color: var(--jd-green) !important;
+}
+
+.Button:active {
+  filter: brightness(95%);
+}
+
+.inactive {
+  color: rgba(10, 10, 10, 0.5);
+}
+
+.inactive:hover {
+  cursor: default;
+  filter: none;
+  background-color: var(--jd-gray) !important;
+}
+
+.inactive:active {
+  filter: none;
+}

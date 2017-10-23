@@ -1,0 +1,18 @@
+.MainMenu {  
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+#welcome-message {
+  margin: auto;
+  text-align: center;
+  font-size: 2em;
+  color: var(--jd-gray);
+  text-shadow: var(--menu-shadow);
+  line-height: 150%;
+}
+
+#welcome-message:hover {
+  cursor: default;
+}

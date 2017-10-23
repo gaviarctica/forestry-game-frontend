@@ -1,0 +1,20 @@
+:root {
+  /* Shared variables */
+  --jd-gray: #E5E6E6;
+  --jd-yellow: #FFDE00;
+  --jd-green: #367C2B;
+  --menu-shadow: 2px 2px 5px #444;
+  --menu-shadow-2: 1px 1px 2px #888;
+}
+
+body {
+  margin: 0;
+  font-family: Helvetica, Sans-serif;
+  background-color: #58595b;
+
+  /* Make everything unselectable */
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}

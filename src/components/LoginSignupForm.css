@@ -1,0 +1,60 @@
+:root {
+  /* Variables */
+  --form-width: 300px;
+}
+
+.LoginForm {  
+  margin: auto;
+}
+
+#login-form {
+  width: var(--form-width);
+  background-color: var(--jd-gray);
+  padding: 20px;
+  box-shadow: var(--menu-shadow);
+  border-radius: 5px;
+}
+
+#signup-message {
+  width: 100%;
+  text-align: center;
+  padding-top: 10px;
+  color: var(--jd-gray);
+  text-shadow: var(--menu-shadow);
+}
+
+#signup-link {
+  color: var(--jd-yellow);
+  transition: color 150ms ease;
+}
+
+#signup-link:hover {
+  cursor: pointer;
+  color: var(--jd-green);
+}
+
+#signup-link:active {
+  filter: brightness(95%);
+}
+
+#message {
+  margin-bottom: 20px;
+}
+
+input {
+  width: var(--form-width);
+  margin-bottom: 20px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 1.2em;
+  border-radius: 4px;
+  border: 1px solid #7D7D7D;
+  background-color: #F4F5F5;
+  color: rgba(10, 10, 10, 0.9);
+  text-align: center;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--jd-yellow);
+}

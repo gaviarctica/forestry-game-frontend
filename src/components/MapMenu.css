@@ -1,0 +1,196 @@
+:root {
+  /* Variables */
+  --list-item-size: 25px;
+  --left-bottom-margin: 15px;
+  --map-chevron-size: 40px;
+}
+
+.MapMenu {  
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+#map-menu {
+  margin: auto;
+}
+
+#top {
+  height: 80vh;
+}
+
+#left, #right {
+  display: inline-block;
+  height: 100%;
+}
+
+#left {
+  margin-right: 15px;
+  vertical-align: top;
+  position: relative;
+}
+
+#right {
+  width: 100vh;
+  max-width: calc(100% - 265px);
+  box-shadow: var(--menu-shadow);
+  position: relative;
+  background-color: #7da66e; /* color of in-game road */
+}
+
+#fading-content {
+  height: 100%;
+  width: 100%;
+}
+
+#fading-content #map-image {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+
+#bottom-row {
+  width: 100vh;
+  max-width: calc(100% - 265px);
+  float: right;
+  text-align: center;
+  color: var(--jd-gray);
+  text-shadow: var(--menu-shadow);
+  margin-top: 10px;
+  font-size: 1.1em;
+}
+
+#left .Button {
+  margin-bottom: var(--left-bottom-margin);
+}
+
+#left #button-start-game {
+  margin-bottom: 0;
+  position: absolute;
+  bottom: 0;
+}
+
+#map-info {
+  width: 100%;
+  max-height: calc(100% - 3 * (var(--button-height) + var(--left-bottom-margin)));
+  overflow-y: auto;
+  background-color: var(--jd-gray);
+  margin-bottom: var(--left-bottom-margin);
+  padding: 7px;
+  box-sizing: border-box;
+  box-shadow: var(--menu-shadow);
+}
+
+.section {
+  background-color: #F4F5F5;
+  margin-bottom: 5px;
+  padding: 5px;
+  border: 1px solid #CECFCF;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.section-header {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.section-value {
+  text-align: right;
+}
+
+.section-list-item-name, .section-list-item-value {
+  display: inline-block;
+}
+
+.section-list-item {
+  height: var(--list-item-size);
+  line-height: var(--list-item-size);
+  vertical-align: middle;
+  margin-bottom: 5px;
+}
+
+.section-list-item:last-child {
+  margin-bottom: 0;
+}
+
+.section-list-item-value {
+  float: right;
+  width: var(--list-item-size);
+  height: var(--list-item-size);
+  text-align: center;
+  background-color: var(--jd-yellow);
+  border-radius: calc(var(--list-item-size) / 2);
+  font-size: 0.9em;
+}
+
+.map-chevron {
+  width: var(--map-chevron-size);
+  height: var(--map-chevron-size);
+  box-sizing: border-box;
+  border: solid 3px #F4F5F5;
+  box-shadow: var(--menu-shadow);
+  border-radius: calc(var(--map-chevron-size) / 2);
+  background-color: var(--jd-yellow);
+  display: inline-block;
+  position: absolute;
+  top: calc(50% - var(--map-chevron-size) / 2);
+  color: #F4F5F5;
+  text-align: center;
+  line-height: 37px;
+  vertical-align: middle;
+  font-size: 30px;
+}
+
+.map-chevron:hover {
+  cursor: pointer;
+  filter: brightness(105%);
+}
+
+.map-chevron:active {
+  filter: brightness(95%);
+}
+
+.map-chevron-inactive {
+  background-color: #CECFCF;
+}
+
+.map-chevron-inactive:hover {
+  cursor: default;
+  filter: none;
+}
+
+.map-chevron-inactive:active {
+  filter: none;
+}
+
+#map-chevron-left {
+  left: 10px;
+}
+
+#map-chevron-right {
+  right: 10px;
+}
+
+#map-name {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: var(--jd-gray);
+  text-shadow: var(--menu-shadow);
+  font-size: 1.8em;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  /* Gradient background */
+  background: rgba(10, 10, 10, 0.6); /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* Standard syntax */
+}
