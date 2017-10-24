@@ -1,5 +1,3 @@
-import {lerp, distance} from './helpers';
-
 export default class RouteNode {
   constructor(point, segments) {
     this.point = point;
@@ -9,7 +7,7 @@ export default class RouteNode {
   addSegment( segment ) {
     // making adding segment secure (check if segment is already added)
     for(var i = 0; i < this.segments.length; ++i) {
-      if(this.segments[i] == segment && this.segments[i] == segment)
+      if(this.segments[i] === segment && this.segments[i] === segment)
         return;
     }
 
@@ -27,18 +25,19 @@ export default class RouteNode {
   getSelectedSegment(current_segment, index) {
     var slength = this.segments.length;
     index = index % slength;
-    for(var i = 0; i < this.segments.length; ++i) {
-      --index;
-      this.segments[i].setSelected(false);
+    index = index < 0 ? -index : index;
 
-      if(index <= 0 && this.segments[i] != current_segment) {
-        this.segments[i].setSelected(true);
-        return this.segments[i];
-      }
+    for(var i = 0; i < this.segments.length; ++i) {
+      this.segments[i].setSelected(false);
     }
 
-    for(var i = 0; i < this.segments.length; ++i) {
-      if(this.segments[i] != current_segment) {
+    if(this.segments[index] !== current_segment) {
+      this.segments[index].setSelected();
+      return this.segments[index];
+    }
+
+    for(i = 0; i < this.segments.length; ++i) {
+      if(this.segments[i] !== current_segment) {
         this.segments[i].setSelected();
         return this.segments[i];
       }

@@ -38,10 +38,7 @@ export default class RouteSegment {
     return this.length;
   }
 
-  getPositionAt(interpolationDelta, swap_nodes = false) {
-    if(swap_nodes)
-      return lerp(this.endNode.getPos(), this.startNode.getPos(), interpolationDelta);
-      
+  getPositionAt(interpolationDelta) {
     return lerp(this.startNode.getPos(), this.endNode.getPos(), interpolationDelta);
   }
 

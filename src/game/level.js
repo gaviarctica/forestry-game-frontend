@@ -96,9 +96,9 @@ export default class Level {
     }
 
     // calculating segments for nodes
-    for(var i = 0; i < this.routeNodes.length; ++i) {
-      for(var j = 0; j < this.routeSegments.length; ++j) {
-        if(this.routeNodes[i] == this.routeSegments[j].getPreviousNode() || this.routeNodes[i] == this.routeSegments[j].getNextNode())
+    for(i = 0; i < this.routeNodes.length; ++i) {
+      for(j = 0; j < this.routeSegments.length; ++j) {
+        if(this.routeNodes[i] === this.routeSegments[j].getPreviousNode() || this.routeNodes[i] === this.routeSegments[j].getNextNode())
           this.routeNodes[i].addSegment(this.routeSegments[j]);
       }
     }
