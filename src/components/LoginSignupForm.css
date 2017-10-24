@@ -7,7 +7,7 @@
   margin: auto;
 }
 
-#login-form {
+#component-form {
   width: var(--form-width);
   background-color: var(--jd-gray);
   padding: 20px;
