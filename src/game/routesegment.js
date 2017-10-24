@@ -1,41 +1,61 @@
 import {lerp, distance} from './helpers';
 
 export default class RouteSegment {
-  constructor(startPoint, endPoint, nextSegment, prevSegment) {
-    this.startPoint = startPoint;
-    this.endPoint = endPoint;
-    this.nextSegment = nextSegment;
-    this.prevSegment = prevSegment;
-    this.length = distance(startPoint, endPoint);
+  constructor(startNode, endNode) {
+    this.startNode = startNode;
+    this.endNode = endNode;
+    this.isSelected = false;
+    this.length = distance(this.startNode.getPos(), this.endNode.getPos());
   }
 
-  setNext(segment) {
-    this.nextSegment = segment;
+  addNext(segment) {
+    if(this.nextSegments && Array.isArray(this.nextSegments))
+      this.nextSegments.push(segment);
+    else {
+      this.nextSegments = [];
+      this.nextSegments.push(segment);
+    }
   }
 
-  setPrevious(segment) {
-    this.prevSegment = segment;
+  addPrevious(segment) {
+    if(this.prevSegments && Array.isArray(this.prevSegments))
+      this.prevSegments.push(segment);
+    else {
+      this.prevSegments = [];
+      this.prevSegments.push(segment);
+    }
+  }
+
+  setSelected( is_selected = true ) {
+    this.isSelected = is_selected
+  }
+
+  isSelected() {
+    return this.isSelected;
   }
 
   getLength() {
     return this.length;
   }
 
-  getPositionAt(interpolationDelta) {
-    return lerp(this.startPoint, this.endPoint, interpolationDelta);
+  getPositionAt(interpolationDelta, swap_nodes = false) {
+    if(swap_nodes)
+      return lerp(this.endNode.getPos(), this.startNode.getPos(), interpolationDelta);
+      
+    return lerp(this.startNode.getPos(), this.endNode.getPos(), interpolationDelta);
   }
 
   getRotation() {
-    var pA = this.startPoint;
-    var pB = this.endPoint;
+    var pA = this.startNode.getPos();
+    var pB = this.endNode.getPos();
     return Math.atan2(pB.y - pA.y, pB.x - pA.x) + Math.PI/2;
   }
 
-  getNext() {
-    return this.nextSegment;
+  getNextNode() {
+    return this.endNode;
   }
 
-  getPrevious() {
-    return this.prevSegment;
+  getPreviousNode() {
+    return this.startNode;
   }
 }

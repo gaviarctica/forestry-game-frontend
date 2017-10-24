@@ -43,27 +43,48 @@ export default class Truck {
     if (this.pointDelta <= 0) {
       this.pointDelta = 0;
 
-      if (this.currentSegment.getPrevious() !== null) {
+      if (this.currentSegment.getPreviousNode() !== null) {
         this.pointDelta = 0.99;
-        this.currentSegment = this.currentSegment.getPrevious();
+        console.log("backwards");
+
+        // console.log(this.currentSegment);
+        var temp_segment = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, 0);
+        if(temp_segment == this.currentSegment)
+          this.pointDelta = 0.01;
+        else {
+          this.currentSegment = temp_segment;
+        }
       }
 
     } else if (this.pointDelta >= 1) {
       this.pointDelta = 1;
 
-      if (this.currentSegment.getNext() !== null) {
+      if (this.currentSegment.getNextNode() !== null) {
         this.pointDelta = 0.01;
-        this.currentSegment = this.currentSegment.getNext();
+        console.log("forwards");
+
+        var temp_segment = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, 0);
+
+        if(this.currentSegment.endNode != temp_segment.startNode) {
+          var temp_node = temp_segment.startNode;
+          temp_segment.startNode = temp_segment.endNode;
+          temp_segment.endNode = temp_node;
+        }
+
+        if(temp_segment == this.currentSegment)
+          this.pointDelta = 0.99;
+        else {
+          this.currentSegment = temp_segment;
+        }
       }
     }
   }
 
   draw() {
-
-    var point = this.currentSegment.getPositionAt(this.pointDelta); 
+    var point = this.currentSegment.getPositionAt(this.pointDelta);
     this.sprite.x = point.x;
     this.sprite.y = point.y;
 
-    this.sprite.rotation = this.currentSegment.getRotation();    
+    this.sprite.rotation = this.currentSegment.getRotation();
   }
 }

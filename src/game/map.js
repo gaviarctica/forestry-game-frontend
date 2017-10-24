@@ -14,6 +14,7 @@ export default class Map {
 	    for (var i = 0; i < MAP.routes.length; i++) {
 	      for (var j = 0; j < MAP.routes[i].length; j++) {
 	        var pos = MAP.routes[i][j];
+
 	        if (j === 0) {
 	          routeGraphics.moveTo(pos.x, pos.y);
 	        } else {

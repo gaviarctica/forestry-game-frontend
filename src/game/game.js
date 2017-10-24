@@ -7,12 +7,10 @@ const MAP = {
   "id": 1,
   "startpoint" : {"x": 200, "y": 500},
   "routes": [
-    [
-      {"x": 200, "y": 500},
-      {"x": 400, "y": 700},
-      {"x": 800, "y": 300},
-      {"x": 1000, "y": 500},
-    ]
+    {"x": 200, "y": 500, "route_node": 1},
+    {"x": 400, "y": 700, "route_node": 2, "to": [3,4]},
+    {"x": 800, "y": 300, "route_node": 3},
+    {"x": 1000, "y": 500, "route_node": 4},
   ],
   "logs": [
 
@@ -26,9 +24,9 @@ export default class GameCanvas {
 
     this.update = this.update.bind(this);
     game.ticker.add(this.update);
-    
+
     document.getElementById('canvas-game').appendChild(game.view);
-    
+
     this.map = new Level(MAP, game.stage);
     this.truck = new Truck(MAP.startpoint.x, MAP.startpoint.y, game.stage, this.map.getStartingSegment());
 
@@ -48,8 +46,8 @@ export default class GameCanvas {
 
     var self = this;
 
-    this.game.stage.hitArea = new PIXI.Rectangle(-1000000, -1000000, 1000000000, 1000000000);    
-    
+    this.game.stage.hitArea = new PIXI.Rectangle(-1000000, -1000000, 1000000000, 1000000000);
+
     this.game.stage.interactive = true;
     this.game.stage.pointerdown = function() {
       mouseInput.isDown = true;
@@ -73,7 +71,7 @@ export default class GameCanvas {
       }
 
     }
-    
+
     var mouseWheelEvent = function(event) {
       if ((event.wheelDelta < -1 || event.deltaY > 1) && self.game.stage.scale.x > 0.5) {
         self.game.stage.scale.x -=  0.05;
@@ -92,7 +90,8 @@ export default class GameCanvas {
 
   update(delta)
   {
-    this.truck.update(delta)
+    this.truck.update(delta);
+
   }
 
   destroy()
@@ -100,6 +99,6 @@ export default class GameCanvas {
     var self = this;
     setTimeout(function() {
       self.game.destroy(true);
-    }, 350); // Wait for game view exit animation to finish    
+    }, 350); // Wait for game view exit animation to finish
   }
 }
