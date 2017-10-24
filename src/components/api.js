@@ -1,49 +1,59 @@
 
 export const API = {
 
-  getCSRFCookie: function(callback) {
+  validateSession: function(callback) {
     var err = undefined;
-    var url = '/api/v1/csrf';
+    var url = '/api/v1/validate';
     var init = {
       method: 'GET',
       credentials: 'same-origin',
     };
 
     fetch(url, init).then(function(response) {
-      if(!response.ok) {
-        err = 'Error getting CSRF cookie.';
+      if (response.status === 200) {
+      	return response.json();
+      }
+      else if(response.status === 204) {
         callback(err);
       }
+      else {
+      	err = 'Error getting CSRF cookie.';
+        callback(err);
+      }
+    }).then(function(responseJson) {
+    	if (responseJson) {
+    		callback(err, responseJson.username, responseJson.email);
+    	}
     });
   },
 
   login: function(username, password, callback) {
     var err = undefined;
-    var url = '/api/v1/user';
+    var url = '/api/v1/auth/login';
+    var form = new FormData();
+    form.append('username', username);
+    form.append('password', password);
     var init = {
       method: 'POST',
       credentials: 'same-origin',
-      body: JSON.stringify({
-        username: username,
-        password: password
-      })
+      body: form
     };
 
     var message = undefined;
 
     fetch(url, init).then(function (response) {
-      if(response.ok) {
-        return response.json();
+      if(response.status === 200) {
+      	console.log("1");
+      	console.log(callback);
+        callback(err, message);
+      } else if (response.status === 401) {
+      	console.log("2");
+        message = 'Wrong username or password';
+        callback(err, message);
       } else {
+      	console.log("3");
         err = 'Error making login request.';
         callback(err);
-      }      
-    }).then(function (responseJson) {
-      if (responseJson.success) {
-        callback(err, message);
-      } else {
-        message = responseJson.message;
-        callback(err, message);
       }
     });
 
@@ -54,34 +64,33 @@ export const API = {
     // setTimeout(callback(err, message), 500);
   },
 
-  register: function (username, email, password, callback) {
+  register: function (username, password, email, callback) {
     var err = undefined;
-    var url = '/api/v1/user';
+    var url = '/api/v1/auth/register';
+    var form = new FormData();
+    form.append('username', username);
+    form.append('password', password);
     var init = {
       method: 'POST',
       credentials: 'same-origin',
-      body: JSON.stringify({
-        username: username,
-        email: email,
-        password: password
-      }),
+      // headers: {
+      // 	'Accept': 'application/json',
+      // 	'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      // },
+      body: form
     };
 
     var message = undefined;
 
-    fetch(url, init).then(function(response) {
-      if(response.ok) {
-        return response.json();
+    fetch(url, init).then(function (response) {
+      if(response.status === 200) {
+        callback(err, message);
+      } else if (response.status === 401) {
+        message = 'Wrong username or password';
+        callback(err, message);
       } else {
-        err = 'Error making register request.';
+        err = 'Error making login request.';
         callback(err);
-      }      
-    }).then(function (responseJson) {
-      if (responseJson.success) {
-        callback(err, message);
-      } else {
-        message = responseJson.message;
-        callback(err, message);
       }
     });
   },

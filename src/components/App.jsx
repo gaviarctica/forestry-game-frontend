@@ -14,6 +14,7 @@ export default class App extends Component {
       currentView: 'mainmenu',
       loggedIn: false,
       username: '',
+      email: '',
       lang: 'fi',
       viewAnimation: false
     }
@@ -21,8 +22,16 @@ export default class App extends Component {
 
   componentWillMount() {
     // Get CSRF token from Django for forms
-    API.getCSRFCookie((err) => function() {
+    var self = this;
+    API.validateSession(function(err, username, email) {
       if (err) throw err;
+      if (username && email) {
+        self.setState({
+          loggedIn: true,
+          username: username,
+          email: email
+        });
+      }
     });
   }
 

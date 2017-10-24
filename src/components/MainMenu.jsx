@@ -32,6 +32,7 @@ export default class MainMenu extends Component {
   }
 
   handleFormSuccess(username) {
+    console.log("handleFormSuccess");
     this.setState({
       centerElementAnimation: false
     });
@@ -47,7 +48,7 @@ export default class MainMenu extends Component {
 
   handleRegister(username, password, email) {
     var self = this;
-    API.register(username, password, email, (err, message) => function() {
+    API.register(username, password, email, function(err, message) {
       if (err) throw err;
 
       // Registering was not successful
@@ -63,9 +64,10 @@ export default class MainMenu extends Component {
 
   handleLogin(username, password) {
     var self = this;
-    API.login(username, password, (err, message) => function() {
+    API.login(username, password, function(err, message) {
       if (err) throw err;
-
+      console.log("API login callback");
+      console.log(username)
       // Login was not successful
       if (message) {
         self.setState({
@@ -83,8 +85,9 @@ export default class MainMenu extends Component {
     });
 
     if (formId === 'signup-form') {
-      this.handleSignup(username, password, email);
+      this.handleRegister(username, password, email);
     } else if (formId === 'login-form') {
+      console.log("ssss");
       this.handleLogin(username, password);
     }  
   }
