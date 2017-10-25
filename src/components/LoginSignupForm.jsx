@@ -67,7 +67,6 @@ export default class LoginSignupForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(e.target.id);
     this.props.handleSubmit(e.target.id, this.state.username, this.state.password, this.state.email);
   }
 

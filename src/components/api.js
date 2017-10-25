@@ -43,25 +43,33 @@ export const API = {
 
     fetch(url, init).then(function (response) {
       if(response.status === 200) {
-      	console.log("1");
-      	console.log(callback);
         callback(err, message);
       } else if (response.status === 401) {
-      	console.log("2");
         message = 'Wrong username or password';
         callback(err, message);
       } else {
-      	console.log("3");
         err = 'Error making login request.';
         callback(err);
       }
     });
+  },
 
-    // Placeholder code
-    // if (username !== "Arho") {
-    //   message = "Wrong username!";
-    // }
-    // setTimeout(callback(err, message), 500);
+  logout: function(callback) {
+    var err = undefined;
+    var url = '/api/v1/auth/logout';
+    var init = {
+      method: 'GET',
+      credentials: 'same-origin',
+    };
+
+    fetch(url, init).then(function (response) {
+      if(response.status === 200) {
+        callback(err);
+      } else {
+        err = 'Error making logout request.';
+        callback(err);
+      }
+    });
   },
 
   register: function (username, password, email, callback) {

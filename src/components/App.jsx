@@ -25,7 +25,7 @@ export default class App extends Component {
     var self = this;
     API.validateSession(function(err, username, email) {
       if (err) throw err;
-      if (username && email) {
+      if (username) {
         self.setState({
           loggedIn: true,
           username: username,

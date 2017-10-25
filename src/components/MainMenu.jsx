@@ -28,11 +28,14 @@ export default class MainMenu extends Component {
 
     if (clicked === 'button-start-game') {
       this.props.switchView('mapmenu');
+    } else if (clicked === 'button-logout') {
+      API.logout(function() {
+        console.log("Log out");
+      });
     }
   }
 
   handleFormSuccess(username) {
-    console.log("handleFormSuccess");
     this.setState({
       centerElementAnimation: false
     });
@@ -66,8 +69,6 @@ export default class MainMenu extends Component {
     var self = this;
     API.login(username, password, function(err, message) {
       if (err) throw err;
-      console.log("API login callback");
-      console.log(username)
       // Login was not successful
       if (message) {
         self.setState({
@@ -87,7 +88,6 @@ export default class MainMenu extends Component {
     if (formId === 'signup-form') {
       this.handleRegister(username, password, email);
     } else if (formId === 'login-form') {
-      console.log("ssss");
       this.handleLogin(username, password);
     }  
   }
@@ -167,6 +167,11 @@ export default class MainMenu extends Component {
             style={rightButtonStyle}
             handleClick={this.handleButtonClick.bind(this)} />
         </TranslateLeft>
+
+        <Button
+            id="button-logout"
+            text="Log out"
+            handleClick={this.handleButtonClick.bind(this)} />
 
       </div>
     );
