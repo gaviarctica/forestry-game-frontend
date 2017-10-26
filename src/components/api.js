@@ -43,13 +43,17 @@ export const API = {
 
     fetch(url, init).then(function (response) {
       if(response.status === 200) {
-        callback(err, message);
+        return response.json();
       } else if (response.status === 401) {
         message = 'Wrong username or password';
         callback(err, message);
       } else {
         err = 'Error making login request.';
         callback(err);
+      }
+    }).then(function(responseJson) {
+      if (responseJson) {
+        callback(err, message, responseJson.username, responseJson.email);
       }
     });
   },
@@ -78,6 +82,7 @@ export const API = {
     var form = new FormData();
     form.append('username', username);
     form.append('password', password);
+    form.append('email', email);
     var init = {
       method: 'POST',
       credentials: 'same-origin',
@@ -92,13 +97,17 @@ export const API = {
 
     fetch(url, init).then(function (response) {
       if(response.status === 200) {
-        callback(err, message);
+        return response.json();
       } else if (response.status === 401) {
         message = 'Wrong username or password';
         callback(err, message);
       } else {
         err = 'Error making login request.';
         callback(err);
+      }
+    }).then(function(responseJson) {
+      if (responseJson) {
+        callback(err, message, responseJson.username, responseJson.email);
       }
     });
   },

@@ -1,0 +1,40 @@
+.Profile {
+	background-color: var(--jd-gray);
+	margin: auto;
+	color: rgba(10, 10, 10, 0.9);
+	box-shadow: var(--menu-shadow);
+}
+
+#profile-header, #user-info, #profile-content {
+	padding: 10px;
+}
+
+#profile-header {
+	text-align: center;
+}
+
+#profile-score-info td:nth-child(2){
+	max-width: 100px;
+	max-height: 50px;
+}
+
+#user-info-username, #user-info-email {
+	display: block;
+	padding: 5px;
+}
+
+#user-info-username-header, #user-info-username-icon {
+	display: inline;
+}
+
+#user-info-username-icon, #user-info-email-icon {
+	margin: auto;
+}
+
+#user-info-username-header, #user-info-email-paragraph {
+	padding-left: 10px;
+}
+
+#user-info-email-paragraph, #user-info-email-icon {
+	display: inline;
+}

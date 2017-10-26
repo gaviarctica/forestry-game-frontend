@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from './Button';
 import LangSelection from './LangSelection';
 import LoginSignupForm from './LoginSignupForm';
+import Profile from './Profile';
 import './MainMenu.css';
 import { FadeInFadeOut, TranslateDown, TranslateRight, TranslateLeft } from './animation';
 import './animation.css';
@@ -13,7 +14,8 @@ export default class MainMenu extends Component {
     this.state = {
       appearAnimation: false,
       centerElementAnimation: true,
-      formMsg: undefined
+      formMsg: undefined,
+      profilePage: false
     }
   }
 
@@ -32,26 +34,38 @@ export default class MainMenu extends Component {
       API.logout(function() {
         console.log("Log out");
       });
+    } else if (clicked === 'button-profile') {
+      this.setState({
+        centerElementAnimation: false
+      });
+
+      var self = this;
+      setTimeout(function() {
+        self.setState({
+          centerElementAnimation: true,
+          profilePage: true
+        });
+      }, 350);
     }
   }
 
-  handleFormSuccess(username) {
+  handleFormSuccess(username, email) {
     this.setState({
       centerElementAnimation: false
     });
-
     var self = this;
     setTimeout(function() {
-      self.props.setLoggedIn(username);
+      self.props.setLoggedIn(username, email);
       self.setState({
         centerElementAnimation: true
       });
+      console.log(self.props);
     }, 350) // Exit animation duration
   }
 
   handleRegister(username, password, email) {
     var self = this;
-    API.register(username, password, email, function(err, message) {
+    API.register(username, password, email, function(err, message, un, em) {
       if (err) throw err;
 
       // Registering was not successful
@@ -60,14 +74,14 @@ export default class MainMenu extends Component {
           formMsg: message
         });
       } else {
-        self.handleFormSuccess(username);
+        self.handleFormSuccess(un, em);
       }
     });
   }
 
-  handleLogin(username, password) {
+  handleLogin(username, password, email) {
     var self = this;
-    API.login(username, password, function(err, message) {
+    API.login(username, password, function(err, message, un, em) {
       if (err) throw err;
       // Login was not successful
       if (message) {
@@ -75,7 +89,7 @@ export default class MainMenu extends Component {
           formMsg: message
         });
       } else {
-        self.handleFormSuccess(username);
+        self.handleFormSuccess(un, em);
       }
     });
   }
@@ -88,7 +102,7 @@ export default class MainMenu extends Component {
     if (formId === 'signup-form') {
       this.handleRegister(username, password, email);
     } else if (formId === 'login-form') {
-      this.handleLogin(username, password);
+      this.handleLogin(username, password, email);
     }  
   }
 
@@ -112,18 +126,25 @@ export default class MainMenu extends Component {
       bottom: '10%',
       backgroundColor: 'var(--jd-yellow)'
     }
-
+    
     var centerElement;
     var startButtonText;
     if (this.props.loggedIn) {
-
-      centerElement = (
-        <div id="welcome-message">
-          Welcome,<br />
-          {this.props.username}
-        </div>
-      );
-
+      if (this.state.profilePage) {
+        centerElement = (
+          <Profile
+            username={this.props.username}
+            email={this.props.email}
+          />
+        );
+      } else {
+        centerElement = (
+          <div id="welcome-message">
+            Welcome,<br />
+            {this.props.username}
+          </div>
+        );
+      }
       startButtonText = 'Start game';
 
     } else {
@@ -136,6 +157,15 @@ export default class MainMenu extends Component {
 
     return (
       <div className="MainMenu">
+
+        <div className="header">
+          <TranslateRight in={this.state.appearAnimation}>
+            <Button
+              id="button-profile"
+              text="Profile"
+              handleClick={this.handleButtonClick.bind(this)} />
+          </TranslateRight>
+        </div>
 
         <TranslateLeft in={this.state.appearAnimation}>
           <LangSelection
@@ -168,10 +198,12 @@ export default class MainMenu extends Component {
             handleClick={this.handleButtonClick.bind(this)} />
         </TranslateLeft>
 
+        <TranslateLeft in={this.state.appearAnimation}>
         <Button
             id="button-logout"
             text="Log out"
             handleClick={this.handleButtonClick.bind(this)} />
+        </TranslateLeft>
 
       </div>
     );

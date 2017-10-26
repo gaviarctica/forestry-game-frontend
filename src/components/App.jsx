@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import MainMenu from './MainMenu';
 import MapMenu from './MapMenu';
+import Profile from './Profile';
 import Game from './Game';
 import { FadeInFadeOut } from './animation';
 import './animation.css';
@@ -48,10 +49,11 @@ export default class App extends Component {
     });
   }
 
-  setLoggedIn(username) {
+  setLoggedIn(username, email) {
     this.setState({
       loggedIn: true,
-      username: username
+      username: username,
+      email: email
     });
   }
 
@@ -83,6 +85,7 @@ export default class App extends Component {
             loggedIn={this.state.loggedIn}
             setLoggedIn={this.setLoggedIn.bind(this)}
             username={this.state.username}
+            email={this.state.email}
             lang={this.state.lang}
             changeLanguage={this.changeLanguage.bind(this)} />
         );
