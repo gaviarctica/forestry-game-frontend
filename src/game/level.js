@@ -18,7 +18,7 @@ export default class Level {
   }
 
   drawRoutes() {
-    var routeGraphics = new PIXI.Graphics();
+      var routeGraphics = new PIXI.Graphics();
       routeGraphics.lineStyle(50, 0xa57d4c, 1);
 
       // for(var i = 0; i < this.routeSegments.length; ++i) {
@@ -121,8 +121,39 @@ export default class Level {
     // }
   }
 
-  parseLogs() {
 
+  parseLogs() {
+    var width = 50;
+    var height = 5;
+    var wineRedColor = 0x722F37;
+
+    for (var i = 0; i < this.map.logs.length; ++i) {
+      var logData = this.map.logs[i];
+      
+      var logGraphics = new PIXI.Graphics();
+      logGraphics.beginFill(wineRedColor, 1);
+      // draw the log centered
+      logGraphics.drawRect(-width/2.0, -height/2, width, height);
+
+      logGraphics.interactive = true;
+      // make hit area bigger rectangle than the log itself, easier to hit
+      logGraphics.hitArea = new PIXI.Rectangle(-width/2.0, -width/2.0, width, width);
+
+      logGraphics.position = new PIXI.Point(logData.x, logData.y);
+     
+      logGraphics.pointerover = function () {
+        this.tint = 0x333333;
+      };
+      logGraphics.pointerout = function () {
+        this.tint = 0xffffff;
+      };
+      logGraphics.pointerdown = function() {
+        console.log("XD " + i);
+      };
+
+      this.stage.addChild(logGraphics);
+      this.logs.push(logGraphics);
+    }
   }
 
   getRouteSegments() {

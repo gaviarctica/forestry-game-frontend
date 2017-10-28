@@ -13,7 +13,9 @@ const MAP = {
     {"x": 1000, "y": 500, "route_node": 4},
   ],
   "logs": [
-
+     {"x": 200, "y": 500, "type": 0},
+     {"x": 300, "y": 500, "type": 1},
+     {"x": 400, "y": 500, "type": 2}
   ]
 }
 
@@ -28,7 +30,7 @@ export default class GameCanvas {
     document.getElementById('canvas-game').appendChild(game.view);
 
     this.map = new Level(MAP, game.stage);
-    this.truck = new Truck(MAP.startpoint.x, MAP.startpoint.y, game.stage, this.map.getStartingSegment());
+    this.truck = new Truck(MAP.startpoint.x, MAP.startpoint.y, game.stage, this.map.getStartingSegment(), this.map.getLogs());
 
     this.stats = new Stats(updateTime, updateDistance, updateScore);
 

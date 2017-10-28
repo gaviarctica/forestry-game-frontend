@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js';
 import * as Key from './controls';
+import {lerp, distance} from './helpers';
 // import RouteSegment from './routesegment';
-// import {lerp, distance} from './helpers';
 
 
 export default class Truck {
-  constructor(x, y, stage, startSegment) {
+  constructor(x, y, stage, startSegment, logsOnLevel) {
     this.sprite = PIXI.Sprite.fromImage('/truck.png');
     this.sprite.anchor.set(0.5);
 
@@ -34,11 +34,23 @@ export default class Truck {
     this.leftWasDown = false;
     this.rightWasDown = false;
 
+<<<<<<< HEAD
     this.previous_direction = 1;
+=======
+    this.logsOnLevel = logsOnLevel;
+
+    // 4x4 array for logs in truck
+    var x = new Array(4);
+    for (var i = 0; i < 4; i++) {
+      x[i] = new Array(4);
+    }
+    this.logsInTruck = x; 
+>>>>>>> Logs: draw logs and near truck detection
   }
 
   update(timeDelta) {
     this.move(timeDelta);
+    this.checkLogs();
     this.draw();
   }
 
@@ -133,6 +145,20 @@ export default class Truck {
         else {
           this.currentSegment = temp_segment_2;
         }
+      }
+    }
+  }
+
+  checkLogs() {
+    for (var i = 0; i < this.logsOnLevel.length; ++i) {
+      var log = this.logsOnLevel[i];
+      var distanceToLog = distance(this.sprite.position, log.position); 
+      if (distanceToLog < 100) {
+        log.canPickUp = true;
+        log.tint = 0x444444;
+      } else {
+        log.tint = 0xffffff;
+        log.canPickUp = false;
       }
     }
   }
