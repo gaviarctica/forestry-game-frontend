@@ -39,10 +39,10 @@ export default class Truck {
 =======
     this.logsOnLevel = logsOnLevel;
 
-    // 4x4 array for logs in truck
+    // 4x5 array matrix for logs in truck
     var x = new Array(4);
     for (var i = 0; i < 4; i++) {
-      x[i] = new Array(4);
+      x[i] = new Array(5);
     }
     this.logsInTruck = x; 
 >>>>>>> Logs: draw logs and near truck detection
@@ -152,15 +152,63 @@ export default class Truck {
   checkLogs() {
     for (var i = 0; i < this.logsOnLevel.length; ++i) {
       var log = this.logsOnLevel[i];
-      var distanceToLog = distance(this.sprite.position, log.position); 
+
+      // check if log is close to truck
+      var distanceToLog = distance(this.sprite.position, log.getPosition()); 
       if (distanceToLog < 100) {
-        log.canPickUp = true;
-        log.tint = 0x444444;
+        log.setCanBePickedUp(true);
       } else {
-        log.tint = 0xffffff;
-        log.canPickUp = false;
+        log.setCanBePickedUp(false);
+      }
+
+      // log close enough and it has been clicked, pick it to truck
+      if (log.canBePickedUp() && log.isMarkedForPickUp()) {
+
+        if (this.pickLog(log)) {
+          // remove it from level array and from pixi stage container (parent of the log)
+          this.logsOnLevel.splice(i, 1);
+          log.removeFromStage();
+
+          // break from the for loop because we altered the logsOnLevel array
+          break;
+        }
+      } 
+    }
+  }
+
+  // traverse priority order for log array matrix
+  /*
+      x/i 0  1  2  3
+  y/j  ______________
+    0  |  14 16 15 13
+    1  |  10 12 11 9
+    2  |  6  8  7  5
+    3  |  x  4  3  x 
+    4  |  x  2  1  x      
+  */
+
+  // returns boolean if the log was picked up
+  pickLog(log) {
+    var logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
+
+    // traverse the container in priority order to find empty position
+    for (var i = 0; i < logContainerTraverseOrder.length; ++i) {
+
+      var logContainerX = logContainerTraverseOrder[i][0];
+      var logContainerY = logContainerTraverseOrder[i][1];
+
+      var logAtPos = this.logsInTruck[logContainerX][logContainerY];
+      
+      // check if undefined or null.. aka no log at that pos
+      if (logAtPos === undefined || !logAtPos) {
+        this.logsInTruck[logContainerX][logContainerY] = log;
+        console.log("Truck set log at pos x: " + logContainerX + " y: " + logContainerY);
+        return true;
       }
     }
+
+    // truck is full
+    return false;
   }
 
   draw() {
