@@ -33,7 +33,7 @@ export default class GameCanvas {
     document.getElementById('canvas-game').appendChild(game.view);
 
     this.map = new Level(MAP, game.stage);
-    this.truck = new Truck(MAP.startpoint.x, MAP.startpoint.y, game.stage, this.map.getStartingSegment(), this.map.getLogs());
+    this.truck = new Truck(MAP.startpoint.x, MAP.startpoint.y, game.stage, this.map.getStartingSegment(), this.map.getLogs(), this.map.getLogDeposits());
 
     this.stats = new Stats(updateTime, updateDistance, updateScore);
 

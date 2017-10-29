@@ -33,13 +33,16 @@ export default class Log {
         this.owner.setMarkedForPickUp(false);
       }
     };
+    graphics.pointerup = function() {
+      this.owner.setMarkedForPickUp(false);
+    }
 
     this.stage.addChild(graphics);
     this.graphics = graphics;
 	}
 
-  removeFromStage() {
-    this.stage.removeChild(this.graphics);
+  removeFromParent() {
+    this.graphics.parent.removeChild(this.graphics);
   }
 
 	canBePickedUp() {

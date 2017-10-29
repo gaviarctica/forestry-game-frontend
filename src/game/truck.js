@@ -5,7 +5,7 @@ import {lerp, distance} from './helpers';
 
 
 export default class Truck {
-  constructor(x, y, stage, startSegment, logsOnLevel) {
+  constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel) {
     this.sprite = PIXI.Sprite.fromImage('/truck.png');
     this.sprite.anchor.set(0.5);
 
@@ -34,23 +34,36 @@ export default class Truck {
     this.leftWasDown = false;
     this.rightWasDown = false;
 
-<<<<<<< HEAD
     this.previous_direction = 1;
-=======
     this.logsOnLevel = logsOnLevel;
+    this.depositsOnLevel = depositsOnLevel;
 
     // 4x5 array matrix for logs in truck
-    var x = new Array(4);
-    for (var i = 0; i < 4; i++) {
-      x[i] = new Array(5);
+    this.logsInTruck = []; 
+    for (var i = 0; i < 4; ++i) {
+      this.logsInTruck[i] = [];
+      for (var j = 0; j < 5; ++j) {
+        this.logsInTruck[i][j] = null;
+      }
     }
-    this.logsInTruck = x; 
->>>>>>> Logs: draw logs and near truck detection
+
+    //  fill priority order for log array matrix
+    /*
+        x/i 0  1  2  3
+    y/j  ______________
+      0  |  14 16 15 13
+      1  |  10 12 11 9
+      2  |  6  8  7  5
+      3  |  x  4  3  x 
+      4  |  x  2  1  x      
+    */
+    this.logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
   }
 
   update(timeDelta) {
     this.move(timeDelta);
     this.checkLogs();
+    this.checkDeposits();
     this.draw();
   }
 
@@ -167,7 +180,6 @@ export default class Truck {
         if (this.pickLog(log)) {
           // remove it from level array and from pixi stage container (parent of the log)
           this.logsOnLevel.splice(i, 1);
-          log.removeFromStage();
 
           // break from the for loop because we altered the logsOnLevel array
           break;
@@ -176,39 +188,84 @@ export default class Truck {
     }
   }
 
-  // traverse priority order for log array matrix
-  /*
-      x/i 0  1  2  3
-  y/j  ______________
-    0  |  14 16 15 13
-    1  |  10 12 11 9
-    2  |  6  8  7  5
-    3  |  x  4  3  x 
-    4  |  x  2  1  x      
-  */
+  getLogAtPriorityIndex(i) {
+    var logContainerX = this.logContainerTraverseOrder[i][0];
+    var logContainerY = this.logContainerTraverseOrder[i][1];
+
+    return this.logsInTruck[logContainerX][logContainerY];
+  }
+
+  setLogAtPriorityIndex(i, log) {
+    var logContainerX = this.logContainerTraverseOrder[i][0];
+    var logContainerY = this.logContainerTraverseOrder[i][1];
+
+    this.logsInTruck[logContainerX][logContainerY] = log;
+
+    if (log != null) {
+
+      // clear state
+      log.setCanBePickedUp(false);
+
+      // setup graphics for truck visuals
+      log.removeFromParent();
+      this.sprite.addChild(log.graphics);
+      log.graphics.position = new PIXI.Point(0, 22.5);
+      log.graphics.rotation = Math.PI/2;
+    }
+  }
 
   // returns boolean if the log was picked up
   pickLog(log) {
-    var logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
 
-    // traverse the container in priority order to find empty position
-    for (var i = 0; i < logContainerTraverseOrder.length; ++i) {
-
-      var logContainerX = logContainerTraverseOrder[i][0];
-      var logContainerY = logContainerTraverseOrder[i][1];
-
-      var logAtPos = this.logsInTruck[logContainerX][logContainerY];
-      
-      // check if undefined or null.. aka no log at that pos
-      if (logAtPos === undefined || !logAtPos) {
-        this.logsInTruck[logContainerX][logContainerY] = log;
-        console.log("Truck set log at pos x: " + logContainerX + " y: " + logContainerY);
+    // traverse the container in fill priority order to find empty position
+    for (var i = 0; i < this.logContainerTraverseOrder.length; ++i) {
+      var logAtPos = this.getLogAtPriorityIndex(i);
+      // check if null.. aka no log at that pos
+      if (!logAtPos) {
+        this.setLogAtPriorityIndex(i, log);
         return true;
       }
     }
 
     // truck is full
     return false;
+  }
+
+  unloadLogTo(deposit) {
+    // unload in reverse fill priority order
+    for (var i = this.logContainerTraverseOrder.length - 1; i >= 0; --i) {
+      var log = this.getLogAtPriorityIndex(i);
+      if (log != null) {
+        if (deposit.addLog(log)) {
+          this.setLogAtPriorityIndex(i, null);
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+  }
+
+  checkDeposits() {
+    for (var i = 0; i < this.depositsOnLevel.length; ++i) {
+      var deposit = this.depositsOnLevel[i];
+
+      // check if deposit is close to truck
+      var distanceToDeposit = distance(this.sprite.position, deposit.getPosition()); 
+      if (distanceToDeposit < 200) {
+        deposit.setCanBeUnloadedTo(true);
+      } else {
+        deposit.setCanBeUnloadedTo(false);
+      }
+
+      // deposit close enough and it has been clicked, unload available log
+      if (deposit.canBeUnloadedTo() && deposit.isMarkedForUnload()) {
+
+        if (this.unloadLogTo(deposit)) {
+          break;
+        }
+      } 
+    }
   }
 
   draw() {
