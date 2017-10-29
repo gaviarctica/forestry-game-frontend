@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import MainMenu from './MainMenu';
-import MapMenu from './MapMenu';
-import Profile from './Profile';
 import Game from './Game';
 import { FadeInFadeOut } from './animation';
 import './animation.css';
@@ -12,17 +10,19 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentView: 'mainmenu',
+      currentView: '',
       loggedIn: false,
       username: '',
       email: '',
       lang: 'fi',
-      viewAnimation: false
+      viewAnimation: false,
+      validationDone: false
     }
   }
 
   componentWillMount() {
     // Get CSRF token from Django for forms
+    // and validate sessionid if it exists
     var self = this;
     API.validateSession(function(err, username, email) {
       if (err) throw err;
@@ -30,7 +30,15 @@ export default class App extends Component {
         self.setState({
           loggedIn: true,
           username: username,
-          email: email
+          email: email,
+          validationDone: true,
+          currentView: 'mainmenu'
+        });
+      } else {
+        self.setState({
+          loggedIn: false,
+          validationDone: true,
+          currentView: 'mainmenu'
         });
       }
     });
@@ -57,6 +65,14 @@ export default class App extends Component {
     });
   }
 
+  setLoggedOut() {
+    this.setState({
+      loggedIn: false,
+      username: '',
+      email: ''
+    });
+  }
+
   switchView(newView) {
     // display view exit animation
     this.setState({
@@ -77,27 +93,17 @@ export default class App extends Component {
   render() {
     var view;
     switch(this.state.currentView) {
-
       case 'mainmenu':
         view = (
           <MainMenu
             switchView={this.switchView.bind(this)}
             loggedIn={this.state.loggedIn}
             setLoggedIn={this.setLoggedIn.bind(this)}
+            setLoggedOut={this.setLoggedOut.bind(this)}
             username={this.state.username}
             email={this.state.email}
             lang={this.state.lang}
             changeLanguage={this.changeLanguage.bind(this)} />
-        );
-        break;
-
-      case 'mapmenu':
-        view = (
-          <MapMenu
-            switchView={this.switchView.bind(this)}
-            loggedIn={this.state.loggedIn}
-            username={this.state.username}
-            lang={this.state.lang} />
         );
         break;
 
@@ -118,7 +124,7 @@ export default class App extends Component {
         break;
 
       default:
-        view = <div>You should never see this text.</div>;
+        view = <div></div>;
         break;
     }
     return (

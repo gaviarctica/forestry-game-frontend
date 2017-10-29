@@ -1,7 +1,6 @@
 .MainMenu {  
   width: 100vw;
   height: 100vh;
-  display: flex;
 }
 
 #welcome-message {
@@ -15,4 +14,34 @@
 
 #welcome-message:hover {
   cursor: default;
+}
+
+#navbar {
+  position: fixed;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: var(--navbar-height);
+}
+
+#navbar-left, #navbar-right {
+  display: inline-block;
+  height: var(--navbar-height);
+}
+
+#navbar-left {
+  float: left;
+}
+
+#navbar-right {
+  float: right;
+}
+
+#active-view-area {
+  position: fixed;
+  top: calc(10% + var(--navbar-height) + 15px);
+  left: 10%;
+  right: 10%;
+  bottom: 5%;
+  display: flex;
 }

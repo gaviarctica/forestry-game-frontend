@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Button from './Button';
 import './LoginSignupForm.css';
-import { FadeInFadeOut, TranslateDown } from './animation';
-import './animation.css';
 import './api';
 import DjangoCSRFToken from 'django-react-csrftoken'
 
@@ -11,20 +9,26 @@ export default class LoginSignupForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentView: 'login',
       username: '',
       password: '',
       email: '',
-      message: undefined,
-      viewAnimation: true,
-      formSwitchAnimationInProgress: false
+      message: undefined
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      message: nextProps.message
-    });
+    if (nextProps.view !== this.props.view) {
+      this.setState({
+        message: nextProps.message,
+        username: '',
+        password: '',
+        email: ''
+      });
+    } else {
+      this.setState({
+        message: nextProps.message
+      });
+    }
   }
 
   handleInputChange(e) {
@@ -37,34 +41,6 @@ export default class LoginSignupForm extends Component {
     });
   }
 
-  handleSignupLinkClick() {
-    if (!this.state.formSwitchAnimationInProgress) {
-      this.setState({
-        viewAnimation: false,
-        formSwitchAnimationInProgress: true
-      });
-
-      var self = this;
-      setTimeout(function() {
-        if (self.state.currentView === 'login') {
-          self.setState({
-            currentView: 'signup',
-            viewAnimation: true,
-            formSwitchAnimationInProgress: false,
-            message: undefined
-          });
-        } else {
-          self.setState({
-            currentView: 'login',
-            viewAnimation: true,
-            formSwitchAnimationInProgress: false,
-            message: undefined
-          });
-        }
-      }, 350); // Exit animation duration
-    }
-  }
-
   handleSubmit(e) {
     e.preventDefault();
     this.props.handleSubmit(e.target.id, this.state.username, this.state.password, this.state.email);
@@ -74,7 +50,6 @@ export default class LoginSignupForm extends Component {
     var buttonStyle = {
       margin: 'auto',
       width: 'var(--form-width)',
-      backgroundColor: 'var(--jd-yellow)',
       boxShadow: 'var(--menu-shadow-2)'
     };
 
@@ -84,7 +59,7 @@ export default class LoginSignupForm extends Component {
 
     var emailField;
     var formButton;
-    if (this.state.currentView === 'signup') {
+    if (this.props.view === 'signup') {
       emailField = (
         <input 
           type="text"
@@ -99,6 +74,7 @@ export default class LoginSignupForm extends Component {
         <Button
           id="button-sign-up"
           text="Sign up"
+          buttonType="primary"
           style={buttonStyle}
           handleClick={() => document.getElementById('form-submit').click()} />
       );
@@ -109,21 +85,20 @@ export default class LoginSignupForm extends Component {
         <Button
           id="button-log-in"
           text="Log in"
+          buttonType="primary"
           style={buttonStyle}
           handleClick={() => document.getElementById('form-submit').click()} />
       );
     }
 
     return (
-      <TranslateDown in={this.state.viewAnimation}>
-      <FadeInFadeOut in={this.state.viewAnimation}>
         <div className="LoginForm">
 
           <div id="component-form">
 
             {this.state.message ? <div id="message">{this.state.message}</div> : ''}
 
-            <form id={this.state.currentView + '-form'} onSubmit={this.handleSubmit.bind(this)}>
+            <form id={this.props.view + '-form'} onSubmit={this.handleSubmit.bind(this)}>
               <DjangoCSRFToken />
 
               <input 
@@ -134,7 +109,7 @@ export default class LoginSignupForm extends Component {
                 value={this.state.username}
                 onChange={this.handleInputChange.bind(this)} />
 
-              {this.state.currentView === 'signup' ? emailField : ''}
+              {this.props.view === 'signup' ? emailField : ''}
 
               <input 
                 type="password"
@@ -151,26 +126,7 @@ export default class LoginSignupForm extends Component {
             {formButton}
 
           </div>
-
-          <div id="signup-message">
-
-            {this.state.currentView === 'login' ? 'Don\'t have and account? ' : 'Already have an account? '}
-            
-            <span
-              id="signup-link"
-              onClick={this.handleSignupLinkClick.bind(this)} >
-
-              {this.state.currentView === 'login' ? 'Sign Up' : 'Log In'}
-
-            </span>
-            
-            {' here!'}
-
-          </div>
-
         </div>
-      </FadeInFadeOut>
-      </TranslateDown>
     );
   }
 }

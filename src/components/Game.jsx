@@ -60,7 +60,8 @@ export default class Game extends Component {
         <div id="game-info">
           <Button 
                 id="button-quit"
-                text="Quit" 
+                text="Quit"
+                buttonType='default'
                 style={quitButtonStyle}
                 handleClick={this.handleButtonClick.bind(this)} />
           <div id="game-stats">
@@ -72,6 +73,7 @@ export default class Game extends Component {
               <Button 
                 id="button-show-report"
                 text="Show report"
+                buttonType='primary'
                 style={buttonStyle} />
             </div>
           </div>
