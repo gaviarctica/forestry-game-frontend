@@ -22,27 +22,30 @@ export default class RouteNode {
     return this.point;
   }
 
-  getSelectedSegment(current_segment, index) {
+  getSelectedSegment(current_segment, index, dir = 1) {
     var slength = this.segments.length;
+    index = index < 0 ? this.segments.length-1 : index;
     index = index % slength;
-    index = index < 0 ? -index : index;
-
     for(var i = 0; i < this.segments.length; ++i) {
       this.segments[i].setSelected(false);
     }
 
     if(this.segments[index] !== current_segment) {
       this.segments[index].setSelected();
-      return this.segments[index];
+      return {'seg':this.segments[index], 'index':index};
     }
 
     for(i = 0; i < this.segments.length; ++i) {
-      if(this.segments[i] !== current_segment) {
-        this.segments[i].setSelected();
-        return this.segments[i];
+      if(this.segments[index] !== current_segment) {
+        this.segments[index].setSelected();
+        return {'seg':this.segments[index], 'index':index};
       }
+
+      index = dir > 0 ? index + 1 : index - 1;
+      index = index < 0 ? this.segments.length-1 : index;
+      index = index % slength;
     }
 
-    return current_segment;
+    return {'seg':current_segment, 'index':index};
   }
 }
