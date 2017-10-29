@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
 import RouteNode from './routenode';
 import RouteSegment from './routesegment';
+import Log from './log';
+import LogDeposit from './logdeposit';
 
 export default class Level {
   constructor(map, stage) {
@@ -9,16 +11,17 @@ export default class Level {
     this.routeNodes = [];
     this.routeSegments = [];
     this.logs = [];
+    this.logDeposits = [];
 
     this.parseNodes();
     this.parseRouteSegments();
     this.drawRoutes();
     this.parseLogs();
-    this.drawLogs();
+    this.parseLogDeposits();
   }
 
   drawRoutes() {
-    var routeGraphics = new PIXI.Graphics();
+      var routeGraphics = new PIXI.Graphics();
       routeGraphics.lineStyle(50, 0xa57d4c, 1);
 
       // for(var i = 0; i < this.routeSegments.length; ++i) {
@@ -121,8 +124,21 @@ export default class Level {
     // }
   }
 
-  parseLogs() {
 
+  parseLogs() {
+    for (var i = 0; i < this.map.logs.length; ++i) {
+      var logData = this.map.logs[i];
+      var log = new Log({x: logData.x, y: logData.y}, logData.type, this.stage);
+      this.logs.push(log);
+    }
+  }
+
+  parseLogDeposits() {
+    for (var i = 0; i < this.map.logdeposits.length; ++i) {
+      var depoData = this.map.logdeposits[i];
+      var logDeposit = new LogDeposit({x: depoData.x, y: depoData.y}, depoData.type, this.stage);
+      this.logDeposits.push(logDeposit);
+    } 
   }
 
   getRouteSegments() {
@@ -137,7 +153,7 @@ export default class Level {
     return this.logs;
   }
 
-  drawLogs() {
-
+  getLogDeposits() {
+    return this.logDeposits;
   }
 }
