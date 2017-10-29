@@ -23,6 +23,7 @@ export default class App extends Component {
 
   componentWillMount() {
     // Get CSRF token from Django for forms
+    // and validate sessionid if it exists
     var self = this;
     API.validateSession(function(err, username, email) {
       if (err) throw err;
@@ -57,6 +58,14 @@ export default class App extends Component {
     });
   }
 
+  setLoggedOut() {
+    this.setState({
+      loggedIn: false,
+      username: '',
+      email: ''
+    });
+  }
+
   switchView(newView) {
     // display view exit animation
     this.setState({
@@ -84,6 +93,7 @@ export default class App extends Component {
             switchView={this.switchView.bind(this)}
             loggedIn={this.state.loggedIn}
             setLoggedIn={this.setLoggedIn.bind(this)}
+            setLoggedOut={this.setLoggedOut.bind(this)}
             username={this.state.username}
             email={this.state.email}
             lang={this.state.lang}

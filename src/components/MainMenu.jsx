@@ -27,12 +27,13 @@ export default class MainMenu extends Component {
 
   handleButtonClick(e) {
     var clicked = e.target.getAttribute('id');
+    var self = this;
 
     if (clicked === 'button-start-game') {
       this.props.switchView('mapmenu');
     } else if (clicked === 'button-logout') {
       API.logout(function() {
-        console.log("Log out");
+        self.props.setLoggedOut();
       });
     } else if (clicked === 'button-profile') {
       this.setState({
