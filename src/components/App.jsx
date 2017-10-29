@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import MainMenu from './MainMenu';
-import MapMenu from './MapMenu';
-import Profile from './Profile';
 import Game from './Game';
 import { FadeInFadeOut } from './animation';
 import './animation.css';
@@ -12,12 +10,13 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentView: 'mainmenu',
+      currentView: '',
       loggedIn: false,
       username: '',
       email: '',
       lang: 'fi',
-      viewAnimation: false
+      viewAnimation: false,
+      validationDone: false
     }
   }
 
@@ -31,7 +30,15 @@ export default class App extends Component {
         self.setState({
           loggedIn: true,
           username: username,
-          email: email
+          email: email,
+          validationDone: true,
+          currentView: 'mainmenu'
+        });
+      } else {
+        self.setState({
+          loggedIn: false,
+          validationDone: true,
+          currentView: 'mainmenu'
         });
       }
     });
@@ -86,7 +93,6 @@ export default class App extends Component {
   render() {
     var view;
     switch(this.state.currentView) {
-
       case 'mainmenu':
         view = (
           <MainMenu
@@ -98,16 +104,6 @@ export default class App extends Component {
             email={this.state.email}
             lang={this.state.lang}
             changeLanguage={this.changeLanguage.bind(this)} />
-        );
-        break;
-
-      case 'mapmenu':
-        view = (
-          <MapMenu
-            switchView={this.switchView.bind(this)}
-            loggedIn={this.state.loggedIn}
-            username={this.state.username}
-            lang={this.state.lang} />
         );
         break;
 
@@ -128,7 +124,7 @@ export default class App extends Component {
         break;
 
       default:
-        view = <div>You should never see this text.</div>;
+        view = <div></div>;
         break;
     }
     return (

@@ -13,99 +13,35 @@ var languages = {
 }
 
 export default class LangSelection extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false
+
+  toggleLang() {
+    if (this.props.lang === 'fi') {
+      this.props.changeLanguage('en');
+    } else if (this.props.lang === 'en') {
+      this.props.changeLanguage('fi');
     }
-  }
-
-  toggleList() {
-    this.setState((prevState) => ({
-      open: !prevState.open
-    }));
-  }
-
-  handleLanguageClick(lang) {
-    this.props.changeLanguage(lang);
-    this.setState({
-      open: false
-    });
   }
 
   render() {
-    var flagStyle;
-    var elemToRender;
-    if (this.state.open) {
-
-      var langs = [];
-      for (var lang in languages) {
-        flagStyle = {
-          backgroundImage: 'url(' + languages[lang].icon + ')'
-        };
-
-        langs.push(
-          <div
-            key={lang}
-            onClick={this.handleLanguageClick.bind(this, lang)} >
-
-            <div
-              className="lang-sel-flag"
-              id={'sel-' + lang}
-              style={flagStyle} >
-            </div>
-
-            <div className="lang-sel-text" >
-
-              {languages[lang].name}
-
-            </div>
-          
-          </div>
-        );
-      }
-
-      elemToRender = (
-        <div>
-          
-          {langs}
-
-        </div>
-      );
-
-    } else {
-
-      flagStyle = {
-        backgroundImage: 'url(' + languages[this.props.lang].icon + ')'
-      };
-
-      elemToRender = (
-        <div>
-
-          <div
-            className="lang-sel-flag"
-            style={flagStyle}
-            onClick={this.toggleList.bind(this)} >
-          </div>
-
-          <div
-            className="lang-sel-text"
-            onClick={this.toggleList.bind(this)} >
-
-            {languages[this.props.lang].name}
-
-          </div>
-        
-        </div>
-      );
-    }
+    var flagStyle = {
+      backgroundImage: 'url(' + languages[this.props.lang].icon + ')'
+    };
 
     return (
-      <div
-        className="LangSelection"
-        style={this.props.style} >
+      <div className="LangSelection" >
 
-        {elemToRender}
+        <div
+          className="lang-sel-flag"
+          style={flagStyle}
+          onClick={this.toggleLang.bind(this)} >
+        </div>
+
+        <div
+          className="lang-sel-text"
+          onClick={this.toggleLang.bind(this)} >
+
+          {languages[this.props.lang].name}
+        </div>
 
       </div>
     );

@@ -1,22 +1,23 @@
 :root {
   /* Variables */
   --list-item-size: 25px;
-  --left-bottom-margin: 15px;
+  --right-bottom-margin: 15px;
   --map-chevron-size: 40px;
 }
 
 .MapMenu {  
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
 }
 
 #map-menu {
-  margin: auto;
+  height: 100%;
+  width: 100%;
 }
 
 #top {
-  height: 80vh;
+  height: 95%;
 }
 
 #left, #right {
@@ -25,17 +26,17 @@
 }
 
 #left {
-  margin-right: 15px;
-  vertical-align: top;
+  width: calc(100% - 250px - 15px);
+  box-shadow: var(--menu-shadow);
   position: relative;
+  background-color: #7da66e; /* color of in-game grass */
 }
 
 #right {
-  width: 100vh;
-  max-width: calc(100% - 265px);
-  box-shadow: var(--menu-shadow);
+  margin-left: 15px;
+  width: 250px;
+  vertical-align: top;
   position: relative;
-  background-color: #7da66e; /* color of in-game road */
 }
 
 #fading-content {
@@ -52,21 +53,23 @@
 }
 
 #bottom-row {
-  width: 100vh;
+  box-sizing: border-box;
+  height: 5%;
+  width: calc(100% - 250px - 15px);
   max-width: calc(100% - 265px);
-  float: right;
+  float: left;
   text-align: center;
   color: var(--jd-gray);
   text-shadow: var(--menu-shadow);
-  margin-top: 10px;
+  padding-top: 10px;
   font-size: 1.1em;
 }
 
 #left .Button {
-  margin-bottom: var(--left-bottom-margin);
+  margin-bottom: var(--right-bottom-margin);
 }
 
-#left #button-start-game {
+#right #button-start-game {
   margin-bottom: 0;
   position: absolute;
   bottom: 0;
@@ -74,10 +77,10 @@
 
 #map-info {
   width: 100%;
-  max-height: calc(100% - 3 * (var(--button-height) + var(--left-bottom-margin)));
+  max-height: calc(100% - (var(--button-height) + var(--right-bottom-margin)));
   overflow-y: auto;
   background-color: var(--jd-gray);
-  margin-bottom: var(--left-bottom-margin);
+  margin-bottom: var(--right-bottom-margin);
   padding: 7px;
   box-sizing: border-box;
   box-shadow: var(--menu-shadow);

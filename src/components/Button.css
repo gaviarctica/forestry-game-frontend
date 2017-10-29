@@ -6,6 +6,7 @@
 .Button {
   width: 250px;
   height: var(--button-height);
+  display: inline-block;
 
   /* Default color */
   background-color: var(--jd-gray);
@@ -20,9 +21,45 @@
   transition: background-color 150ms ease;
 }
 
+.primary {
+  background-color: var(--jd-yellow);
+}
+
+.navbar-tab {
+  background-color: rgba(0, 0, 0, 0);
+  box-shadow: none;
+  color: var(--jd-gray);
+  font-size: var(--navbar-font-size);
+  text-shadow: var(--menu-shadow);
+  height: var(--navbar-height);
+  line-height: var(--navbar-height);
+  width: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  vertical-align: top;
+  border-radius: 5px;
+}
+
+.navbar-icon {
+  vertical-align: top;
+  height: var(--navbar-height);
+  line-height: var(--navbar-height);
+  padding-right: 5px;
+  pointer-events: none;
+}
+
+.navbar-tab-active {
+  color: var(--jd-yellow);
+}
+
 .Button:hover {
   cursor: pointer;
   background-color: var(--jd-green) !important;
+}
+
+.navbar-tab-active:hover {
+  cursor: default;
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 
 .Button:active {

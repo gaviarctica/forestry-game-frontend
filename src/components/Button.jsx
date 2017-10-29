@@ -1,23 +1,39 @@
 import React from 'react';
 import './Button.css';
+import Icon from 'react-icons-kit';
 
 export default function Button(props) {
 
-  if (props.roundedCorners) {
-    props.style.borderRadius = '5px';
+  var buttonClass = 'Button';
+  switch (props.buttonType) {
+    case 'primary':
+      buttonClass = buttonClass + ' primary';
+      break;
+
+    case 'navbar-tab':
+    case 'navbar-tab-active':
+    buttonClass = buttonClass + ' navbar-tab';
+      if (props.buttonType === 'navbar-tab-active') {
+        buttonClass = buttonClass + ' navbar-tab-active';
+      }
+      break;
+    
+    default:
+      break;
   }
 
-  var inactive;
   if (props.inactive) {
-    inactive = true;
+    buttonClass = buttonClass + ' inactive';
   }
 
   return (
     <div
-      className={inactive ? 'Button inactive' : 'Button'}
+      className={buttonClass}
       id={props.id}
       style={props.style}
       onClick={props.handleClick} >
+
+    {props.icon ? <Icon size={'1.3em'} icon={props.icon} className="navbar-icon"/> : ''}
 
     {props.text}
     

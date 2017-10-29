@@ -5,6 +5,8 @@
   --jd-green: #367C2B;
   --menu-shadow: 2px 2px 5px #444;
   --menu-shadow-2: 1px 1px 2px #888;
+  --navbar-height: 35px;
+  --navbar-font-size: 1.3em;
 }
 
 body {

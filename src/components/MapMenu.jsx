@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from './Button';
 import './MapMenu.css';
-import { TranslateRight, TranslateLeft, FadeInFadeOut, Slide } from './animation';
+import { TranslateRight, TranslateLeft, FadeInFadeOut } from './animation';
 import './animation.css';
 
 var dummyMaps = [
@@ -172,12 +172,8 @@ export default class MapMenu extends Component {
       backgroundImage: 'url(' + selMap.image + ')'
     };
 
-    var firstMap = this.state.selectedMapIndex === 0 ? true : false;
-    var lastMap = this.state.selectedMapIndex === this.state.maps.length - 1 ? true : false;
-
     return (
-      <div className="MapMenu">
-        
+      <div className="MapMenu">        
         <div id="map-menu">
 
           <div id="top">
@@ -185,122 +181,91 @@ export default class MapMenu extends Component {
             <TranslateRight in={this.state.appearAnimation}>
               <div id="left">
 
-                <Button
-                  id="button-back"
-                  text="Back to menu"
-                  handleClick={this.handleButtonClick.bind(this)} />
-
-                <Button
-                  id="button-create-map"
-                  text="Create map"
-                  handleClick={this.handleButtonClick.bind(this)}
-                  inactive={this.props.loggedIn ? false : true} />
-
-                <div id="map-info">
-
-                  <div className="section">
-
-                    <div className="section-header">
-                      Pile Types and Amounts
+                <FadeInFadeOut in={this.state.viewAnimation}>
+                  <div id="fading-content">
+                    <div id="map-name">
+                      {selMap.name}
                     </div>
-
-                    {pileTypes}
-
+                    <div id="map-image" style={mapImage}></div>
                   </div>
+                </FadeInFadeOut>
 
-                  <div className="section">
+                <div
+                  className="map-chevron"
+                  id="map-chevron-left"
+                  onClick={this.handlePreviousClick.bind(this)} >
 
-                    <div className="section-header">
-                      Route Length
-                    </div>
-
-                    <div className="section-value">
-                      {selMap.routeLength + ' m'}
-                    </div>
-
-                  </div>
-
-                  <div className="section">
-
-                    <div className="section-header">
-                      Storage Area Amount
-                    </div>
-
-                    <div className="section-value">
-                      {selMap.storageAreas}
-                    </div>
-
-                  </div>
-
-                  <div className="section">
-
-                    <div className="section-header">
-                      Passing Limit
-                    </div>
-
-                    <div className="section-value">
-                      {selMap.passingLimit ? 'YES' : 'NO'}
-                    </div>
-
-                  </div>
-
+                  {'<'}
                 </div>
 
-                <Button
-                  id="button-start-game"
-                  text="Start game"
-                  style={{backgroundColor: 'var(--jd-yellow)'}}
-                  handleClick={this.handleButtonClick.bind(this)} />
+                <div
+                  className="map-chevron"
+                  id="map-chevron-right"
+                  onClick={this.handleNextClick.bind(this)} >
+
+                  {'>'}
+                </div>
 
               </div>
             </TranslateRight>
 
-            <TranslateLeft in={this.state.appearAnimation}>
-            
-            
+            <TranslateLeft in={this.state.appearAnimation}>            
               <div id="right">
 
-                <FadeInFadeOut in={this.state.viewAnimation}>
-                <div id="fading-content">
-                  <div id="map-name">
-                    {selMap.name}
+              <div id="map-info">
+
+                <div className="section">
+                  <div className="section-header">
+                    Pile Types and Amounts
                   </div>
-                  <div id="map-image" style={mapImage}></div>
-                </div>
-                </FadeInFadeOut>
-
-                <div
-                  className={firstMap ? 'map-chevron map-chevron-inactive' : 'map-chevron'}
-                  id="map-chevron-left"
-                  onClick={firstMap ? '' : this.handlePreviousClick.bind(this)} >
-
-                  {'<'}
-
+                  {pileTypes}
                 </div>
 
-                <div
-                  className={lastMap ? 'map-chevron map-chevron-inactive' : 'map-chevron'}
-                  id="map-chevron-right"
-                  onClick={lastMap ? '' : this.handleNextClick.bind(this)} >
+                <div className="section">
+                  <div className="section-header">
+                    Route Length
+                  </div>
+                  <div className="section-value">
+                    {selMap.routeLength + ' m'}
+                  </div>
+                </div>
 
-                  {'>'}
+                <div className="section">
+                  <div className="section-header">
+                    Storage Area Amount
+                  </div>
+                  <div className="section-value">
+                    {selMap.storageAreas}
+                  </div>
+                </div>
 
+                <div className="section">
+                  <div className="section-header">
+                    Passing Limit
+                  </div>
+                  <div className="section-value">
+                    {selMap.passingLimit ? 'YES' : 'NO'}
+                  </div>
                 </div>
 
               </div>
-            
+
+                <Button
+                  id="button-start-game"
+                  text="Start game"
+                  buttonType="primary"
+                  handleClick={this.handleButtonClick.bind(this)} />
+              </div>            
             </TranslateLeft>
 
           </div>
 
-          <TranslateLeft in={this.state.appearAnimation}>
+          <TranslateRight in={this.state.appearAnimation}>
             <div id="bottom-row">
               {(this.state.selectedMapIndex + 1) + '/' + this.state.maps.length}
             </div>
-          </TranslateLeft>
-
+          </TranslateRight>
         </div>
-
       </div>
     );
   }
