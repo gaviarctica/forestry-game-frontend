@@ -25,7 +25,13 @@ export default class App extends Component {
     // and validate sessionid if it exists
     var self = this;
     API.validateSession(function(err, username, email) {
-      if (err) throw err;
+      if (err) {
+        self.setState({
+          loggedIn: false,
+          currentView: 'mainmenu'
+        });
+        throw err;
+      }
       if (username) {
         self.setState({
           loggedIn: true,
@@ -41,7 +47,7 @@ export default class App extends Component {
           currentView: 'mainmenu'
         });
       }
-    });
+    });    
   }
 
   componentDidMount() {
