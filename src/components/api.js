@@ -15,15 +15,17 @@ export const API = {
       }
       else if(response.status === 204) {
         callback(err);
-      }
-      else {
+      } else {
       	err = 'Error getting CSRF cookie.';
         callback(err);
       }
     }).then(function(responseJson) {
     	if (responseJson) {
     		callback(err, responseJson.username, responseJson.email);
-    	}
+    	} else {
+      	err = 'Error getting CSRF cookie.';
+        callback(err);
+      }
     });
   },
 
@@ -54,6 +56,9 @@ export const API = {
     }).then(function(responseJson) {
       if (responseJson) {
         callback(err, message, responseJson.username, responseJson.email);
+      } else {
+        err = 'Error making login request.';
+        callback(err);
       }
     });
   },
@@ -112,22 +117,54 @@ export const API = {
     });
   },
 
-  getMaps: function(callback) {
+  getAllMapsInfo: function(callback) {
     var err = undefined;
     var url = '/api/v1/level';
     var init = {
       method: 'GET',
       credentials: 'same-origin',
     };
+
+    fetch(url, init).then(function(response) {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        err = 'Error fetching map info.';
+        callback(err);
+      }
+    }).then(function(responseJson) {
+      if (responseJson) {
+        callback(err, responseJson);
+      } else {
+        err = 'Error fetching map info.';
+        callback(err);
+      }
+    });
   },
 
-  getMap: function(id, callback) {
+  getMapData: function(id, callback) {
     var err = undefined;
     var url = '/api/v1/level?id=' + id;
     var init = {
       method: 'GET',
       credentials: 'same-origin',
     };
+
+    fetch(url, init).then(function(response) {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        err = 'Error fetching map data.';
+        callback(err);
+      }
+    }).then(function(responseJson) {
+      if (responseJson) {
+        callback(err, responseJson);
+      } else {
+        err = 'Error fetching map data.';
+        callback(err);
+      }
+    });
   },
 
   addMap: function(callback) {
