@@ -183,6 +183,47 @@ export const API = {
       method: 'GET',
       credentials: 'same-origin',
     };
+
+    fetch(url, init).then(function(response) {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        err = 'Error fetching reports.';
+        callback(err);
+      }
+    }).then(function(responseJson) {
+      if (responseJson) {
+        callback(err, responseJson);
+      } else {
+        err = 'Error fetching report.';
+        callback(err);
+      }
+    });
+  },
+
+  getMyLatestScores: function(callback) {
+    var err = undefined;
+    var url = '/api/v1/scores';
+    var init = {
+      method: 'GET',
+      credentials: 'same-origin',
+    };
+
+    fetch(url, init).then(function(response) {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        err = 'Error fetching reports.';
+        callback(err);
+      }
+    }).then(function(responseJson) {
+      if (responseJson) {
+        callback(err, responseJson);
+      } else {
+        err = 'Error fetching report.';
+        callback(err);
+      }
+    });
   },
 
   postReport: function(callback) {

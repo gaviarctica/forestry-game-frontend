@@ -18,16 +18,25 @@
 	max-height: 50px;
 }
 
+#profile-no-scores {
+	color: grey;
+	text-align: center;
+}
+
 #user-info-username, #user-info-email {
 	display: block;
 	padding: 5px;
 }
 
 #user-info-username-header, #user-info-username-icon {
+	vertical-align: middle;
 	display: inline;
 }
 
 #user-info-username-icon, #user-info-email-icon {
+	vertical-align: middle;
+	height: var(--navbar-height);
+  line-height: var(--navbar-height);
 	margin: auto;
 }
 
