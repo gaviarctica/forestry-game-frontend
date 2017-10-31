@@ -6,8 +6,9 @@ import {lerp, distance} from './helpers';
 
 export default class Truck {
   constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel) {
-    this.sprite = PIXI.Sprite.fromImage('/truck.png');
+    this.sprite = PIXI.Sprite.fromImage('/truck.svg');
     this.sprite.anchor.set(0.5);
+    this.sprite.scale.set(0.1);
 
     this.sprite.x = x;
     this.sprite.y = y;
