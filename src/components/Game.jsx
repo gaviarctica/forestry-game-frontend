@@ -9,8 +9,15 @@ export default class Game extends Component {
     this.state = {
       time: 0,
       distance: 0,
-      score: 0
+      score: 0,
+      fuel: 0
     }
+  }
+
+  updateFuel(fuel) {
+    this.setState({
+      fuel: fuel
+    });
   }
 
   updateTime(time) {
@@ -32,7 +39,8 @@ export default class Game extends Component {
   }
 
   componentDidMount() {
-    this.gameCanvas = new GameCanvas(this.updateTime.bind(this), this.updateDistance.bind(this), this.updateScore.bind(this));
+    this.gameCanvas = new GameCanvas(this.updateTime.bind(this), this.updateDistance.bind(this), this.updateScore.bind(this),
+                                     this.updateFuel.bind(this));
   }
 
   handleButtonClick(e) {
@@ -68,8 +76,9 @@ export default class Game extends Component {
             <div id="game-stats-grouped">
               <div id="user">{this.props.username}</div>
               <div id="time">{this.state.time}</div>
-              <div id="distance">{this.state.distance}m</div>
-              <div id="unload-count">{this.state.score}</div>
+              <div id="distance">{this.state.distance} m</div>
+              <div id="fuel">{this.state.fuel} l</div>
+              <div id="unload-count">{this.state.score} pts</div>
               <Button 
                 id="button-show-report"
                 text="Show report"
