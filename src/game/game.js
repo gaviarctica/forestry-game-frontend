@@ -23,7 +23,7 @@ const MAP = {
 }
 
 export default class GameCanvas {
-  constructor(updateTime, updateDistance, updateScore) {
+  constructor(updateTime, updateDistance, updateScore, updateFuel) {
     var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x7da66e});
     this.game = game;
 
@@ -35,7 +35,7 @@ export default class GameCanvas {
     this.map = new Level(MAP, game.stage);
     this.truck = new Truck(MAP.startpoint.x, MAP.startpoint.y, game.stage, this.map.getStartingSegment(), this.map.getLogs(), this.map.getLogDeposits());
 
-    this.stats = new Stats(updateTime, updateDistance, updateScore);
+    this.stats = new Stats(updateTime, updateDistance, updateScore, updateFuel);
 
     this.setupCameraControl();
   }
@@ -95,8 +95,14 @@ export default class GameCanvas {
 
   update(delta)
   {
-    this.truck.update(delta);
+    var totalDistance = this.truck.getDistanceMoved()
+    var totalfuelBurned = this.truck.getFuelBurned()
+    var score = totalDistance * totalfuelBurned;
 
+    this.truck.update(delta);
+    this.stats.updateDistance(totalDistance);
+    this.stats.updateFuel(totalfuelBurned);
+    this.stats.updateScore(score.toFixed(0))    
   }
 
   destroy()

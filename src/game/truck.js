@@ -59,6 +59,49 @@ export default class Truck {
       4  |  x  2  1  x      
     */
     this.logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
+
+    this.distanceMoved = 0;
+    this.fuelBurned = 0;
+    this.previousPoint = null;
+  }
+
+  // Calculates the distance truck has moved during an instance of gameplay
+  calcDistance(point) {
+    if(this.previousPoint === null) {
+      this.previousPoint = this.currentSegment.getPositionAt(this.pointDelta);
+    }
+
+    if((this.previousPoint.x !== point.x) && (this.previousPoint.y !== point.y)) {
+      this.distanceMoved += 1;
+      this.calcFuelBurned();
+      this.previousPoint = point;
+    }
+  }
+
+  getDistanceMoved() {
+    return this.distanceMoved;
+  }
+
+  // Calculates the fuel consumed by truck in one instance of gameplay
+  calcFuelBurned() {
+    // If there are logs in the truck increase fuel consumption by a load factor
+    var loadFactor = 0;
+    this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
+
+    switch(loadFactor) {
+      case 0: 
+        this.fuelBurned += 0.001;
+        break;
+      case 1:
+        this.fuelBurned += 0.002;
+        break;
+      default: 
+        this.fuelBurned += 0.001+0.001*loadFactor;
+    }    
+  }
+
+  getFuelBurned() {
+    return this.fuelBurned.toFixed(2);
   }
 
   update(timeDelta) {
@@ -66,6 +109,7 @@ export default class Truck {
     this.checkLogs();
     this.checkDeposits();
     this.draw();
+    this.calcDistance(this.currentSegment.getPositionAt(this.pointDelta));    
   }
 
   move(timeDelta) {
@@ -120,7 +164,6 @@ export default class Truck {
         var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, -1);
         this.routeIndex = selected_segment_data['index'];
 
-        // console.log(this.currentSegment);
         var temp_segment = selected_segment_data['seg'];
 
         if(this.currentSegment.startNode !== temp_segment.endNode && this.currentSegment.startNode.getSegments().length > 1) {
@@ -133,6 +176,7 @@ export default class Truck {
           this.pointDelta = 0.01;
           this.currentSegment = temp_segment;
         } else {
+          this.endOfSegment = false;
           this.currentSegment = temp_segment;
         }
 
@@ -154,9 +198,12 @@ export default class Truck {
           temp_segment_2.endNode = temp_node_2;
         }
 
-        if(temp_segment_2 === this.currentSegment)
+        if(temp_segment_2 === this.currentSegment) {
+          this.endOfSegment = true;        
           this.pointDelta = 0.99;
+        }
         else {
+          this.endOfSegment = false;
           this.currentSegment = temp_segment_2;
         }
       }
