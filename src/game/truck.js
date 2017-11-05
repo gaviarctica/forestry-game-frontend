@@ -5,7 +5,7 @@ import {lerp, distance} from './helpers';
 
 
 export default class Truck {
-  constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel) {
+  constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel, stats) {
     this.sprite = PIXI.Sprite.fromImage('/truck.svg');
     this.sprite.anchor.set(0.5);
     this.sprite.scale.set(0.1);
@@ -63,6 +63,8 @@ export default class Truck {
     this.distanceMoved = 0;
     this.fuelBurned = 0;
     this.previousPoint = null;
+
+    this.stats = stats;
   }
 
   // Calculates the distance truck has moved during an instance of gameplay
@@ -271,6 +273,7 @@ export default class Truck {
       // check if null.. aka no log at that pos
       if (!logAtPos) {
         this.setLogAtPriorityIndex(i, log);
+        this.stats.updateLogs(this.logsInTruck);
         return true;
       }
     }
@@ -286,6 +289,7 @@ export default class Truck {
       if (log != null) {
         if (deposit.addLog(log)) {
           this.setLogAtPriorityIndex(i, null);
+          this.stats.updateLogs(this.logsInTruck);
           return true;
         } else {
           return false;
