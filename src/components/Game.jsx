@@ -14,33 +14,12 @@ export default class Game extends Component {
     }
   }
 
-  updateFuel(fuel) {
-    this.setState({
-      fuel: fuel
-    });
-  }
-
-  updateTime(time) {
-    this.setState({
-      time: time
-    });
-  }
-
-  updateDistance(distance) {
-    this.setState({
-      distance: distance
-    });
-  }
-
-  updateScore(score) {
-    this.setState({
-      score: score
-    })
+  updateUI(update) {
+    this.setState(update);
   }
 
   componentDidMount() {
-    this.gameCanvas = new GameCanvas(this.updateTime.bind(this), this.updateDistance.bind(this), this.updateScore.bind(this),
-                                     this.updateFuel.bind(this));
+    this.gameCanvas = new GameCanvas(this.updateUI.bind(this));
   }
 
   handleButtonClick(e) {

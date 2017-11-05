@@ -5,12 +5,16 @@ import Stats from './stats';
 
 const MAP = {
   "id": 1,
-  "startpoint" : {"x": 200, "y": 500},
+  "startpoint" : {"x": 0, "y": 0},
   "routes": [
-    {"x": 200, "y": 500, "route_node": 1},
-    {"x": 400, "y": 700, "route_node": 2, "to": [3,4]},
-    {"x": 800, "y": 300, "route_node": 3},
-    {"x": 1000, "y": 500, "route_node": 4},
+    {"x": 0, "y": 0, "route_node": 1},
+    {"x": 0, "y": 500, "route_node": 2},
+    {"x": 400, "y": 500, "route_node": 3},
+    {"x": 800, "y": 300, "route_node": 4, "to": [3]},
+    {"x": 400, "y": 800, "route_node": 5, "to": [3]},
+    {"x": -300, "y": 1000, "route_node": 6, "to": [5]},
+    {"x": -700, "y": 400, "route_node": 7, "to": [6,2]},
+    {"x": -700, "y": 0, "route_node": 8, "to": [7,1]}
   ],
   "logs": [
      {"x": 200, "y": 500, "type": 0},
@@ -23,7 +27,7 @@ const MAP = {
 }
 
 export default class GameCanvas {
-  constructor(updateTime, updateDistance, updateScore, updateFuel) {
+  constructor(updateUI) {
     var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x7da66e});
     this.game = game;
 
@@ -35,7 +39,7 @@ export default class GameCanvas {
     this.map = new Level(MAP, game.stage);
     this.truck = new Truck(MAP.startpoint.x, MAP.startpoint.y, game.stage, this.map.getStartingSegment(), this.map.getLogs(), this.map.getLogDeposits());
 
-    this.stats = new Stats(updateTime, updateDistance, updateScore, updateFuel);
+    this.stats = new Stats(updateUI);
 
     this.setupCameraControl();
   }
@@ -100,9 +104,11 @@ export default class GameCanvas {
     var score = totalDistance * totalfuelBurned;
 
     this.truck.update(delta);
-    this.stats.updateDistance(totalDistance);
-    this.stats.updateFuel(totalfuelBurned);
-    this.stats.updateScore(score.toFixed(0))    
+    this.stats.updateUI({
+      distance: totalDistance,
+      fuel: totalfuelBurned,
+      score: score.toFixed(0)
+    });
   }
 
   destroy()
