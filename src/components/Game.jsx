@@ -10,37 +10,22 @@ export default class Game extends Component {
       time: 0,
       distance: 0,
       score: 0,
-      fuel: 0
+      fuel: 0,
+      logs: [
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+      ]
     }
   }
 
-  updateFuel(fuel) {
-    this.setState({
-      fuel: fuel
-    });
-  }
-
-  updateTime(time) {
-    this.setState({
-      time: time
-    });
-  }
-
-  updateDistance(distance) {
-    this.setState({
-      distance: distance
-    });
-  }
-
-  updateScore(score) {
-    this.setState({
-      score: score
-    })
+  updateUI(update) {
+    this.setState(update);
   }
 
   componentDidMount() {
-    this.gameCanvas = new GameCanvas(this.updateTime.bind(this), this.updateDistance.bind(this), this.updateScore.bind(this),
-                                     this.updateFuel.bind(this));
+    this.gameCanvas = new GameCanvas(this.updateUI.bind(this));
   }
 
   handleButtonClick(e) {
@@ -54,7 +39,6 @@ export default class Game extends Component {
 
   render() {
     var buttonStyle = {
-      backgroundColor: 'var(--jd-yellow)',
       width: '100%'
     };
     var quitButtonStyle = {
@@ -89,38 +73,49 @@ export default class Game extends Component {
 
           <div id="logs-remaining">
             <div id="logs-remaining-row">
-              <div id="logs-remaining-count">1</div>
-              <div id="logs-remaining-count">2</div>
-              <div id="logs-remaining-count">3</div>
-              <div id="logs-remaining-count">4</div>
+              <div className="logs-remaining-count">1</div>
+              <div className="logs-remaining-count">2</div>
+              <div className="logs-remaining-count">3</div>
+              <div className="logs-remaining-count">4</div>
             </div>
           </div>
 
           <div id="log-load">
-            <div id="log-load-row">
-              <div id="log-load-fill">1</div>
-              <div id="log-load-fill">2</div>
-              <div id="log-load-fill">3</div>
-              <div id="log-load-fill">4</div>
+          <div className="log-load-row">
+            <div className={'log-load-fill log-type-' + this.state.logs[0][0]}>{this.state.logs[0][0]}</div>
+            <div className={'log-load-fill log-type-' + this.state.logs[1][0]}>{this.state.logs[1][0]}</div>
+            <div className={'log-load-fill log-type-' + this.state.logs[2][0]}>{this.state.logs[2][0]}</div>
+            <div className={'log-load-fill log-type-' + this.state.logs[3][0]}>{this.state.logs[3][0]}</div>
             </div>
-            <div id="log-load-row">
-              <div id="log-load-fill">1</div>
-              <div id="log-load-fill">2</div>
-              <div id="log-load-fill">3</div>
-              <div id="log-load-fill">4</div>
+            <div className="log-load-row">
+              <div className={'log-load-fill log-type-' + this.state.logs[0][1]}>{this.state.logs[0][1]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[1][1]}>{this.state.logs[1][1]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][1]}>{this.state.logs[2][1]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[3][1]}>{this.state.logs[3][1]}</div>
             </div>
-            <div id="log-load-row">
-              <div id="log-load-fill">1</div>
-              <div id="log-load-fill">2</div>
-              <div id="log-load-fill">3</div>
-              <div id="log-load-fill">4</div>
+            <div className="log-load-row">
+              <div className={'log-load-fill log-type-' + this.state.logs[0][2]}>{this.state.logs[0][2]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[1][2]}>{this.state.logs[1][2]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][2]}>{this.state.logs[2][2]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[3][2]}>{this.state.logs[3][2]}</div>
             </div>
-            <div id="log-load-row">
-              <div id="log-load-fill">1</div>
-              <div id="log-load-fill">2</div>
-              <div id="log-load-fill">3</div>
-              <div id="log-load-fill">4</div>
+            <div className="log-load-row">
+              <div className={'log-load-fill log-type-' + this.state.logs[1][3]}>{this.state.logs[1][3]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][3]}>{this.state.logs[2][3]}</div>
             </div>
+            <div className="log-load-row">
+              <div className={'log-load-fill log-type-' + this.state.logs[1][4]}>{this.state.logs[1][4]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][4]}>{this.state.logs[2][4]}</div>
+            </div>
+            <div className="log-load-border log-load-border-notch" id="log-load-border-notch-1"></div>
+            <div className="log-load-border log-load-border-notch" id="log-load-border-notch-2"></div>
+            <div className="log-load-border" id="log-load-border-1"></div>
+            <div className="log-load-border" id="log-load-border-2"></div>
+            <div className="log-load-border" id="log-load-border-3"></div>
+            <div className="log-load-border" id="log-load-border-4"></div>
+            <div className="log-load-border" id="log-load-border-5"></div>
+            <div className="log-load-border" id="log-load-border-6"></div>
+            <div className="log-load-border" id="log-load-border-7"></div>
           </div>
         </div>
       </div>
