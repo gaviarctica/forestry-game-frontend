@@ -4,11 +4,11 @@ import './LangSelection.css';
 var languages = {
   'fi': {
     name: 'Suomi',
-    icon: '/flag-fi.png'
+    icon: '/static/flag-fi.png'
   },
   'en': {
     name: 'English',
-    icon: '/flag-en.png'
+    icon: '/static/flag-en.png'
   }
 }
 
