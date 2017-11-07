@@ -22,7 +22,7 @@ export default class Level {
 
   drawRoutes() {
       var routeGraphics = new PIXI.Graphics();
-      routeGraphics.lineStyle(50, 0xa57d4c, 1);
+      routeGraphics.beginFill(0xa57d4c, 1);
 
       // for(var i = 0; i < this.routeSegments.length; ++i) {
       //   var spos = this.routeSegments[i].startNode.getPos();
@@ -51,7 +51,10 @@ export default class Level {
           if(segments[j].isSelected)
             routeGraphics.lineStyle(50, 0xc79f6e, 1);
 
+          routeGraphics.lineStyle(50, 0xa57d4c, 1);
           routeGraphics.lineTo(epos.x, epos.y);
+          routeGraphics.lineStyle(0);
+          routeGraphics.drawCircle(spos.x, spos.y, 50/2);
 
           if(segments[j].isSelected)
             routeGraphics.lineStyle(50, 0xa57d4c, 1);
