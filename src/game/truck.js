@@ -22,14 +22,12 @@ export default class Truck {
 
     this.currentSegment = startSegment;
 
-    this.arrow_graphics = new PIXI.Graphics();
-    this.arrow_graphics.lineStyle(50, 0x0B5394, 1);
-    this.arrow_graphics.moveTo(0, 0);
-    this.arrow_graphics.lineTo(500, 400);
-    this.arrow_graphics.endFill();
+    this.arrowSprite = PIXI.Sprite.fromImage('/static/arrow.svg');
+    this.arrowSprite.anchor.set(0, 0.5);
+    this.arrowSprite.scale.set(0.2);
 
-    stage.addChild(this.sprite);
-    stage.addChild(this.arrow_graphics);
+    stage.addChild(this.arrowSprite);
+    stage.addChild(this.sprite);    
 
     // some key helpers
     this.leftWasDown = false;
@@ -139,8 +137,8 @@ export default class Truck {
       this.leftWasDown = false;
       this.rightWasDown = false;
       ++this.routeIndex;
-      var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, 1) :
-        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, 1);
+      var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1) :
+        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
       this.routeIndex = seg['index'];
     }
 
@@ -148,8 +146,8 @@ export default class Truck {
       this.leftWasDown = false;
       this.rightWasDown = false;
       --this.routeIndex;
-      seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, -1) :
-        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, -1);
+      seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1) :
+        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1);
       this.routeIndex = seg['index'];
     }
 
@@ -163,7 +161,7 @@ export default class Truck {
       if (this.currentSegment.getPreviousNode() !== null) {
         this.pointDelta = 0.99;
 
-        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, -1);
+        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1);
         this.routeIndex = selected_segment_data['index'];
 
         var temp_segment = selected_segment_data['seg'];
@@ -190,7 +188,7 @@ export default class Truck {
       if (this.currentSegment.getNextNode() !== null) {
         this.pointDelta = 0.01;
 
-        selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, 1);
+        selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
         this.routeIndex = selected_segment_data['index'];
         var temp_segment_2 = selected_segment_data['seg'];
 
@@ -327,14 +325,9 @@ export default class Truck {
 
     this.sprite.rotation = this.currentSegment.getRotation();
 
-    var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex) :
-      this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex);
+    var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite) :
+      this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
     var epoints = { 'start': seg['seg'].getPositionAt(0),'end' : seg['seg'].getPositionAt(1)}
     var dest_point = { 'x' : (epoints.start.x + epoints.end.x) / 2,  'y' : (epoints.start.y + epoints.end.y) / 2}
-    this.arrow_graphics.clear();
-    this.arrow_graphics.lineStyle(5, 0x0B5394, 1);
-    this.arrow_graphics.moveTo(dest_point.x, dest_point.y);
-    this.arrow_graphics.lineTo(point.x, point.y);
-    this.arrow_graphics.endFill();
   }
 }

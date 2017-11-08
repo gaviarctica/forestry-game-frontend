@@ -27,7 +27,7 @@ export default class RouteSegment {
   }
 
   setSelected( is_selected = true ) {
-    this.isSelected = is_selected
+    this.isSelected = is_selected;
   }
 
   isSelected() {
@@ -42,9 +42,15 @@ export default class RouteSegment {
     return lerp(this.startNode.getPos(), this.endNode.getPos(), interpolationDelta);
   }
 
-  getRotation() {
-    var pA = this.startNode.getPos();
-    var pB = this.endNode.getPos();
+  getRotation(callerNode = undefined) {      
+    var pA, pB;   
+    if (callerNode === this.endNode) {
+      pA = this.endNode.getPos();
+      pB = this.startNode.getPos();
+    } else {
+      pA = this.startNode.getPos();
+      pB = this.endNode.getPos();
+    }
     return Math.atan2(pB.y - pA.y, pB.x - pA.x) + Math.PI/2;
   }
 
