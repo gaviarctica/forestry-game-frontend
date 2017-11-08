@@ -58,11 +58,13 @@ export default class RouteNode {
       arrowSprite.x = this.point.x;
       arrowSprite.y = this.point.y;
       arrowSprite.rotation = rotation - Math.PI / 2;
+      arrowSprite.alpha = 1;
     }      
   }
 
   hideArrow(arrowSprite) {
     arrowSprite.x = undefined;
     arrowSprite.y = undefined;
+    arrowSprite.alpha = 0;
   }
 }
