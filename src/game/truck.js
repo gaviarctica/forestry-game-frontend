@@ -73,7 +73,7 @@ export default class Truck {
       this.previousPoint = this.currentSegment.getPositionAt(this.pointDelta);
     }
 
-    if((this.previousPoint.x !== point.x) && (this.previousPoint.y !== point.y)) {
+    if((this.previousPoint.x !== point.x) || (this.previousPoint.y !== point.y)) {
       this.distanceMoved += 1;
       this.calcFuelBurned();
       this.previousPoint = point;
