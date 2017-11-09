@@ -197,6 +197,9 @@ export default class Truck {
           this.currentSegment = temp_segment;
         }
 
+        // experimental index suggestion
+        this.routeIndex = this.currentSegment.getPreviousNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
+
       }
 
     } else if (this.pointDelta >= 1) {
@@ -207,6 +210,7 @@ export default class Truck {
 
         selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
         this.routeIndex = selected_segment_data['index'];
+
         var temp_segment_2 = selected_segment_data['seg'];
 
         if(this.currentSegment.endNode !== temp_segment_2.startNode && this.currentSegment.endNode.getSegments().length > 1) {
@@ -223,6 +227,9 @@ export default class Truck {
           this.endOfSegment = false;
           this.currentSegment = temp_segment_2;
         }
+
+        // experimental index suggestion
+        this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }
     }
   }
