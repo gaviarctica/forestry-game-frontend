@@ -5,7 +5,13 @@ import {lerp, distance} from './helpers';
 
 
 export default class Truck {
+
+
   constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel, stats) {
+    // can be lower with reverse
+    Truck.MIN_VELOCITY = 1.0;
+    Truck.REVERSE_VELOCITY_FACTOR = 0.5;
+
     this.sprite = PIXI.Sprite.fromImage('/static/truck.svg');
     this.sprite.anchor.set(0.5);
     this.sprite.scale.set(0.1);
@@ -104,6 +110,16 @@ export default class Truck {
     return this.fuelBurned.toFixed(2);
   }
 
+  getSpeed(reverse = false) {
+
+      // If there are logs in the truck increase fuel consumption by a load factor
+      var loadFactor = 0.0;
+      this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
+
+      var velocity = this.velocity - (this.velocity - Truck.MIN_VELOCITY) * loadFactor / 20;
+      return reverse ?  velocity * Truck.REVERSE_VELOCITY_FACTOR :  velocity;
+  }
+
   update(timeDelta) {
     this.move(timeDelta);
     this.checkLogs();
@@ -135,6 +151,7 @@ export default class Truck {
       this.leftWasDown = false;
     }
 
+    // Selecting route if arrow keys were pressed
     if(this.leftWasDown && Key.left.isUp) {
       this.leftWasDown = false;
       this.rightWasDown = false;
@@ -152,7 +169,7 @@ export default class Truck {
     }
 
     // Advance on route segment based on segment length
-    this.pointDelta += (direction * this.velocity * timeDelta) / this.currentSegment.getLength();
+    this.pointDelta += (direction * this.getSpeed( direction != 1 ) * timeDelta) / this.currentSegment.getLength();
 
     // Switch route segment if needed
     if (this.pointDelta <= 0) {
