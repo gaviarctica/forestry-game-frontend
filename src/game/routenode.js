@@ -64,7 +64,7 @@ export default class RouteNode {
       this.hideArrow(arrowSprite);
     }
 
-    for(var i = 0; i < this.segments.length; ++i) {
+    for(i = 0; i < this.segments.length; ++i) {
       if(this.segments[i] !== current_segment) {
         var value = (this.segments[i].getRotation(this) + current_segment.getRotation(this)) / (Math.PI / 2) - 1;
         value = Math.abs(value);
@@ -75,14 +75,12 @@ export default class RouteNode {
       }
     }
 
-    if(index == -1) {
+    if(index === -1) {
       return {'seg':current_segment, 'index':0};
     }
 
     this.segments[index].setSelected();
     this.setArrowPos(arrowSprite, this.segments[index].getRotation(this));
-    console.log("The Last Index: " + index);
-    console.log("Segment amount: " + this.segments.length);
     return {'seg':this.segments[index], 'index':index};
 
   }

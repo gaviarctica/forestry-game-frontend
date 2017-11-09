@@ -169,7 +169,7 @@ export default class Truck {
     }
 
     // Advance on route segment based on segment length
-    this.pointDelta += (direction * this.getSpeed( direction != 1 ) * timeDelta) / this.currentSegment.getLength();
+    this.pointDelta += (direction * this.getSpeed( direction !== 1 ) * timeDelta) / this.currentSegment.getLength();
 
     // Switch route segment if needed
     if (this.pointDelta <= 0) {
