@@ -27,7 +27,7 @@ export default class Truck {
     this.arrowSprite.scale.set(0.2);
 
     stage.addChild(this.arrowSprite);
-    stage.addChild(this.sprite);    
+    stage.addChild(this.sprite);
 
     // some key helpers
     this.leftWasDown = false;
@@ -38,7 +38,7 @@ export default class Truck {
     this.depositsOnLevel = depositsOnLevel;
 
     // 4x5 array matrix for logs in truck
-    this.logsInTruck = []; 
+    this.logsInTruck = [];
     for (var i = 0; i < 4; ++i) {
       this.logsInTruck[i] = [];
       for (var j = 0; j < 5; ++j) {
@@ -53,8 +53,8 @@ export default class Truck {
       0  |  14 16 15 13
       1  |  10 12 11 9
       2  |  6  8  7  5
-      3  |  x  4  3  x 
-      4  |  x  2  1  x      
+      3  |  x  4  3  x
+      4  |  x  2  1  x
     */
     this.logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
 
@@ -89,15 +89,15 @@ export default class Truck {
     this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
 
     switch(loadFactor) {
-      case 0: 
+      case 0:
         this.fuelBurned += 0.001;
         break;
       case 1:
         this.fuelBurned += 0.002;
         break;
-      default: 
+      default:
         this.fuelBurned += 0.001+0.001*loadFactor;
-    }    
+    }
   }
 
   getFuelBurned() {
@@ -109,7 +109,7 @@ export default class Truck {
     this.checkLogs();
     this.checkDeposits();
     this.draw();
-    this.calcDistance(this.currentSegment.getPositionAt(this.pointDelta));    
+    this.calcDistance(this.currentSegment.getPositionAt(this.pointDelta));
   }
 
   move(timeDelta) {
@@ -158,10 +158,17 @@ export default class Truck {
     if (this.pointDelta <= 0) {
       this.pointDelta = 0;
 
+
+
+
       if (this.currentSegment.getPreviousNode() !== null) {
         this.pointDelta = 0.99;
 
-        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1);
+        // console.log("Segment info");
+        // console.log(this.currentSegment.getPreviousNode().getSegments().length);
+        // console.log(this.routeIndex);
+
+        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
         this.routeIndex = selected_segment_data['index'];
 
         var temp_segment = selected_segment_data['seg'];
@@ -199,7 +206,7 @@ export default class Truck {
         }
 
         if(temp_segment_2 === this.currentSegment) {
-          this.endOfSegment = true;        
+          this.endOfSegment = true;
           this.pointDelta = 0.99;
         }
         else {
@@ -215,7 +222,7 @@ export default class Truck {
       var log = this.logsOnLevel[i];
 
       // check if log is close to truck
-      var distanceToLog = distance(this.sprite.position, log.getPosition()); 
+      var distanceToLog = distance(this.sprite.position, log.getPosition());
       if (distanceToLog < 100) {
         log.setCanBePickedUp(true);
       } else {
@@ -232,7 +239,7 @@ export default class Truck {
           // break from the for loop because we altered the logsOnLevel array
           break;
         }
-      } 
+      }
     }
   }
 
@@ -301,7 +308,7 @@ export default class Truck {
       var deposit = this.depositsOnLevel[i];
 
       // check if deposit is close to truck
-      var distanceToDeposit = distance(this.sprite.position, deposit.getPosition()); 
+      var distanceToDeposit = distance(this.sprite.position, deposit.getPosition());
       if (distanceToDeposit < 200) {
         deposit.setCanBeUnloadedTo(true);
       } else {
@@ -314,7 +321,7 @@ export default class Truck {
         if (this.unloadLogTo(deposit)) {
           break;
         }
-      } 
+      }
     }
   }
 
