@@ -114,10 +114,12 @@ export default class Truck {
 
   move(timeDelta) {
     var direction = 0;
+
     if(Key.up.isDown) {
       this.previous_direction = 1;
       direction = 1;
     }
+
     if(Key.down.isDown) {
       this.previous_direction = -1;
       direction = -1;
@@ -140,9 +142,7 @@ export default class Truck {
       var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1) :
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
       this.routeIndex = seg['index'];
-    }
-
-    if(this.rightWasDown && Key.right.isUp) {
+    } else if(this.rightWasDown && Key.right.isUp) {
       this.leftWasDown = false;
       this.rightWasDown = false;
       --this.routeIndex;
@@ -158,15 +158,8 @@ export default class Truck {
     if (this.pointDelta <= 0) {
       this.pointDelta = 0;
 
-
-
-
       if (this.currentSegment.getPreviousNode() !== null) {
         this.pointDelta = 0.99;
-
-        // console.log("Segment info");
-        // console.log(this.currentSegment.getPreviousNode().getSegments().length);
-        // console.log(this.routeIndex);
 
         var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
         this.routeIndex = selected_segment_data['index'];
@@ -336,8 +329,7 @@ export default class Truck {
       this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
 
     if(seg['seg'] !== null) {
-      var epoints = { 'start': seg['seg'].getPositionAt(0),'end' : seg['seg'].getPositionAt(1)};
-      var dest_point = { 'x' : (epoints.start.x + epoints.end.x) / 2,  'y' : (epoints.start.y + epoints.end.y) / 2};
+      this.routeIndex = seg['index'];
     }
   }
 }
