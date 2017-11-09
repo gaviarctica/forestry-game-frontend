@@ -39,8 +39,6 @@ export default class RouteNode {
       return {'seg':this.segments[index], 'index':index};
     }
 
-
-
     for(i = 0; i < this.segments.length; ++i) {
       if(this.segments[index] !== current_segment) {
         this.segments[index].setSelected();
