@@ -22,7 +22,7 @@ export default class Level {
 
   drawRoutes() {
       var routeGraphics = new PIXI.Graphics();
-      routeGraphics.lineStyle(50, 0xa57d4c, 1);
+      routeGraphics.beginFill(0xa57d4c, 1);
 
       // for(var i = 0; i < this.routeSegments.length; ++i) {
       //   var spos = this.routeSegments[i].startNode.getPos();
@@ -51,7 +51,10 @@ export default class Level {
           if(segments[j].isSelected)
             routeGraphics.lineStyle(50, 0xc79f6e, 1);
 
+          routeGraphics.lineStyle(50, 0xa57d4c, 1);
           routeGraphics.lineTo(epos.x, epos.y);
+          routeGraphics.lineStyle(0);
+          routeGraphics.drawCircle(spos.x, spos.y, 50/2);
 
           if(segments[j].isSelected)
             routeGraphics.lineStyle(50, 0xa57d4c, 1);
@@ -77,34 +80,42 @@ export default class Level {
       var segment = null;
       // checking if there is multiple routes from this node
       // if not we just use default settings
-      if(!startNode.getPos().to && i < this.routeNodes.length-1) {
-        endNode = this.routeNodes[i+1];
-        segment = new RouteSegment(startNode, endNode);
-        this.routeNodes[i].addSegment(segment);
-        this.routeSegments.push(segment);
 
-      } else if(Array.isArray(this.routeNodes[i].getPos().to)) {
+      /** REMOVED SUPPORT FOR AUTOMATIC NEXT NODE **/
+      /** It was removed because there were some interesting problems with dublicate segments **/
+      // if(!startNode.getPos().to && i < this.routeNodes.length-1) {
+      //   endNode = this.routeNodes[i+1];
+      //   segment = new RouteSegment(startNode, endNode);
+      //   this.routeNodes[i].addSegment(segment);
+      //   this.routeSegments.push(segment);
+      //
+      // } else
+
+      if(Array.isArray(this.routeNodes[i].getPos().to)) {
         for(var j = 0; j < this.routeNodes[i].getPos().to.length; ++j) {
+          var the_k = -1;
           for (var k = 0; k < this.routeNodes.length; ++k) {
             if(this.routeNodes[k].getPos().route_node === this.routeNodes[i].getPos().to[j]) {
               endNode = this.routeNodes[k];
+              the_k = k;
             }
           }
 
           segment = new RouteSegment(startNode, endNode);
           this.routeNodes[i].addSegment(segment);
+          this.routeNodes[the_k].addSegment(segment);
           this.routeSegments.push(segment);
         }
       }
     }
 
     // calculating segments for nodes
-    for(i = 0; i < this.routeNodes.length; ++i) {
-      for(j = 0; j < this.routeSegments.length; ++j) {
-        if(this.routeNodes[i] === this.routeSegments[j].getPreviousNode() || this.routeNodes[i] === this.routeSegments[j].getNextNode())
-          this.routeNodes[i].addSegment(this.routeSegments[j]);
-      }
-    }
+    // for(i = 0; i < this.routeNodes.length; ++i) {
+    //   for(j = 0; j < this.routeSegments.length; ++j) {
+    //     if(this.routeNodes[i] === this.routeSegments[j].getPreviousNode() || this.routeNodes[i] === this.routeSegments[j].getNextNode())
+    //       this.routeNodes[i].addSegment(this.routeSegments[j]);
+    //   }
+    // }
 
     // var previousSegment = null;
     // for (var i = 0; i < this.map.routes.length; i++) {
@@ -138,7 +149,7 @@ export default class Level {
       var depoData = this.map.logdeposits[i];
       var logDeposit = new LogDeposit({x: depoData.x, y: depoData.y}, depoData.type, this.stage);
       this.logDeposits.push(logDeposit);
-    } 
+    }
   }
 
   getRouteSegments() {

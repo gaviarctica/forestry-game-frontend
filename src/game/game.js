@@ -5,25 +5,45 @@ import Stats from './stats';
 
 const MAP = {
   "id": 1,
-  "startpoint" : {"x": 200, "y": 500},
+  "startpoint" : {"x": 0, "y": 0},
   "routes": [
-    {"x": 200, "y": 500, "route_node": 1},
-    {"x": 400, "y": 700, "route_node": 2, "to": [3,4]},
-    {"x": 800, "y": 300, "route_node": 3},
-    {"x": 1000, "y": 500, "route_node": 4},
+    {"x": 0, "y": 0, "route_node": 1, "to": [2]},
+    {"x": 0, "y": 500, "route_node": 2, "to": [3]},
+    {"x": 400, "y": 500, "route_node": 3, "to": [4]},
+    {"x": 800, "y": 300, "route_node": 4, "to": []},
+    {"x": 400, "y": 800, "route_node": 5, "to": [3]},
+    {"x": -300, "y": 1000, "route_node": 6, "to": [5]},
+    {"x": -700, "y": 400, "route_node": 7, "to": [6,2]},
+    {"x": -700, "y": 0, "route_node": 8, "to": [7,1]}
   ],
   "logs": [
-     {"x": 200, "y": 500, "type": 0},
-     {"x": 300, "y": 500, "type": 1},
-     {"x": 400, "y": 500, "type": 2}
+     {"x": 100, "y": 450, "type": 0},
+     {"x": 200, "y": 450, "type": 1},
+     {"x": 300, "y": 450, "type": 2},
+     {"x": 400, "y": 450, "type": 3},
+     {"x": -100, "y": 440, "type": 0},
+     {"x": -200, "y": 420, "type": 1},
+     {"x": -300, "y": 400, "type": 2},
+     {"x": -400, "y": 380, "type": 3},
+     {"x": -200, "y": -50, "type": 4},
+     {"x": -100, "y": -50, "type": 5},
+     {"x": -200, "y": -50, "type": 4},
+     {"x": -300, "y": -50, "type": 5},
+     {"x": -400, "y": -50, "type": 4},
+     {"x": -500, "y": -50, "type": 5},
+     {"x": -600, "y": -50, "type": 4},
+     {"x": -700, "y": -50, "type": 5},
+     {"x": 460, "y": 550, "type": 1},
+     {"x": 460, "y": 570, "type": 3},
+     {"x": 460, "y": 590, "type": 5}
   ],
   "logdeposits" : [
-     {"x": 1100, "y": 500}
+     {"x": 700, "y": 240}
   ]
 }
 
 export default class GameCanvas {
-  constructor(updateTime, updateDistance, updateScore) {
+  constructor(updateUI) {
     var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x7da66e});
     this.game = game;
 
@@ -32,10 +52,16 @@ export default class GameCanvas {
 
     document.getElementById('canvas-game').appendChild(game.view);
 
-    this.map = new Level(MAP, game.stage);
-    this.truck = new Truck(MAP.startpoint.x, MAP.startpoint.y, game.stage, this.map.getStartingSegment(), this.map.getLogs(), this.map.getLogDeposits());
+    this.stats = new Stats(updateUI);
 
-    this.stats = new Stats(updateTime, updateDistance, updateScore);
+    this.map = new Level(MAP, game.stage);
+    this.truck = new Truck(MAP.startpoint.x,
+                           MAP.startpoint.y,
+                           game.stage,
+                           this.map.getStartingSegment(),
+                           this.map.getLogs(),
+                           this.map.getLogDeposits(),
+                           this.stats);
 
     this.setupCameraControl();
   }
@@ -95,8 +121,16 @@ export default class GameCanvas {
 
   update(delta)
   {
-    this.truck.update(delta);
+    var totalDistance = this.truck.getDistanceMoved()
+    var totalfuelBurned = this.truck.getFuelBurned()
+    var score = totalDistance * totalfuelBurned;
 
+    this.truck.update(delta);
+    this.stats.updateUI({
+      distance: totalDistance,
+      fuel: totalfuelBurned,
+      score: score.toFixed(0)
+    });
   }
 
   destroy()

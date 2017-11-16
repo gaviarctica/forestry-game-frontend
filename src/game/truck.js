@@ -5,9 +5,16 @@ import {lerp, distance} from './helpers';
 
 
 export default class Truck {
-  constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel) {
-    this.sprite = PIXI.Sprite.fromImage('/truck.png');
+
+
+  constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel, stats) {
+    // can be lower with reverse
+    Truck.MIN_VELOCITY = 1.0;
+    Truck.REVERSE_VELOCITY_FACTOR = 0.5;
+
+    this.sprite = PIXI.Sprite.fromImage('/static/truck.svg');
     this.sprite.anchor.set(0.5);
+    this.sprite.scale.set(0.1);
 
     this.sprite.x = x;
     this.sprite.y = y;
@@ -21,14 +28,12 @@ export default class Truck {
 
     this.currentSegment = startSegment;
 
-    this.arrow_graphics = new PIXI.Graphics();
-    this.arrow_graphics.lineStyle(50, 0x0B5394, 1);
-    this.arrow_graphics.moveTo(0, 0);
-    this.arrow_graphics.lineTo(500, 400);
-    this.arrow_graphics.endFill();
+    this.arrowSprite = PIXI.Sprite.fromImage('/static/arrow.svg');
+    this.arrowSprite.anchor.set(0, 0.5);
+    this.arrowSprite.scale.set(0.2);
 
+    stage.addChild(this.arrowSprite);
     stage.addChild(this.sprite);
-    stage.addChild(this.arrow_graphics);
 
     // some key helpers
     this.leftWasDown = false;
@@ -39,7 +44,7 @@ export default class Truck {
     this.depositsOnLevel = depositsOnLevel;
 
     // 4x5 array matrix for logs in truck
-    this.logsInTruck = []; 
+    this.logsInTruck = [];
     for (var i = 0; i < 4; ++i) {
       this.logsInTruck[i] = [];
       for (var j = 0; j < 5; ++j) {
@@ -54,10 +59,65 @@ export default class Truck {
       0  |  14 16 15 13
       1  |  10 12 11 9
       2  |  6  8  7  5
-      3  |  x  4  3  x 
-      4  |  x  2  1  x      
+      3  |  x  4  3  x
+      4  |  x  2  1  x
     */
     this.logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
+
+    this.distanceMoved = 0;
+    this.fuelBurned = 0;
+    this.previousPoint = null;
+
+    this.stats = stats;
+  }
+
+  // Calculates the distance truck has moved during an instance of gameplay
+  calcDistance(point) {
+    if(this.previousPoint === null) {
+      this.previousPoint = this.currentSegment.getPositionAt(this.pointDelta);
+    }
+
+    if((this.previousPoint.x !== point.x) || (this.previousPoint.y !== point.y)) {
+      this.distanceMoved += 1;
+      this.calcFuelBurned();
+      this.previousPoint = point;
+    }
+  }
+
+  getDistanceMoved() {
+    return this.distanceMoved;
+  }
+
+  // Calculates the fuel consumed by truck in one instance of gameplay
+  calcFuelBurned() {
+    // If there are logs in the truck increase fuel consumption by a load factor
+    var loadFactor = 0;
+    this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
+
+    switch(loadFactor) {
+      case 0:
+        this.fuelBurned += 0.001;
+        break;
+      case 1:
+        this.fuelBurned += 0.002;
+        break;
+      default:
+        this.fuelBurned += 0.001+0.001*loadFactor;
+    }
+  }
+
+  getFuelBurned() {
+    return this.fuelBurned.toFixed(2);
+  }
+
+  getSpeed(reverse = false) {
+
+      // If there are logs in the truck increase fuel consumption by a load factor
+      var loadFactor = 0.0;
+      this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
+
+      var velocity = this.velocity - (this.velocity - Truck.MIN_VELOCITY) * loadFactor / 20;
+      return reverse ?  velocity * Truck.REVERSE_VELOCITY_FACTOR :  velocity;
   }
 
   update(timeDelta) {
@@ -65,14 +125,17 @@ export default class Truck {
     this.checkLogs();
     this.checkDeposits();
     this.draw();
+    this.calcDistance(this.currentSegment.getPositionAt(this.pointDelta));
   }
 
   move(timeDelta) {
     var direction = 0;
+
     if(Key.up.isDown) {
       this.previous_direction = 1;
       direction = 1;
     }
+
     if(Key.down.isDown) {
       this.previous_direction = -1;
       direction = -1;
@@ -88,26 +151,25 @@ export default class Truck {
       this.leftWasDown = false;
     }
 
+    // Selecting route if arrow keys were pressed
     if(this.leftWasDown && Key.left.isUp) {
       this.leftWasDown = false;
       this.rightWasDown = false;
       ++this.routeIndex;
-      var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, 1) :
-        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, 1);
+      var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1) :
+        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
       this.routeIndex = seg['index'];
-    }
-
-    if(this.rightWasDown && Key.right.isUp) {
+    } else if(this.rightWasDown && Key.right.isUp) {
       this.leftWasDown = false;
       this.rightWasDown = false;
       --this.routeIndex;
-      seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, -1) :
-        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, -1);
+      seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1) :
+        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1);
       this.routeIndex = seg['index'];
     }
 
     // Advance on route segment based on segment length
-    this.pointDelta += (direction * this.velocity * timeDelta) / this.currentSegment.getLength();
+    this.pointDelta += (direction * this.getSpeed( direction !== 1 ) * timeDelta) / this.currentSegment.getLength();
 
     // Switch route segment if needed
     if (this.pointDelta <= 0) {
@@ -116,10 +178,9 @@ export default class Truck {
       if (this.currentSegment.getPreviousNode() !== null) {
         this.pointDelta = 0.99;
 
-        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, -1);
+        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
         this.routeIndex = selected_segment_data['index'];
 
-        // console.log(this.currentSegment);
         var temp_segment = selected_segment_data['seg'];
 
         if(this.currentSegment.startNode !== temp_segment.endNode && this.currentSegment.startNode.getSegments().length > 1) {
@@ -132,8 +193,12 @@ export default class Truck {
           this.pointDelta = 0.01;
           this.currentSegment = temp_segment;
         } else {
+          this.endOfSegment = false;
           this.currentSegment = temp_segment;
         }
+
+        // experimental index suggestion
+        this.routeIndex = this.currentSegment.getPreviousNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
 
       }
 
@@ -143,8 +208,9 @@ export default class Truck {
       if (this.currentSegment.getNextNode() !== null) {
         this.pointDelta = 0.01;
 
-        selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, 1);
+        selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
         this.routeIndex = selected_segment_data['index'];
+
         var temp_segment_2 = selected_segment_data['seg'];
 
         if(this.currentSegment.endNode !== temp_segment_2.startNode && this.currentSegment.endNode.getSegments().length > 1) {
@@ -153,11 +219,17 @@ export default class Truck {
           temp_segment_2.endNode = temp_node_2;
         }
 
-        if(temp_segment_2 === this.currentSegment)
+        if(temp_segment_2 === this.currentSegment) {
+          this.endOfSegment = true;
           this.pointDelta = 0.99;
+        }
         else {
+          this.endOfSegment = false;
           this.currentSegment = temp_segment_2;
         }
+
+        // experimental index suggestion
+        this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }
     }
   }
@@ -167,7 +239,7 @@ export default class Truck {
       var log = this.logsOnLevel[i];
 
       // check if log is close to truck
-      var distanceToLog = distance(this.sprite.position, log.getPosition()); 
+      var distanceToLog = distance(this.sprite.position, log.getPosition());
       if (distanceToLog < 100) {
         log.setCanBePickedUp(true);
       } else {
@@ -184,7 +256,7 @@ export default class Truck {
           // break from the for loop because we altered the logsOnLevel array
           break;
         }
-      } 
+      }
     }
   }
 
@@ -223,6 +295,7 @@ export default class Truck {
       // check if null.. aka no log at that pos
       if (!logAtPos) {
         this.setLogAtPriorityIndex(i, log);
+        this.stats.updateLogs(this.logsInTruck);
         return true;
       }
     }
@@ -238,6 +311,7 @@ export default class Truck {
       if (log != null) {
         if (deposit.addLog(log)) {
           this.setLogAtPriorityIndex(i, null);
+          this.stats.updateLogs(this.logsInTruck);
           return true;
         } else {
           return false;
@@ -251,7 +325,7 @@ export default class Truck {
       var deposit = this.depositsOnLevel[i];
 
       // check if deposit is close to truck
-      var distanceToDeposit = distance(this.sprite.position, deposit.getPosition()); 
+      var distanceToDeposit = distance(this.sprite.position, deposit.getPosition());
       if (distanceToDeposit < 200) {
         deposit.setCanBeUnloadedTo(true);
       } else {
@@ -264,7 +338,7 @@ export default class Truck {
         if (this.unloadLogTo(deposit)) {
           break;
         }
-      } 
+      }
     }
   }
 
@@ -275,14 +349,11 @@ export default class Truck {
 
     this.sprite.rotation = this.currentSegment.getRotation();
 
-    var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex) :
-      this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex);
-    var epoints = { 'start': seg['seg'].getPositionAt(0),'end' : seg['seg'].getPositionAt(1)}
-    var dest_point = { 'x' : (epoints.start.x + epoints.end.x) / 2,  'y' : (epoints.start.y + epoints.end.y) / 2}
-    this.arrow_graphics.clear();
-    this.arrow_graphics.lineStyle(5, 0x0B5394, 1);
-    this.arrow_graphics.moveTo(dest_point.x, dest_point.y);
-    this.arrow_graphics.lineTo(point.x, point.y);
-    this.arrow_graphics.endFill();
+    var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite) :
+      this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
+
+    if(seg['seg'] !== null) {
+      this.routeIndex = seg['index'];
+    }
   }
 }

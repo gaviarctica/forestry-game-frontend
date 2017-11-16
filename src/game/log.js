@@ -2,8 +2,14 @@ import * as PIXI from 'pixi.js';
 
 var Width = 50;
 var Height = 5;
-var WineRedColor = 0x722F37;
-var LogColorByType = [WineRedColor, WineRedColor, WineRedColor, WineRedColor];
+var LogColorByType = [
+  0xD85040,
+  0x5286EC,
+  0x58A55C,
+  0xBC8E56,
+  0xAD8BFF,
+  0xFF72BE
+];
 
 export default class Log {
 	constructor(position, type, stage) {

@@ -1,3 +1,9 @@
+:root {
+  /* Variables */
+  --log-load-border-width: 7px;
+  --game-stats-width: 180px;
+}
+
 #canvas-game {
   position: fixed;
   top: 0;
@@ -30,7 +36,7 @@ html {
 #game-stats {
 	background-color: rgb(136,136,136);
   opacity: 0.5;
-  width: 180px;
+  width: var(--game-stats-width);
   margin-bottom: 20px;
   margin-top: 20px;
 }
@@ -39,7 +45,7 @@ html {
   padding: 10px;
 }
 
-#user, #time, #distance, #unload-count {
+#user, #time, #distance, #unload-count, #fuel {
   padding-bottom: 10px;
   color: white;
   font-size: 24px;
@@ -49,7 +55,7 @@ html {
 #logs-remaining {
 	background-color: rgb(136,136,136);
 	color: black;
-  width: 180px;
+  width: var(--game-stats-width);
   margin-bottom: 20px;
   opacity: 0.5;
 }
@@ -60,7 +66,7 @@ html {
   justify-content: space-between;
 }
 
-#logs-remaining-count {
+.logs-remaining-count {
 	border-radius: 50%;
   width: 18px;
   height: 18px;
@@ -69,33 +75,153 @@ html {
   border: 1px solid #666;
   color: #666;
   text-align: center;
-  font: 16px Arial, sans-serif;
+  font: 16px;
 	display: inline-block;
 }
 
 #log-load {
-  border: 8px solid #888;
-  border-top: none !important; 
-	background-color: transparent;
-	color: black;
-  width: 180px;
+  width: var(--game-stats-width);
+  position: relative;
 }
 
-#log-load-row {
-  padding: 5px;
+.log-load-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
-#log-load-fill {
+.log-load-fill {
   border-radius: 50%;
   width: 18px;
   height: 18px;
   padding: 9px;
   background: transparent;
-  border: 1px solid #666;
-  color: #666;
+  border: 1px dashed #666;
+  color: rgba(245, 245, 245, 0.8);
   text-align: center;
-  font: 16px Arial, sans-serif;
+  font: 16px;
   display: inline-block;
+  margin: 1px;
+}
+
+.log-type-0 {
+  border: 1px solid #D85040;
+  background-color: #D85040;
+}
+
+.log-type-1 {
+  border: 1px solid #5286EC;
+  background-color: #5286EC;
+}
+
+.log-type-2 {
+  border: 1px solid #58A55C;
+  background-color: #58A55C;
+}
+
+.log-type-3 {
+  border: 1px solid #BC8E56;
+  background-color: #BC8E56;
+}
+
+.log-type-4 {
+  border: 1px solid #AD8BFF;
+  background-color: #AD8BFF;
+}
+
+.log-type-5 {
+  border: 1px solid #FF72BE;
+  background-color: #FF72BE;
+}
+
+.log-load-border {
+  background-color: #151515;
+  position: absolute;
+}
+
+#log-load-border-1 {
+  left: 0;
+  top: 0;
+  width: var(--log-load-border-width);
+  height: 125px;
+  border-top-left-radius: calc(var(--log-load-border-width) / 2);
+  border-top-right-radius: calc(var(--log-load-border-width) / 2);
+  border-bottom-left-radius: calc(var(--log-load-border-width) / 2);
+}
+
+#log-load-border-2 {
+  right: 0;
+  top: 0;
+  width: var(--log-load-border-width);
+  height: 130px;
+  border-top-left-radius: calc(var(--log-load-border-width) / 2);
+  border-top-right-radius: calc(var(--log-load-border-width) / 2);
+  border-bottom-right-radius: calc(var(--log-load-border-width) / 2);
+}
+
+#log-load-border-3 {
+  left: 0;
+  top: calc(130px - var(--log-load-border-width));
+  width: 45px;
+  height: var(--log-load-border-width);
+  border-bottom-left-radius: calc(var(--log-load-border-width) / 2);
+  border-top-right-radius: calc(var(--log-load-border-width) / 2);
+}
+
+#log-load-border-4 {
+  right: 0;
+  top: calc(130px - var(--log-load-border-width));
+  width: 45px;
+  height: var(--log-load-border-width);
+  border-bottom-right-radius: calc(var(--log-load-border-width) / 2);
+  border-top-left-radius: calc(var(--log-load-border-width) / 2);
+}
+
+#log-load-border-5 {
+  left: calc(45px - var(--log-load-border-width));
+  top: calc(130px - var(--log-load-border-width));
+  width: var(--log-load-border-width);
+  height: 85px;
+  border-top-right-radius: calc(var(--log-load-border-width) / 2);
+  border-bottom-left-radius: calc(var(--log-load-border-width) / 2);
+}
+
+#log-load-border-6 {
+  right: calc(45px - var(--log-load-border-width));
+  top: calc(130px - var(--log-load-border-width));
+  width: var(--log-load-border-width);
+  height: 85px;
+  border-top-left-radius: calc(var(--log-load-border-width) / 2);
+  border-bottom-right-radius: calc(var(--log-load-border-width) / 2);
+}
+
+#log-load-border-7 {
+  left: calc(45px - var(--log-load-border-width));
+  top: calc(130px + 85px - 2 * var(--log-load-border-width));
+  width: 104px;
+  height: var(--log-load-border-width);
+  border-bottom-left-radius: calc(var(--log-load-border-width) / 2);
+  border-bottom-right-radius: calc(var(--log-load-border-width) / 2);
+}
+
+.log-load-border-notch {
+  background-color: var(--jd-yellow);
+  z-index: 11;
+}
+
+#log-load-border-notch-1 {
+  left: 0;
+  top: 0;
+  width: var(--log-load-border-width);
+  height: 20px;
+  border-top-left-radius: calc(var(--log-load-border-width) / 2);
+  border-top-right-radius: calc(var(--log-load-border-width) / 2);
+}
+
+#log-load-border-notch-2 {
+  right: 0;
+  top: 0;
+  width: var(--log-load-border-width);
+  height: 20px;
+  border-top-left-radius: calc(var(--log-load-border-width) / 2);
+  border-top-right-radius: calc(var(--log-load-border-width) / 2);
 }

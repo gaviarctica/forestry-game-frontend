@@ -1,7 +1,26 @@
 export default class Stats {
-  constructor(updateTime, updateDistance, updateScore) {
-    this.updateTime = updateTime;
-    this.updateDistance = updateDistance;
-    this.updateScore = updateScore;
+  constructor(updateUI) {
+    this.updateUI = updateUI;
+  }
+
+  updateLogs(logUpdate) {
+    var formattedLogUpdate = {
+      logs: [
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+        ['', '', '', '', ''],
+      ]
+    };
+
+    logUpdate.forEach((column, i) => {
+      column.forEach((slot, j) => {
+        if (slot !== null) {
+          formattedLogUpdate.logs[i][j] = slot.type;
+        }
+      });
+    });
+
+    this.updateUI(formattedLogUpdate);
   }
 }
