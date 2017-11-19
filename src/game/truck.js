@@ -64,6 +64,11 @@ export default class Truck {
     */
     this.logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
 
+    // currently selected log (either automaticly, by mouse or q/e keys)
+    this.selectedLog = null;
+    this.logSelectGraphics = new PIXI.Graphics();
+    stage.addChild(this.logSelectGraphics);
+
     this.distanceMoved = 0;
     this.fuelBurned = 0;
     this.previousPoint = null;
@@ -149,6 +154,15 @@ export default class Truck {
     if(Key.right.isDown) {
       this.rightWasDown = true
       this.leftWasDown = false;
+    }
+
+    if(Key.space.isDown) {
+      this.spaceWasDown = true
+    }
+
+    if(this.spaceWasDown && Key.space.isUp) {
+      this.doCollectLog = true;
+      this.spaceWasDown = false;
     }
 
     // Selecting route if arrow keys were pressed
@@ -242,22 +256,49 @@ export default class Truck {
       var distanceToLog = distance(this.sprite.position, log.getPosition());
       if (distanceToLog < 100) {
         log.setCanBePickedUp(true);
+
+        // no selected log or log is explicitly highlighted
+        if (this.selectedLog == null || log.isHighlighted()) {
+          this.selectLog(log);
+        }
+
+        // log close enough and it has been clicked, pick it to truck
+        if (log.isMarkedForPickUp() && log.isHighlighted()) {
+          console.log("isMarkedForPickUp");
+          this.doCollectLog = true;
+        }
+
       } else {
         log.setCanBePickedUp(false);
-      }
-
-      // log close enough and it has been clicked, pick it to truck
-      if (log.canBePickedUp() && log.isMarkedForPickUp()) {
-
-        if (this.pickLog(log)) {
-          // remove it from level array and from pixi stage container (parent of the log)
-          this.logsOnLevel.splice(i, 1);
-
-          // break from the for loop because we altered the logsOnLevel array
-          break;
+        if (this.selectedLog === log) {
+          this.deselectLog();
+          console.log("this.selectedLog === log" + log);
         }
       }
     }
+
+    if (this.doCollectLog) {
+      if (this.pickLog(this.selectedLog) === true) {
+          console.log("pickLog" + this.selectedLog);
+          // remove it from level array and from pixi stage container (parent of the log)
+          var index = this.logsOnLevel.indexOf(this.selectedLog);
+          this.logsOnLevel.splice(index, 1);
+          this.deselectLog();
+      }
+    }
+    this.doCollectLog = false;
+  }
+
+  selectLog(log) {
+    console.log("select log");
+    if (this.selectedLog !== log) {
+      this.selectedLog = log;
+    }
+  }
+
+  deselectLog() {
+    console.log("deselect log");
+    this.selectedLog = null;
   }
 
   getLogAtPriorityIndex(i) {
@@ -354,6 +395,15 @@ export default class Truck {
 
     if(seg['seg'] !== null) {
       this.routeIndex = seg['index'];
+    }
+
+    this.logSelectGraphics.clear();
+    if (this.selectedLog != null) {
+      this.logSelectGraphics.beginFill();
+      this.logSelectGraphics.lineStyle(3, 0x000000);
+      this.logSelectGraphics.moveTo(point.x, point.y);
+      this.logSelectGraphics.lineTo(this.selectedLog.graphics.position.x, this.selectedLog.graphics.position.y);
+      this.logSelectGraphics.endFill();
     }
   }
 }
