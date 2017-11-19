@@ -325,8 +325,9 @@ export default class Truck {
       // setup graphics for truck visuals
       log.removeFromParent();
       this.sprite.addChild(log.graphics);
-      log.graphics.position = new PIXI.Point(0, 22.5);
+      log.graphics.position = new PIXI.Point((logContainerX * 60) - 90, 250);
       log.graphics.rotation = Math.PI/2;
+      log.graphics.scale.set(1.0 / this.sprite.scale.x);
     }
   }
 
