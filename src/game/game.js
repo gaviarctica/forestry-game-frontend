@@ -121,6 +121,12 @@ export default class GameCanvas {
 
   update(delta)
   {
+    if (this.isInEndGameState()) {
+      this.stats.updateUI({
+        gameEnd: true
+      });
+    }
+
     var totalDistance = this.truck.getDistanceMoved()
     var totalfuelBurned = this.truck.getFuelBurned()
     var score = totalDistance * totalfuelBurned;
@@ -131,6 +137,21 @@ export default class GameCanvas {
       fuel: totalfuelBurned,
       score: score.toFixed(0)
     });
+  }
+
+  isInEndGameState() {
+    // no logs in the map anymore
+    if (this.map.getLogs().length !== 0) {
+      return false;
+    }
+
+    // no logs in truck
+    if (this.truck.logCount() > 0) {
+      return false;
+    }
+
+    // logs are now in deposits, game is over
+    return true;
   }
 
   destroy()

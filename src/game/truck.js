@@ -76,6 +76,13 @@ export default class Truck {
     this.stats = stats;
   }
 
+  // TODO: maybe keep up with the log count in pickLog, depositLog functions to avoid unnecessary for looping
+  logCount() {
+    var logCount = 0;
+    this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) logCount += 1}));
+    return logCount;
+  }
+
   // Calculates the distance truck has moved during an instance of gameplay
   calcDistance(point) {
     if(this.previousPoint === null) {
@@ -96,8 +103,7 @@ export default class Truck {
   // Calculates the fuel consumed by truck in one instance of gameplay
   calcFuelBurned() {
     // If there are logs in the truck increase fuel consumption by a load factor
-    var loadFactor = 0;
-    this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
+    var loadFactor = this.logCount();
 
     switch(loadFactor) {
       case 0:
@@ -118,8 +124,7 @@ export default class Truck {
   getSpeed(reverse = false) {
 
       // If there are logs in the truck increase fuel consumption by a load factor
-      var loadFactor = 0.0;
-      this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
+      var loadFactor = this.logCount();
 
       var velocity = this.velocity - (this.velocity - Truck.MIN_VELOCITY) * loadFactor / 20;
       return reverse ?  velocity * Truck.REVERSE_VELOCITY_FACTOR :  velocity;
