@@ -18,6 +18,7 @@ export default class Log {
 
     this._isMarkedForPickUp = false;
 		this._canBePickedUp = false;
+    this._isHighlighted = false;
 
     var graphics = new PIXI.Graphics();
     graphics.beginFill(LogColorByType[type], 1);
@@ -41,6 +42,14 @@ export default class Log {
     };
     graphics.pointerup = function() {
       this.owner.setMarkedForPickUp(false);
+    }
+
+    graphics.pointerover = function() {
+      this.owner.setHighlighted(true);
+    }
+
+    graphics.pointerout = function() {
+      this.owner.setHighlighted(false);
     }
 
     this.stage.addChild(graphics);
@@ -72,6 +81,14 @@ export default class Log {
 
   setMarkedForPickUp(value) {
     this._isMarkedForPickUp = value;
+  }
+
+  isHighlighted() {
+    return this._isHighlighted;
+  }
+
+  setHighlighted(value) {
+    this._isHighlighted = value;
   }
 
   getPosition() {
