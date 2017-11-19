@@ -16,7 +16,8 @@ export default class Game extends Component {
         ['', '', '', '', ''],
         ['', '', '', '', ''],
         ['', '', '', '', ''],
-      ]
+      ],
+      gameEnd: false
     }
   }
 
@@ -49,6 +50,12 @@ export default class Game extends Component {
     return (
       <div className="Game">
         <div id="canvas-game"></div>
+        {this.state.gameEnd == true &&
+        <div id="game-end">
+          Game is over!
+          Maybe show some report and buttons here
+        </div>
+        }
         <div id="game-info">
           <Button 
                 id="button-quit"
