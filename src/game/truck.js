@@ -67,6 +67,7 @@ export default class Truck {
 
     // currently selected item (either automaticly, by mouse or q/e keys)
     this.selectedItem = null;
+    this.selectableItems = [];
     this.selectGraphic = new PIXI.Graphics();
     stage.addChild(this.selectGraphic);
 
@@ -166,7 +167,25 @@ export default class Truck {
       this.spaceWasDown = true
     }
 
-    if(this.spaceWasDown && Key.space.isUp) {
+    if(Key.q.isDown) {
+      this.qWasDown = true;
+    }
+
+    if (Key.e.isDown) {
+      this.eWasDown = true;
+    }
+
+    if (this.qWasDown && Key.q.isUp) {
+      this.selectNearbyItemAtDir(1);
+      this.qWasDown = false;
+    }
+
+    if (this.eWasDown && Key.e.isUp) {
+      this.selectNearbyItemAtDir(-1);
+      this.eWasDown = false;
+    }
+
+    if(this.spaceWasDown && !Key.space.isUp) {
       this.doLogAction = true;
       this.spaceWasDown = false;
     } else {
@@ -265,6 +284,10 @@ export default class Truck {
       if (distanceToLog < 100) {
         log.setCanBePickedUp(true);
 
+        if (this.selectableItems.indexOf(log) === -1) {
+          this.selectableItems.push(log);
+        }
+
         // no selected item or log is explicitly highlighted
         if (this.selectedItem == null || log.isHighlighted()) {
           this.selectItem(log);
@@ -279,6 +302,11 @@ export default class Truck {
         log.setCanBePickedUp(false);
         if (this.selectedItem === log) {
           this.deselectItem();
+        }
+
+        var index = this.selectableItems.indexOf(log);
+        if (index !== -1) {
+          this.selectableItems.splice(index, 1);
         }
       }
     }
@@ -302,6 +330,19 @@ export default class Truck {
 
   deselectItem() {
     this.selectedItem = null;
+  }
+
+  selectNearbyItemAtDir(dir) {
+    if (this.selectedItem != null) {
+      var index = this.selectableItems.indexOf(this.selectedItem);
+      index += dir;
+      if (index >= this.selectableItems.length) {
+        index = 0;
+      } else if (index < 0) {
+        index = this.selectableItems.length - 1;
+      }
+      this.selectItem(this.selectableItems[index]);
+    }
   }
 
   getLogAtPriorityIndex(i) {
@@ -374,6 +415,10 @@ export default class Truck {
       if (distanceToDeposit < 200) {
         deposit.setCanBeUnloadedTo(true);
 
+        if (this.selectableItems.indexOf(deposit) === -1) {
+          this.selectableItems.push(deposit);
+        }
+
         // no selected item or deposit is explicitly highlighted
         if (this.selectedItem == null || deposit.isHighlighted()) {
           this.selectItem(deposit);
@@ -388,6 +433,11 @@ export default class Truck {
         deposit.setCanBeUnloadedTo(false);
         if (this.selectedItem === deposit) {
           this.deselectItem();
+        }
+
+        var index = this.selectableItems.indexOf(deposit);
+        if (index !== -1) {
+          this.selectableItems.splice(index, 1);
         }
       }
     }

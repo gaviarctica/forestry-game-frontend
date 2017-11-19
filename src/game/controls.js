@@ -36,4 +36,6 @@ export const up = keyboard(38)
 export const right = keyboard(39)
 export const down = keyboard(40)
 export const space = keyboard(32)
+export const q = keyboard(81)
+export const e = keyboard(69)
 
