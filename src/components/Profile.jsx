@@ -17,13 +17,13 @@ const Rows = (props) => {
 	}
 
 	for (let i = 0; i < props.data.length; i++) {
-		rows.push(<tr key={i}>
+		rows.push(<tr key={props.data[i].id}>
 				    <td>{props.data[i].m_score}</td>
 				    <td>{props.data[i].level}</td>
 				    <td>
 				    	<Button
 				    		text="Report"
-				    		id={i}
+				    		id={props.data[i].id}
 				    		style={tableButtonStyle}
 				    		handleClick={props.handleButtonClick}/>
 				    </td>
@@ -70,17 +70,24 @@ export default class Profile extends Component {
 	}
 
 	handleButtonClick(e) {
+		var id = e.target.getAttribute('id');
+		var content;
+		for (let i = 0; i < this.state.scores.length; i++) {
+			if (Number(this.state.scores[i].id) === Number(id)) {
+				content = this.state.scores[i];
+				break;
+			}
+		}
 	    this.setState({
-			report: true
+			report: true,
+			content: content
 	    });
 	}
-
 
 	render() {
 		var leftContent;
 		var rightContent;
 		if (this.state.scores) {
-			console.log(this.state.scores)
 			leftContent = (<Rows
 						  	data={this.state.scores}
 						  	handleButtonClick={this.handleButtonClick.bind(this)}/>);
@@ -89,22 +96,36 @@ export default class Profile extends Component {
 		}
 
 		if (this.state.report) {
+
+			//Date when game finished
+			var date = new Date(this.state.content.timestamp);
+
+			//Working time
+			var newdate = new Date(null);
+			newdate.setSeconds(this.state.content.duration);
+			var workingtime = newdate.toISOString().substr(11,8);
+
 			rightContent = (
 				<div id="right-content">
 					<h1>Report</h1>
 					<div id="report">
 						<div id="report-general">
-							<p>19.11.2017, 16:00</p>
-							<p>Map: Learning the ropes</p>
+							<p>{date.getDate()}.{date.getMonth()}.{date.getFullYear()}, {date.getHours()}:{date.getMinutes()<10?'0':''}{date.getMinutes()}</p>
+							<p>Map: {this.state.content.level}</p>
 						</div>
 						<div id="report-stats">
 							<h2>Stats</h2>
-							<p>Working time (hh:mm:ss):<span>00:15:26</span></p>
-							<p>Logs collected:<span>12</span></p>
-							<p>Distance travelled:<span>526m</span></p>
-							<p>Fuel consumed:<span>8.26l</span></p>
+							<p>Working time (hh:mm:ss):<span>{workingtime}</span></p>
+							<p>Distance travelled:<span>{this.state.content.distance}m</span></p>
+							<p>Fuel consumed:<span>{this.state.content.gas_consumption}l</span></p>
+							<h3>Logs collected:</h3>
+							<ul>
+								{this.state.content.logs.map(function(logs, index) {
+									return <li key={index}>{logs.name}: <span>{logs.amount}</span></li>
+								})}
+							</ul>
 							<hr/>
-							<p><b>Final score:<span>23532</span></b></p>
+							<p><b>Final score:<span>{this.state.content.m_score}</span></b></p>
 						</div>
 					</div>
 				</div>

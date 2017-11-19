@@ -203,7 +203,7 @@ export const API = {
 
   getMyLatestScores: function(callback) {
     var err = undefined;
-    var url = '/api/v1/scores';
+    var url = '/api/v1/report';
     var init = {
       method: 'GET',
       credentials: 'same-origin',

@@ -11,6 +11,10 @@
 	vertical-align: middle;
 }
 
+ul {
+	list-style-type: none;
+}
+
 #right-content {
 	display:inline-block;
 	background-color: var(--jd-gray);
