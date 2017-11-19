@@ -1,8 +1,39 @@
 .Profile {
-	background-color: var(--jd-gray);
 	margin: auto;
+}
+
+#left-content {
+	background-color: var(--jd-gray);
 	color: rgba(10, 10, 10, 0.9);
 	box-shadow: var(--menu-shadow);
+	display:inline-block;
+	margin: 20px;
+	vertical-align: middle;
+}
+
+#right-content {
+	display:inline-block;
+	background-color: var(--jd-gray);
+	width: 400px;
+	height: 500px;
+	margin: 20px;
+	vertical-align: middle;
+}
+
+#right-content > h1 {
+	text-align: center;
+}
+
+#report {
+	margin: 20px;
+}
+
+#report span {
+	float: right;
+}
+
+#report-general, #report-stats {
+	margin: 10px;
 }
 
 #profile-header, #user-info, #profile-content {
@@ -36,7 +67,7 @@
 #user-info-username-icon, #user-info-email-icon {
 	vertical-align: middle;
 	height: var(--navbar-height);
-  line-height: var(--navbar-height);
+  	line-height: var(--navbar-height);
 	margin: auto;
 }
 

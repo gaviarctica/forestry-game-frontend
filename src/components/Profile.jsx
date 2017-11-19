@@ -17,13 +17,15 @@ const Rows = (props) => {
 	}
 
 	for (let i = 0; i < props.data.length; i++) {
-		rows.push(<tr>
+		rows.push(<tr key={i}>
 				    <td>{props.data[i].m_score}</td>
 				    <td>{props.data[i].level}</td>
 				    <td>
 				    	<Button
 				    		text="Report"
-				    		style={tableButtonStyle}/>
+				    		id={i}
+				    		style={tableButtonStyle}
+				    		handleClick={props.handleButtonClick}/>
 				    </td>
 				  </tr>);
 	}
@@ -46,7 +48,8 @@ export default class Profile extends Component {
 	constructor(props) {
 	    super(props);
 	    this.state = {
-	    	scores: undefined
+	    	scores: undefined,
+			report: undefined
 	    }
     }
 
@@ -57,42 +60,78 @@ export default class Profile extends Component {
 	      if (responseJson.length > 0) {
 	      	self.setState({
 		        scores: responseJson
-		      });
+		    });
 	      } else {
 	      	self.setState({
 		        scores: undefined
-		      });
+		    });
 	      }
 	    });
 	}
 
+	handleButtonClick(e) {
+	    this.setState({
+			report: true
+	    });
+	}
+
+
 	render() {
-		var tableContent;
+		var leftContent;
+		var rightContent;
 		if (this.state.scores) {
-			tableContent = (<Rows
-						  	data={this.state.scores}/>);
+			console.log(this.state.scores)
+			leftContent = (<Rows
+						  	data={this.state.scores}
+						  	handleButtonClick={this.handleButtonClick.bind(this)}/>);
 		} else {
-			tableContent = (<p id="profile-no-scores">No scores found!</p>);
+			leftContent = (<p id="profile-no-scores">No scores found!</p>);
+		}
+
+		if (this.state.report) {
+			rightContent = (
+				<div id="right-content">
+					<h1>Report</h1>
+					<div id="report">
+						<div id="report-general">
+							<p>19.11.2017, 16:00</p>
+							<p>Map: Learning the ropes</p>
+						</div>
+						<div id="report-stats">
+							<h2>Stats</h2>
+							<p>Working time (hh:mm:ss):<span>00:15:26</span></p>
+							<p>Logs collected:<span>12</span></p>
+							<p>Distance travelled:<span>526m</span></p>
+							<p>Fuel consumed:<span>8.26l</span></p>
+							<hr/>
+							<p><b>Final score:<span>23532</span></b></p>
+						</div>
+					</div>
+				</div>
+        	);
 		}
 		return (
 			<div className="Profile">
-				<div id="profile-header">
-					<h1>Profile</h1>
-				</div>
-				<hr></hr>
-				<div id="user-info">
-					<div id="user-info-username">
-						<Icon size={'1.3em'} icon={user} id="user-info-username-icon"/>
-						<h2 id="user-info-username-header">{this.props.username}</h2>
+				<div id="left-content">
+					<div id="profile-header">
+						<h1>Profile</h1>
 					</div>
-					<div id="user-info-email">
-						<Icon size={'1.3em'} icon={mail} id="user-info-email-icon" />
-						<p id="user-info-email-paragraph">{this.props.email}</p>
+					<hr></hr>
+					<div id="user-info">
+						<div id="user-info-username">
+							<Icon size={'1.3em'} icon={user} id="user-info-username-icon"/>
+							<h2 id="user-info-username-header">{this.props.username}</h2>
+						</div>
+						<div id="user-info-email">
+							<Icon size={'1.3em'} icon={mail} id="user-info-email-icon" />
+							<p id="user-info-email-paragraph">{this.props.email}</p>
+						</div>
+					</div>
+					<div id="profile-content">
+						{leftContent}
 					</div>
 				</div>
-				<div id="profile-content">
-					{tableContent}
-				</div>
+				{rightContent}
 			</div>
 		);
 	}
