@@ -12,6 +12,7 @@ export default class LogDeposit {
 
     this._isMarkedForPickUp = false;
     this._canBeUnloadedTo = false;
+    this._isHighlighted = false;
 
     var graphics = new PIXI.Graphics();
     graphics.beginFill(Color, 1);
@@ -37,6 +38,14 @@ export default class LogDeposit {
 
     graphics.pointerup = function() {
       this.owner.setMarkedForUnload(false);
+    }
+
+    graphics.pointerover = function() {
+      this.owner.setHighlighted(true);
+    }
+
+    graphics.pointerout = function() {
+      this.owner.setHighlighted(false);
     }
 
     this.stage.addChild(graphics);
@@ -76,6 +85,14 @@ export default class LogDeposit {
 
   setMarkedForUnload(value) {
     this._isMarkedForPickUp = value;
+  }
+
+  isHighlighted() {
+    return this._isHighlighted;
+  }
+
+  setHighlighted(value) {
+    this._isHighlighted = value;
   }
 
   getPosition() {
