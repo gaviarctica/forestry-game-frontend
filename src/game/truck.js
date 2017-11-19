@@ -264,7 +264,6 @@ export default class Truck {
 
         // log close enough and it has been clicked, pick it to truck
         if (log.isMarkedForPickUp() && log.isHighlighted()) {
-          console.log("isMarkedForPickUp");
           this.doCollectLog = true;
         }
 
@@ -272,14 +271,12 @@ export default class Truck {
         log.setCanBePickedUp(false);
         if (this.selectedLog === log) {
           this.deselectLog();
-          console.log("this.selectedLog === log" + log);
         }
       }
     }
 
     if (this.doCollectLog) {
       if (this.pickLog(this.selectedLog) === true) {
-          console.log("pickLog" + this.selectedLog);
           // remove it from level array and from pixi stage container (parent of the log)
           var index = this.logsOnLevel.indexOf(this.selectedLog);
           this.logsOnLevel.splice(index, 1);
@@ -290,14 +287,12 @@ export default class Truck {
   }
 
   selectLog(log) {
-    console.log("select log");
     if (this.selectedLog !== log) {
       this.selectedLog = log;
     }
   }
 
   deselectLog() {
-    console.log("deselect log");
     this.selectedLog = null;
   }
 
