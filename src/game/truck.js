@@ -185,7 +185,7 @@ export default class Truck {
       this.eWasDown = false;
     }
 
-    if(this.spaceWasDown && !Key.space.isUp) {
+    if(this.spaceWasDown && Key.space.isUp) {
       this.doLogAction = true;
       this.spaceWasDown = false;
     } else {
@@ -316,6 +316,10 @@ export default class Truck {
           // remove it from level array and from pixi stage container (parent of the log)
           var index = this.logsOnLevel.indexOf(this.selectedItem);
           this.logsOnLevel.splice(index, 1);
+          var index = this.selectableItems.indexOf(this.selectedItem);
+          if (index !== -1) {
+            this.selectableItems.splice(index, 1);
+          }
           this.deselectItem();
       }
       this.doLogAction = false;
