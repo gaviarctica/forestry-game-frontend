@@ -58,9 +58,9 @@ export default class LogDeposit {
     // in this case parent is truck
     log.removeFromParent();
     // add it to deposit container
-    this.graphics.addChild(log.graphics);
-    log.graphics.position = new PIXI.Point(-Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
-    log.graphics.scale.set(1.0 / this.graphics.scale.x);
+    this.graphics.addChild(log.logSprite);
+    log.logSprite.position = new PIXI.Point(-Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
+    log.logSprite.scale.set(0.1);
     ++this.numOfLogs;
 
     return true;
