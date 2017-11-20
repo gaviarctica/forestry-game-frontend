@@ -12,6 +12,7 @@ export default class LogDeposit {
 
     this._isMarkedForPickUp = false;
     this._canBeUnloadedTo = false;
+    this._isHighlighted = false;
 
     var graphics = new PIXI.Graphics();
     graphics.beginFill(Color, 1);
@@ -39,6 +40,14 @@ export default class LogDeposit {
       this.owner.setMarkedForUnload(false);
     }
 
+    graphics.pointerover = function() {
+      this.owner.setHighlighted(true);
+    }
+
+    graphics.pointerout = function() {
+      this.owner.setHighlighted(false);
+    }
+
     this.stage.addChild(graphics);
     this.graphics = graphics;
   }
@@ -49,8 +58,9 @@ export default class LogDeposit {
     // in this case parent is truck
     log.removeFromParent();
     // add it to deposit container
-    this.graphics.addChild(log.graphics);
-    log.graphics.position = new PIXI.Point(-Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
+    this.graphics.addChild(log.logSprite);
+    log.logSprite.position = new PIXI.Point(-Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
+    log.logSprite.scale.set(0.1);
     ++this.numOfLogs;
 
     return true;
@@ -76,6 +86,14 @@ export default class LogDeposit {
 
   setMarkedForUnload(value) {
     this._isMarkedForPickUp = value;
+  }
+
+  isHighlighted() {
+    return this._isHighlighted;
+  }
+
+  setHighlighted(value) {
+    this._isHighlighted = value;
   }
 
   getPosition() {

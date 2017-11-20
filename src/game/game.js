@@ -35,10 +35,13 @@ const MAP = {
      {"x": -700, "y": -50, "type": 5},
      {"x": 460, "y": 550, "type": 1},
      {"x": 460, "y": 570, "type": 3},
-     {"x": 460, "y": 590, "type": 5}
+     {"x": 600, "y": 330, "type": 1},
+     {"x": 540, "y": 360, "type": 3},
+     {"x": 480, "y": 390, "type": 5},
   ],
   "logdeposits" : [
-     {"x": 700, "y": 240}
+     {"x": 700, "y": 240},
+     {"x": 700, "y": 445}
   ]
 }
 
@@ -121,6 +124,12 @@ export default class GameCanvas {
 
   update(delta)
   {
+    if (this.isInEndGameState()) {
+      this.stats.updateUI({
+        gameEnd: true
+      });
+    }
+
     var totalDistance = this.truck.getDistanceMoved()
     var totalfuelBurned = this.truck.getFuelBurned()
     var score = totalDistance * totalfuelBurned;
@@ -131,6 +140,21 @@ export default class GameCanvas {
       fuel: totalfuelBurned,
       score: score.toFixed(0)
     });
+  }
+
+  isInEndGameState() {
+    // no logs in the map anymore
+    if (this.map.getLogs().length !== 0) {
+      return false;
+    }
+
+    // no logs in truck
+    if (this.truck.logCount() > 0) {
+      return false;
+    }
+
+    // logs are now in deposits, game is over
+    return true;
   }
 
   destroy()

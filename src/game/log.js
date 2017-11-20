@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 
 var Width = 50;
 var Height = 5;
+var Outline = 4;
 var LogColorByType = [
   0xD85040,
   0x5286EC,
@@ -9,6 +10,14 @@ var LogColorByType = [
   0xBC8E56,
   0xAD8BFF,
   0xFF72BE
+];
+var LogSpriteByType = [
+  '/static/log_placeholder.png',
+  '/static/log_placeholder.png',
+  '/static/log_placeholder.png',
+  '/static/log_placeholder.jpg',
+  '/static/log_placeholder.jpg',
+  '/static/log_placeholder.jpg'
 ];
 
 export default class Log {
@@ -18,15 +27,24 @@ export default class Log {
 
     this._isMarkedForPickUp = false;
 		this._canBePickedUp = false;
+    this._isHighlighted = false;
 
+    // Log color code outline when log can be picked up
     var graphics = new PIXI.Graphics();
     graphics.beginFill(LogColorByType[type], 1);
-    // draw the log centered
-    graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
+    graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
+    graphics.alpha = 0.0;
+
+    // Apply log sprite
+    var logSprite = PIXI.Sprite.fromImage(LogSpriteByType[type]);
+    logSprite.anchor.set(0.5, 0.5);
+    logSprite.scale.set(0.1);
+    logSprite.x = position.x;
+    logSprite.y = position.y;
 
     graphics.interactive = true;
     // make hit area bigger rectangle than the log itself, easier to hit
-    graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -Width/2.0, Width, Width);
+    graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -(Height+20)/2.0, Width, Height+20);
 
     graphics.position = new PIXI.Point(position.x, position.y);
     
@@ -43,12 +61,25 @@ export default class Log {
       this.owner.setMarkedForPickUp(false);
     }
 
+    graphics.pointerover = function() {
+      this.owner.setHighlighted(true);
+    }
+
+    graphics.pointerout = function() {
+      this.owner.setHighlighted(false);
+    }
+
     this.stage.addChild(graphics);
+    this.stage.addChild(logSprite);
     this.graphics = graphics;
+    this.logSprite = logSprite;
 	}
 
   removeFromParent() {
-    this.graphics.parent.removeChild(this.graphics);
+    if (this.graphics.parent) {
+      this.graphics.parent.removeChild(this.graphics);
+    }    
+    this.logSprite.parent.removeChild(this.logSprite);
   }
 
 	canBePickedUp() {
@@ -60,9 +91,9 @@ export default class Log {
 
     // alter color if log can be picked up
     if (this._canBePickedUp) {
-      this.graphics.tint = 0x444444;
+      this.graphics.alpha = 1.0;
     } else {
-      this.graphics.tint = 0xFFFFFF;
+      this.graphics.alpha = 0.0;
     }
   }
 
@@ -72,6 +103,14 @@ export default class Log {
 
   setMarkedForPickUp(value) {
     this._isMarkedForPickUp = value;
+  }
+
+  isHighlighted() {
+    return this._isHighlighted;
+  }
+
+  setHighlighted(value) {
+    this._isHighlighted = value;
   }
 
   getPosition() {

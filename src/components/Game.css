@@ -225,3 +225,18 @@ html {
   border-top-left-radius: calc(var(--log-load-border-width) / 2);
   border-top-right-radius: calc(var(--log-load-border-width) / 2);
 }
+
+#game-end {
+  background-color: rgba(0,0,0,0.65);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:white;
+  font-size: 72px;
+}

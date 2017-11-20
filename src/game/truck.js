@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js';
 import * as Key from './controls';
 import {lerp, distance} from './helpers';
-// import RouteSegment from './routesegment';
+import Log from './log';
+import LogDeposit from './logdeposit';
 
 
 export default class Truck {
@@ -64,11 +65,24 @@ export default class Truck {
     */
     this.logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
 
+    // currently selected item (either automaticly, by mouse or q/e keys)
+    this.selectedItem = null;
+    this.selectableItems = [];
+    this.selectGraphic = new PIXI.Graphics();
+    stage.addChild(this.selectGraphic);
+
     this.distanceMoved = 0;
     this.fuelBurned = 0;
     this.previousPoint = null;
 
     this.stats = stats;
+  }
+
+  // TODO: maybe keep up with the log count in pickLog, depositLog functions to avoid unnecessary for looping
+  logCount() {
+    var logCount = 0;
+    this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) logCount += 1}));
+    return logCount;
   }
 
   // Calculates the distance truck has moved during an instance of gameplay
@@ -91,8 +105,7 @@ export default class Truck {
   // Calculates the fuel consumed by truck in one instance of gameplay
   calcFuelBurned() {
     // If there are logs in the truck increase fuel consumption by a load factor
-    var loadFactor = 0;
-    this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
+    var loadFactor = this.logCount();
 
     switch(loadFactor) {
       case 0:
@@ -113,8 +126,7 @@ export default class Truck {
   getSpeed(reverse = false) {
 
       // If there are logs in the truck increase fuel consumption by a load factor
-      var loadFactor = 0.0;
-      this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) loadFactor += 1}));
+      var loadFactor = this.logCount();
 
       var velocity = this.velocity - (this.velocity - Truck.MIN_VELOCITY) * loadFactor / 20;
       return reverse ?  velocity * Truck.REVERSE_VELOCITY_FACTOR :  velocity;
@@ -149,6 +161,35 @@ export default class Truck {
     if(Key.right.isDown) {
       this.rightWasDown = true
       this.leftWasDown = false;
+    }
+
+    if(Key.space.isDown) {
+      this.spaceWasDown = true
+    }
+
+    if(Key.q.isDown) {
+      this.qWasDown = true;
+    }
+
+    if (Key.e.isDown) {
+      this.eWasDown = true;
+    }
+
+    if (this.qWasDown && Key.q.isUp) {
+      this.selectNearbyItemAtDir(1);
+      this.qWasDown = false;
+    }
+
+    if (this.eWasDown && Key.e.isUp) {
+      this.selectNearbyItemAtDir(-1);
+      this.eWasDown = false;
+    }
+
+    if(this.spaceWasDown && Key.space.isUp) {
+      this.doLogAction = true;
+      this.spaceWasDown = false;
+    } else {
+      this.doLogAction = false;
     }
 
     // Selecting route if arrow keys were pressed
@@ -242,21 +283,69 @@ export default class Truck {
       var distanceToLog = distance(this.sprite.position, log.getPosition());
       if (distanceToLog < 100) {
         log.setCanBePickedUp(true);
+
+        if (this.selectableItems.indexOf(log) === -1) {
+          this.selectableItems.push(log);
+        }
+
+        // no selected item or log is explicitly highlighted
+        if (this.selectedItem == null || log.isHighlighted()) {
+          this.selectItem(log);
+        }
+
+        // log close enough and it has been clicked, pick it to truck
+        if (log.isMarkedForPickUp() && log.isHighlighted()) {
+          this.doLogAction = true;
+        }
+
       } else {
         log.setCanBePickedUp(false);
-      }
+        if (this.selectedItem === log) {
+          this.deselectItem();
+        }
 
-      // log close enough and it has been clicked, pick it to truck
-      if (log.canBePickedUp() && log.isMarkedForPickUp()) {
-
-        if (this.pickLog(log)) {
-          // remove it from level array and from pixi stage container (parent of the log)
-          this.logsOnLevel.splice(i, 1);
-
-          // break from the for loop because we altered the logsOnLevel array
-          break;
+        var index = this.selectableItems.indexOf(log);
+        if (index !== -1) {
+          this.selectableItems.splice(index, 1);
         }
       }
+    }
+
+    if (this.doLogAction && this.selectedItem instanceof Log) {
+      if (this.pickLog(this.selectedItem) === true) {
+          // remove it from level array and from pixi stage container (parent of the log)
+          var index = this.logsOnLevel.indexOf(this.selectedItem);
+          this.logsOnLevel.splice(index, 1);
+          var index = this.selectableItems.indexOf(this.selectedItem);
+          if (index !== -1) {
+            this.selectableItems.splice(index, 1);
+          }
+          this.deselectItem();
+      }
+      this.doLogAction = false;
+    }
+  }
+
+  selectItem(item) {
+    if (this.selectedItem !== item) {
+      this.selectedItem = item;
+    }
+  }
+
+  deselectItem() {
+    this.selectedItem = null;
+  }
+
+  selectNearbyItemAtDir(dir) {
+    if (this.selectedItem != null) {
+      var index = this.selectableItems.indexOf(this.selectedItem);
+      index += dir;
+      if (index >= this.selectableItems.length) {
+        index = 0;
+      } else if (index < 0) {
+        index = this.selectableItems.length - 1;
+      }
+      this.selectItem(this.selectableItems[index]);
     }
   }
 
@@ -280,9 +369,10 @@ export default class Truck {
 
       // setup graphics for truck visuals
       log.removeFromParent();
-      this.sprite.addChild(log.graphics);
-      log.graphics.position = new PIXI.Point(0, 22.5);
-      log.graphics.rotation = Math.PI/2;
+      this.sprite.addChild(log.logSprite);
+      log.logSprite.position = new PIXI.Point((logContainerX * 60) - 90, 250);
+      log.logSprite.rotation = Math.PI/2;
+      log.logSprite.scale.set(1.0);
     }
   }
 
@@ -328,17 +418,37 @@ export default class Truck {
       var distanceToDeposit = distance(this.sprite.position, deposit.getPosition());
       if (distanceToDeposit < 200) {
         deposit.setCanBeUnloadedTo(true);
+
+        if (this.selectableItems.indexOf(deposit) === -1) {
+          this.selectableItems.push(deposit);
+        }
+
+        // no selected item or deposit is explicitly highlighted
+        if (this.selectedItem == null || deposit.isHighlighted()) {
+          this.selectItem(deposit);
+        }
+
+        // deposit close enough and it has been clicked, unload available log
+        if (deposit.isMarkedForUnload()) {
+          this.doLogAction = true;
+        }
+
       } else {
         deposit.setCanBeUnloadedTo(false);
-      }
+        if (this.selectedItem === deposit) {
+          this.deselectItem();
+        }
 
-      // deposit close enough and it has been clicked, unload available log
-      if (deposit.canBeUnloadedTo() && deposit.isMarkedForUnload()) {
-
-        if (this.unloadLogTo(deposit)) {
-          break;
+        var index = this.selectableItems.indexOf(deposit);
+        if (index !== -1) {
+          this.selectableItems.splice(index, 1);
         }
       }
+    }
+
+    if (this.doLogAction && this.selectedItem instanceof LogDeposit) {
+      this.unloadLogTo(this.selectedItem);
+      this.doLogAction = false;
     }
   }
 
@@ -354,6 +464,15 @@ export default class Truck {
 
     if(seg['seg'] !== null) {
       this.routeIndex = seg['index'];
+    }
+
+    this.selectGraphic.clear();
+    if (this.selectedItem != null) {
+      this.selectGraphic.beginFill();
+      this.selectGraphic.lineStyle(3, 0x000000);
+      this.selectGraphic.moveTo(point.x, point.y);
+      this.selectGraphic.lineTo(this.selectedItem.graphics.position.x, this.selectedItem.graphics.position.y);
+      this.selectGraphic.endFill();
     }
   }
 }
