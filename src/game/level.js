@@ -3,6 +3,7 @@ import RouteNode from './routenode';
 import RouteSegment from './routesegment';
 import Log from './log';
 import LogDeposit from './logdeposit';
+import { endpointByStartPointDistanceAndAngle, distance } from './helpers';
 
 export default class Level {
   constructor(map, stage) {
@@ -21,49 +22,59 @@ export default class Level {
   }
 
   drawRoutes() {
-      var routeGraphics = new PIXI.Graphics();
-      routeGraphics.beginFill(0xa57d4c, 1);
+    const roadSpriteLength = 50;
 
-      // for(var i = 0; i < this.routeSegments.length; ++i) {
-      //   var spos = this.routeSegments[i].startNode.getPos();
-      //   var epos = this.routeSegments[i].endNode.getPos();
-      //
-      //   routeGraphics.moveTo(spos.x, spos.y);
-      //
-      //   if(this.routeSegments[i].isSelected)
-      //     routeGraphics.lineStyle(50, 0xc79f6e, 1);
-      //
-      //   routeGraphics.lineTo(epos.x, epos.y);
-      //
-      //   if(this.routeSegments[i].isSelected)
-      //     routeGraphics.lineStyle(50, 0xa57d4c, 1);
-      //
-      // }
+    for(var i = 0; i < this.routeNodes.length; ++i) {
+      var segments = this.routeNodes[i].getSegments();
+      for(var j = 0; j < segments.length; ++j) {
+        var spos = segments[j].startNode.getPos();
+        var epos = segments[j].endNode.getPos();
 
-      for(var i = 0; i < this.routeNodes.length; ++i) {
-        var segments = this.routeNodes[i].getSegments();
-        for(var j = 0; j < segments.length; ++j) {
-          var spos = segments[j].startNode.getPos();
-          var epos = segments[j].endNode.getPos();
+        var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
+        var currentPos = {x: spos.x, y: spos.y};
+        var roadSprite;
+        var distanceToEnd = 0;
+        
+        while (!this.pastEndPosition(spos, epos, currentPos)) {
+          roadSprite = new PIXI.Sprite.fromImage('/static/road.png');
+          roadSprite.anchor.set(0.5, 0.0);
+          roadSprite.scale.set(0.1);
+          roadSprite.rotation = angle + Math.PI;
+          roadSprite.x = currentPos.x;
+          roadSprite.y = currentPos.y;
 
-          routeGraphics.moveTo(spos.x, spos.y);
+          // Make last texture chunk shorter if needed
+          distanceToEnd = distance(currentPos, epos);
+          if (distanceToEnd < roadSpriteLength) {
+            roadSprite.height = distanceToEnd;
+          }
 
-          if(segments[j].isSelected)
-            routeGraphics.lineStyle(50, 0xc79f6e, 1);
+          this.stage.addChild(roadSprite);
 
-          routeGraphics.lineStyle(50, 0xa57d4c, 1);
-          routeGraphics.lineTo(epos.x, epos.y);
-          routeGraphics.lineStyle(0);
-          routeGraphics.drawCircle(spos.x, spos.y, 50/2);
-
-          if(segments[j].isSelected)
-            routeGraphics.lineStyle(50, 0xa57d4c, 1);
-
+          // Calculate starting point for next texture chunk
+          currentPos = endpointByStartPointDistanceAndAngle(currentPos, roadSpriteLength, angle - Math.PI / 2);
         }
       }
+    }
 
-      routeGraphics.endFill();
-      this.stage.addChild(routeGraphics);
+    for(var i = 0; i < this.routeNodes.length; ++i) {
+      var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
+      intersectionSprite.anchor.set(0.5, 0.5);
+      intersectionSprite.scale.set(0.1);
+      intersectionSprite.x = this.routeNodes[i].getPos().x;
+      intersectionSprite.y = this.routeNodes[i].getPos().y;
+      this.stage.addChild(intersectionSprite);
+    }
+  }
+
+  pastEndPosition(spos, epos, cpos) {
+    if ((spos.x < epos.x && cpos.x > epos.x) ||
+        (spos.x > epos.x && cpos.x < epos.x) ||
+        (spos.y < epos.y && cpos.y > epos.y) ||
+        (spos.y > epos.y && cpos.y < epos.y)) {
+      return true;
+    }
+    return false;
   }
 
   parseNodes() {

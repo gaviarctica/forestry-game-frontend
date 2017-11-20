@@ -22,9 +22,12 @@ export default class MapMenu extends Component {
     API.getAllMapsInfo(function(err, responseJson) {
       if (err) throw err;
 
-      self.setState({
-        maps: responseJson
-      });
+      if (responseJson.length > 0) {
+        console.log('LÖYTY');
+        self.setState({
+          maps: responseJson
+        });
+      }
     });
   }
 
@@ -131,7 +134,7 @@ export default class MapMenu extends Component {
     if (this.state.maps === undefined) {
       return (
         <div className="MapMenu">
-          Loading or no connection to backend
+          Loading or no connection to backend or no maps in database
         </div>
       );
     } else {
