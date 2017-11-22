@@ -23,7 +23,6 @@ export default class MapMenu extends Component {
       if (err) throw err;
 
       if (responseJson.length > 0) {
-        console.log('LÖYTY');
         self.setState({
           maps: responseJson
         });
@@ -44,7 +43,9 @@ export default class MapMenu extends Component {
     if (clicked === 'button-back') {
       this.props.switchView('mainmenu');
     } else if (clicked === 'button-start-game') {
-      this.props.switchView('gameplayview');
+      this.props.switchView('gameplayview', {
+        mapID: this.state.maps[this.state.selectedMapIndex].id
+      });
     }
   }
 
