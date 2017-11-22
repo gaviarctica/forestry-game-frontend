@@ -11,6 +11,7 @@ export default class App extends Component {
     super(props);
     this.state = {
       currentView: '',
+      viewData: undefined,
       loggedIn: false,
       username: '',
       email: '',
@@ -79,7 +80,7 @@ export default class App extends Component {
     });
   }
 
-  switchView(newView) {
+  switchView(newView, data) {
     // display view exit animation
     this.setState({
       viewAnimation: false
@@ -90,6 +91,7 @@ export default class App extends Component {
     setTimeout(function() {
       self.setState({
         currentView: newView,
+        viewData: data,
         viewAnimation: true
       });
     }, 350); // Duration of fade out animation
@@ -124,6 +126,7 @@ export default class App extends Component {
         view = (
           <Game 
             switchView={this.switchView.bind(this)}
+            viewData={this.state.viewData}
             loggedIn={this.state.loggedIn}
             username={username} />
         );

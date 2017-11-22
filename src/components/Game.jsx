@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Game.css';
 import Button from './Button';
 import GameCanvas from '../game/game';
+import { API } from './api';
 
 export default class Game extends Component {
   constructor(props) {
@@ -26,7 +27,14 @@ export default class Game extends Component {
   }
 
   componentDidMount() {
-    this.gameCanvas = new GameCanvas(this.updateUI.bind(this));
+    var self = this;
+    API.getMapData(this.props.viewData.mapID, function(err, responseJson) {
+      if (err) throw err;
+
+      if (responseJson.length > 0) {
+        self.gameCanvas = new GameCanvas(responseJson[0].mapdata, self.updateUI.bind(self));
+      }
+    });
   }
 
   handleButtonClick(e) {
