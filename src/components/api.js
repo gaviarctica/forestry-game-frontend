@@ -47,7 +47,7 @@ export const API = {
       if(response.status === 200) {
         return response.json();
       } else if (response.status === 401) {
-        message = 'Wrong username or password';
+        message = 'wrongUsernameOrPassword';
         callback(err, message);
       } else {
         err = 'Error making login request.';
@@ -101,17 +101,23 @@ export const API = {
     var message = undefined;
 
     fetch(url, init).then(function (response) {
-      if(response.status === 200) {
+      if(response.status === 200 || response.status === 400) {
         return response.json();
-      } else if (response.status === 401) {
-        message = 'Wrong username or password';
-        callback(err, message);
       } else {
         err = 'Error making login request.';
         callback(err);
       }
     }).then(function(responseJson) {
       if (responseJson) {
+        if (responseJson.username && responseJson.username.indexOf("This field may not be blank.") !== -1 ||
+            responseJson.email && responseJson.email.indexOf("This field may not be blank.") !== -1 ||
+            responseJson.password && responseJson.password.indexOf("This field may not be blank.") !== -1) {
+          message = 'noBlankFields';
+        } else if (responseJson.username.indexOf("A user with that username already exists.") !== -1) {
+          message = 'usernameExists';
+        } else if (responseJson.email.indexOf("A user with that email already exists.") !== -1) {
+          message = 'emailExists';
+        }
         callback(err, message, responseJson.username, responseJson.email);
       }
     });

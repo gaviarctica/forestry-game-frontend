@@ -15,13 +15,21 @@ export default class App extends Component {
       loggedIn: false,
       username: '',
       email: '',
-      lang: 'fi',
+      lang: 'en',
       viewAnimation: false,
       validationDone: false
     }
   }
 
   componentWillMount() {
+    // Get browser language
+    var userLang = navigator.language || navigator.userLanguage;
+    if (userLang === 'fi-FI') {
+      this.setState({
+        lang: 'fi'
+      });
+    }
+
     // Get CSRF token from Django for forms
     // and validate sessionid if it exists
     var self = this;
@@ -128,7 +136,8 @@ export default class App extends Component {
             switchView={this.switchView.bind(this)}
             viewData={this.state.viewData}
             loggedIn={this.state.loggedIn}
-            username={username} />
+            username={username}
+            lang={this.state.lang} />
         );
         break;
 

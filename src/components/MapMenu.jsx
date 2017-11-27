@@ -4,6 +4,7 @@ import './MapMenu.css';
 import { TranslateRight, TranslateLeft, FadeInFadeOut } from './animation';
 import './animation.css';
 import { API } from './api';
+import { LANG } from './lang';
 
 export default class MapMenu extends Component {
   constructor(props) {
@@ -183,14 +184,14 @@ export default class MapMenu extends Component {
 
                   <div className="section">
                     <div className="section-header">
-                      Pile Types and Amounts
+                      {LANG[this.props.lang].mainMenu.playTab.pileTypesAndAmounts}
                     </div>
                     {pileTypes}
                   </div>
 
                   <div className="section">
                     <div className="section-header">
-                      Route Length
+                    {LANG[this.props.lang].mainMenu.playTab.routeLength}
                     </div>
                     <div className="section-value">
                       {selMap.mapinfo.routeLength + ' m'}
@@ -199,7 +200,7 @@ export default class MapMenu extends Component {
 
                   <div className="section">
                     <div className="section-header">
-                      Storage Area Amount
+                    {LANG[this.props.lang].mainMenu.playTab.storageAreaAmount}
                     </div>
                     <div className="section-value">
                       {selMap.mapinfo.storageAreas}
@@ -208,7 +209,7 @@ export default class MapMenu extends Component {
 
                   <div className="section">
                     <div className="section-header">
-                      Passing Limit
+                    {LANG[this.props.lang].mainMenu.playTab.roadAnomalies}
                     </div>
                     <div className="section-value">
                       {selMap.mapinfo.passingLimit ? 'YES' : 'NO'}
@@ -219,7 +220,7 @@ export default class MapMenu extends Component {
 
                   <Button
                     id="button-start-game"
-                    text="Start game"
+                    text={LANG[this.props.lang].buttons.startGame}
                     buttonType="primary"
                     handleClick={this.handleButtonClick.bind(this)} />
                 </div>            

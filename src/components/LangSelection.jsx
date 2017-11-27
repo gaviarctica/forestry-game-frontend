@@ -1,16 +1,6 @@
 import React, { Component } from 'react';
 import './LangSelection.css';
-
-var languages = {
-  'fi': {
-    name: 'Suomi',
-    icon: '/static/flag-fi.png'
-  },
-  'en': {
-    name: 'English',
-    icon: '/static/flag-en.png'
-  }
-}
+import { LANG } from './lang';
 
 export default class LangSelection extends Component {
 
@@ -24,7 +14,7 @@ export default class LangSelection extends Component {
 
   render() {
     var flagStyle = {
-      backgroundImage: 'url(' + languages[this.props.lang].icon + ')'
+      backgroundImage: 'url(' + LANG[this.props.lang].icon + ')'
     };
 
     return (
@@ -40,7 +30,7 @@ export default class LangSelection extends Component {
           className="lang-sel-text"
           onClick={this.toggleLang.bind(this)} >
 
-          {languages[this.props.lang].name}
+          {LANG[this.props.lang].langName}
         </div>
 
       </div>

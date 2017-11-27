@@ -3,6 +3,7 @@ import './Game.css';
 import Button from './Button';
 import GameCanvas from '../game/game';
 import { API } from './api';
+import { LANG } from './lang';
 
 export default class Game extends Component {
   constructor(props) {
@@ -67,7 +68,7 @@ export default class Game extends Component {
         <div id="game-info">
           <Button 
                 id="button-quit"
-                text="Quit"
+                text={LANG[this.props.lang].buttons.quit}
                 buttonType='default'
                 style={quitButtonStyle}
                 handleClick={this.handleButtonClick.bind(this)} />
