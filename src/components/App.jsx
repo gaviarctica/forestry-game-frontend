@@ -22,6 +22,14 @@ export default class App extends Component {
   }
 
   componentWillMount() {
+    // Get browser language
+    var userLang = navigator.language || navigator.userLanguage;
+    if (userLang === 'fi-FI') {
+      this.setState({
+        lang: 'fi'
+      });
+    }
+
     // Get CSRF token from Django for forms
     // and validate sessionid if it exists
     var self = this;
