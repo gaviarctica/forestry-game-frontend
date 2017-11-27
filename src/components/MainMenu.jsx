@@ -8,6 +8,7 @@ import './MainMenu.css';
 import { FadeInFadeOut, TranslateDown, TranslateRight, TranslateLeft } from './animation';
 import './animation.css';
 import { API } from './api';
+import { LANG } from './lang';
 import { ic_videogame_asset, ic_account_box, ic_extension, ic_lightbulb_outline, ic_exit_to_app, ic_person_add } from 'react-icons-kit/md';
 
 export default class MainMenu extends Component {
@@ -138,7 +139,7 @@ export default class MainMenu extends Component {
             switchView={this.props.switchView}
             loggedIn={this.state.loggedIn}
             username={this.state.username}
-            lang={this.state.lang} />
+            lang={this.props.lang} />
         );
         break;
 
@@ -146,7 +147,8 @@ export default class MainMenu extends Component {
         view = (
           <Profile
             username={this.props.username}
-            email={this.props.email} />
+            email={this.props.email}
+            lang={this.props.lang} />
         );
         break;
 
@@ -155,7 +157,8 @@ export default class MainMenu extends Component {
           <LoginSignupForm
             message={this.state.formMsg}
             handleSubmit={this.handleFormSubmit.bind(this)}
-            view='login' />
+            view='login'
+            lang={this.props.lang} />
         );
         break;
 
@@ -164,7 +167,8 @@ export default class MainMenu extends Component {
           <LoginSignupForm
             message={this.state.formMsg}
             handleSubmit={this.handleFormSubmit.bind(this)}
-            view='signup' />
+            view='signup'
+            lang={this.props.lang} />
         );
         break;
 
@@ -176,43 +180,43 @@ export default class MainMenu extends Component {
     var tabs = {
       play     : <Button
                    id="button-play"
-                   text="Play"
+                   text={LANG[this.props.lang].navbar.play}
                    icon={ic_videogame_asset}
                    buttonType={this.state.activeTab === 'play' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
       profile  : <Button
                    id="button-profile"
-                   text="Profile"
+                   text={LANG[this.props.lang].navbar.profile}
                    icon={ic_account_box}
                    buttonType={this.state.activeTab === 'profile' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
       editor   : <Button
                    id="button-editor"
-                   text="Editor"
+                   text={LANG[this.props.lang].navbar.editor}
                    icon={ic_extension}
                    buttonType={this.state.activeTab === 'editor' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
       tutorial : <Button
                    id="button-tutorial"
-                   text="Tutorial"
+                   text={LANG[this.props.lang].navbar.tutorial}
                    icon={ic_lightbulb_outline}
                    buttonType={this.state.activeTab === 'tutorial' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
       logout   : <Button
                    id="button-logout"
-                   text="Log out"
+                   text={LANG[this.props.lang].navbar.logOut}
                    icon={ic_exit_to_app}
                    buttonType='navbar-tab'
                    handleClick={this.handleButtonClick.bind(this)} />,
       login    : <Button
                    id="button-login"
-                   text="Log in"
+                   text={LANG[this.props.lang].navbar.logIn}
                    icon={ic_exit_to_app}
                    buttonType={this.state.activeTab === 'login' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
       signup   : <Button
                    id="button-signup"
-                   text="Sign up"
+                   text={LANG[this.props.lang].navbar.signUp}
                    icon={ic_person_add}
                    buttonType={this.state.activeTab === 'signup' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />

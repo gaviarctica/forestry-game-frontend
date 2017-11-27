@@ -3,6 +3,7 @@ import Button from './Button';
 import './LoginSignupForm.css';
 import './api';
 import DjangoCSRFToken from 'django-react-csrftoken'
+import { LANG } from './lang';
 
 
 export default class LoginSignupForm extends Component {
@@ -65,7 +66,7 @@ export default class LoginSignupForm extends Component {
           type="text"
           id="email"
           name="email"
-          placeholder="email"
+          placeholder={LANG[this.props.lang].mainMenu.loginSignupForm.email}
           value={this.state.email}
           onChange={this.handleInputChange.bind(this)} />
       );
@@ -73,7 +74,7 @@ export default class LoginSignupForm extends Component {
       formButton = (
         <Button
           id="button-sign-up"
-          text="Sign up"
+          text={LANG[this.props.lang].buttons.signUp}
           buttonType="primary"
           style={buttonStyle}
           handleClick={() => document.getElementById('form-submit').click()} />
@@ -84,7 +85,7 @@ export default class LoginSignupForm extends Component {
       formButton = (
         <Button
           id="button-log-in"
-          text="Log in"
+          text={LANG[this.props.lang].buttons.logIn}
           buttonType="primary"
           style={buttonStyle}
           handleClick={() => document.getElementById('form-submit').click()} />
@@ -96,7 +97,13 @@ export default class LoginSignupForm extends Component {
 
           <div id="component-form">
 
-            {this.state.message ? <div id="message">{this.state.message}</div> : ''}
+            {
+              this.state.message ? 
+                <div id="message">
+                  {LANG[this.props.lang].mainMenu.loginSignupForm.messages[this.state.message]}
+                </div>
+              : ''
+            }
 
             <form id={this.props.view + '-form'} onSubmit={this.handleSubmit.bind(this)}>
               <DjangoCSRFToken />
@@ -105,7 +112,7 @@ export default class LoginSignupForm extends Component {
                 type="text"
                 id="username"
                 name="username"
-                placeholder="username"            
+                placeholder={LANG[this.props.lang].mainMenu.loginSignupForm.username}           
                 value={this.state.username}
                 onChange={this.handleInputChange.bind(this)} />
 
@@ -115,7 +122,7 @@ export default class LoginSignupForm extends Component {
                 type="password"
                 id="password"
                 name="password"
-                placeholder="password"            
+                placeholder={LANG[this.props.lang].mainMenu.loginSignupForm.password}           
                 value={this.state.password}
                 onChange={this.handleInputChange.bind(this)} />
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from './Button';
 import './Profile.css';
 import { API } from './api';
+import { LANG } from './lang';
 import Icon from 'react-icons-kit';
 import { user } from 'react-icons-kit/icomoon/user';
 import { mail } from 'react-icons-kit/icomoon/mail';
@@ -22,7 +23,7 @@ const Rows = (props) => {
 				    <td>{props.data[i].level}</td>
 				    <td>
 				    	<Button
-				    		text="Report"
+				    		text={LANG[props.lang].buttons.report}
 				    		id={props.data[i].id}
 				    		style={tableButtonStyle}
 				    		handleClick={props.handleButtonClick}/>
@@ -33,9 +34,9 @@ const Rows = (props) => {
 	return (<table id="profile-score-info">
 			  <thead>
 			  	<tr>
-				    <th>Latest scores</th>
-				    <th>Map</th>
-				    <th>Info</th>
+				    <th>{LANG[props.lang].mainMenu.profileTab.latestScores}</th>
+				    <th>{LANG[props.lang].mainMenu.profileTab.map}</th>
+				    <th>{LANG[props.lang].mainMenu.profileTab.info}</th>
 				</tr>
 			  </thead>
 			  <tbody>
@@ -90,9 +91,14 @@ export default class Profile extends Component {
 		if (this.state.scores) {
 			leftContent = (<Rows
 						  	data={this.state.scores}
-						  	handleButtonClick={this.handleButtonClick.bind(this)}/>);
+						  	handleButtonClick={this.handleButtonClick.bind(this)}
+							lang={this.props.lang} />);
 		} else {
-			leftContent = (<p id="profile-no-scores">No scores found!</p>);
+			leftContent = (
+				<p id="profile-no-scores">
+					{LANG[this.props.lang].mainMenu.profileTab.noScoresFound}
+				</p>
+			);
 		}
 
 		if (this.state.report) {
@@ -107,25 +113,25 @@ export default class Profile extends Component {
 
 			rightContent = (
 				<div id="right-content">
-					<h1>Report</h1>
+					<h1>{LANG[this.props.lang].report.report}</h1>
 					<div id="report">
 						<div id="report-general">
 							<p>{date.getDate()}.{date.getMonth()}.{date.getFullYear()}, {date.getHours()}:{date.getMinutes()<10?'0':''}{date.getMinutes()}</p>
-							<p>Map: {this.state.content.level}</p>
+							<p>{LANG[this.props.lang].report.map}: {this.state.content.level}</p>
 						</div>
 						<div id="report-stats">
-							<h2>Stats</h2>
-							<p>Working time (hh:mm:ss):<span>{workingtime}</span></p>
-							<p>Distance travelled:<span>{this.state.content.distance}m</span></p>
-							<p>Fuel consumed:<span>{this.state.content.gas_consumption}l</span></p>
-							<h3>Logs collected:</h3>
+							<h2>{LANG[this.props.lang].report.stats}</h2>
+							<p>{LANG[this.props.lang].report.workingTime}:<span>{workingtime}</span></p>
+							<p>{LANG[this.props.lang].report.distanceTravelled}:<span>{this.state.content.distance}m</span></p>
+							<p>{LANG[this.props.lang].report.fuelConsumed}:<span>{this.state.content.gas_consumption}l</span></p>
+							<h3>{LANG[this.props.lang].report.logsCollected}:</h3>
 							<ul>
 								{this.state.content.logs.map(function(logs, index) {
 									return <li key={index}>{logs.name}: <span>{logs.amount}</span></li>
 								})}
 							</ul>
 							<hr/>
-							<p><b>Final score:<span>{this.state.content.m_score}</span></b></p>
+							<p><b>{LANG[this.props.lang].report.finalScore}:<span>{this.state.content.m_score}</span></b></p>
 						</div>
 					</div>
 				</div>
@@ -135,7 +141,7 @@ export default class Profile extends Component {
 			<div className="Profile">
 				<div id="left-content">
 					<div id="profile-header">
-						<h1>Profile</h1>
+						<h1>{LANG[this.props.lang].mainMenu.profileTab.profile}</h1>
 					</div>
 					<hr></hr>
 					<div id="user-info">

@@ -15,7 +15,7 @@ export default class App extends Component {
       loggedIn: false,
       username: '',
       email: '',
-      lang: 'fi',
+      lang: 'en',
       viewAnimation: false,
       validationDone: false
     }
@@ -128,7 +128,8 @@ export default class App extends Component {
             switchView={this.switchView.bind(this)}
             viewData={this.state.viewData}
             loggedIn={this.state.loggedIn}
-            username={username} />
+            username={username}
+            lang={this.state.lang} />
         );
         break;
 
