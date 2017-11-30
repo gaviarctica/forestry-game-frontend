@@ -3,14 +3,7 @@ import * as PIXI from 'pixi.js';
 var Width = 50;
 var Height = 5;
 var Outline = 4;
-var LogColorByType = [
-  0xD85040,
-  0x5286EC,
-  0x58A55C,
-  0xBC8E56,
-  0xAD8BFF,
-  0xFF72BE
-];
+
 var LogSpriteByType = [
   '/static/log_placeholder.png',
   '/static/log_placeholder.png',
@@ -21,7 +14,16 @@ var LogSpriteByType = [
 ];
 
 export default class Log {
+
 	constructor(position, type, stage) {
+    Log.LogColorByType = [
+      0xD85040,
+      0x5286EC,
+      0x58A55C,
+      0xBC8E56,
+      0xAD8BFF,
+      0xFF72BE
+    ];
     this.type = type;
 		this.stage = stage;
 
@@ -31,7 +33,7 @@ export default class Log {
 
     // Log color code outline when log can be picked up
     var graphics = new PIXI.Graphics();
-    graphics.beginFill(LogColorByType[type], 1);
+    graphics.beginFill(Log.LogColorByType[type], 1);
     graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
     graphics.alpha = 0.0;
 
@@ -47,7 +49,7 @@ export default class Log {
     graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -(Height+20)/2.0, Width, Height+20);
 
     graphics.position = new PIXI.Point(position.x, position.y);
-    
+
     graphics.owner = this;
     graphics.pointerdown = function() {
       // check if truck is in pickup range (flag managed by truck)
@@ -78,7 +80,7 @@ export default class Log {
   removeFromParent() {
     if (this.graphics.parent) {
       this.graphics.parent.removeChild(this.graphics);
-    }    
+    }
     this.logSprite.parent.removeChild(this.logSprite);
   }
 

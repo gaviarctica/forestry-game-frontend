@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js';
+import Log from './log';
 
 var Width = 150;
 var Height = 50;
+var Outline = 4;
 var Color = 0xAAAAAA;
 
 export default class LogDeposit {
@@ -22,7 +24,7 @@ export default class LogDeposit {
     graphics.interactive = true;
     graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -Height/2, Width, Height);
     graphics.position = new PIXI.Point(position.x, position.y);
-    
+
     graphics.owner = this;
 
     this.numOfLogs = 0;
@@ -53,17 +55,30 @@ export default class LogDeposit {
   }
 
   addLog(log) {
-    // reset the state for clicking
-    this.setMarkedForUnload(false);
-    // in this case parent is truck
-    log.removeFromParent();
-    // add it to deposit container
-    this.graphics.addChild(log.logSprite);
-    log.logSprite.position = new PIXI.Point(-Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
-    log.logSprite.scale.set(0.1);
-    ++this.numOfLogs;
+    if( this.type === null ) {
+      this.type = log.type;
 
-    return true;
+      this.graphics.beginFill(Log.LogColorByType[this.type], 1);
+      this.graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
+      this.graphics.beginFill(Color, 1);
+      this.graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
+    }
+
+    if(this.type === log.type) {
+      // reset the state for clicking
+      this.setMarkedForUnload(false);
+      // in this case parent is truck
+      log.removeFromParent();
+      // add it to deposit container
+      this.graphics.addChild(log.logSprite);
+      log.logSprite.position = new PIXI.Point(-Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
+      log.logSprite.scale.set(0.1);
+      ++this.numOfLogs;
+
+      return true;
+    }
+
+    return false;
   }
 
   canBeUnloadedTo() {
