@@ -9,6 +9,9 @@ export default class Truck {
 
 
   constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel, stats) {
+    // store the stage so we can control the camera when we need it
+    this.stage = stage;
+
     // can be lower with reverse
     Truck.MIN_VELOCITY = 1.0;
     Truck.REVERSE_VELOCITY_FACTOR = 0.5;
@@ -134,6 +137,7 @@ export default class Truck {
 
   update(timeDelta) {
     this.move(timeDelta);
+    this.updateCamera();
     this.checkLogs();
     this.checkDeposits();
     this.draw();
@@ -273,6 +277,13 @@ export default class Truck {
         this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }
     }
+  }
+
+  updateCamera() {
+    var upfactor = 1 / 60;
+    var upvector =  [(this.stage.pivot.x - this.sprite.x)*upfactor, (this.stage.pivot.y - this.sprite.y) * upfactor];
+    this.stage.pivot.x -= upvector[0];
+    this.stage.pivot.y -= upvector[1];
   }
 
   checkLogs() {

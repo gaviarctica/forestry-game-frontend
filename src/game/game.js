@@ -16,10 +16,10 @@ export default class GameCanvas {
 
     this.stats = new Stats(updateUI);
 
-    this.map = new Level(this.mapData, game.stage);
+    this.map = new Level(this.mapData, this.game.stage);
     this.truck = new Truck(this.mapData.startpoint.x,
                            this.mapData.startpoint.y,
-                           game.stage,
+                           this.game.stage,
                            this.map.getStartingSegment(),
                            this.map.getLogs(),
                            this.map.getLogDeposits(),
