@@ -4,7 +4,6 @@ import {lerp, distance} from './helpers';
 import Log from './log';
 import LogDeposit from './logdeposit';
 
-
 export default class Truck {
 
 
@@ -364,7 +363,9 @@ export default class Truck {
     var logContainerX = this.logContainerTraverseOrder[i][0];
     var logContainerY = this.logContainerTraverseOrder[i][1];
 
-    return this.logsInTruck[logContainerX][logContainerY];
+
+
+    return { "log" : this.logsInTruck[logContainerX][logContainerY], "layer" : logContainerX };
   }
 
   setLogAtPriorityIndex(i, log) {
@@ -392,7 +393,7 @@ export default class Truck {
 
     // traverse the container in fill priority order to find empty position
     for (var i = 0; i < this.logContainerTraverseOrder.length; ++i) {
-      var logAtPos = this.getLogAtPriorityIndex(i);
+      var logAtPos = this.getLogAtPriorityIndex(i).log;
       // check if null.. aka no log at that pos
       if (!logAtPos) {
         this.setLogAtPriorityIndex(i, log);
@@ -406,19 +407,27 @@ export default class Truck {
   }
 
   unloadLogTo(deposit) {
+    var layer = -1;
     // unload in reverse fill priority order
     for (var i = this.logContainerTraverseOrder.length - 1; i >= 0; --i) {
       var log = this.getLogAtPriorityIndex(i);
-      if (log != null) {
-        if (deposit.addLog(log)) {
+      if (log.log != null) {
+        if (deposit.addLog(log.log)) {
           this.setLogAtPriorityIndex(i, null);
           this.stats.updateLogs(this.logsInTruck);
           return true;
+        }
+        // if there is a chance that a log is on the same layer we try again
+        else if(layer < 0 || layer == log.layer) {
+          layer = log.layer;
+          //return false;
         } else {
           return false;
         }
       }
     }
+
+    return false;
   }
 
   checkDeposits() {

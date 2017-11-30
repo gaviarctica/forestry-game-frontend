@@ -55,6 +55,8 @@ export default class LogDeposit {
   }
 
   addLog(log) {
+
+    // if we have no type, we assign type and mark it with appropriate color
     if( this.type === null ) {
       this.type = log.type;
 
