@@ -150,7 +150,6 @@ export default class Truck {
 
       // when direction changes
       if(this.previous_direction == -1) {
-        console.log("Dir change");
         // experimental index suggestion
         this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }
@@ -163,9 +162,8 @@ export default class Truck {
 
       // when direction changes
       if(this.previous_direction == 1) {
-        console.log("Dir change");
         // experimental index suggestion
-        this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
+        this.routeIndex = this.currentSegment.getPreviousNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }
 
       this.previous_direction = -1;
