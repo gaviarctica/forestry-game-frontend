@@ -147,14 +147,32 @@ export default class Truck {
     var direction = 0;
 
     if(Key.up.isDown) {
+
+      // when direction changes
+      if(this.previous_direction == -1) {
+        console.log("Dir change");
+        // experimental index suggestion
+        this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
+      }
+
       this.previous_direction = 1;
       direction = 1;
     }
 
     if(Key.down.isDown) {
+
+      // when direction changes
+      if(this.previous_direction == 1) {
+        console.log("Dir change");
+        // experimental index suggestion
+        this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
+      }
+
       this.previous_direction = -1;
       direction = -1;
     }
+
+
 
     if(Key.left.isDown) {
       this.leftWasDown = true;
@@ -243,7 +261,6 @@ export default class Truck {
 
         // experimental index suggestion
         this.routeIndex = this.currentSegment.getPreviousNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
-
       }
 
     } else if (this.pointDelta >= 1) {

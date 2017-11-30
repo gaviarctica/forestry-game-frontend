@@ -66,8 +66,11 @@ export default class RouteNode {
 
     for(i = 0; i < this.segments.length; ++i) {
       if(this.segments[i] !== current_segment) {
-        var value = (this.segments[i].getRotation(this) + current_segment.getRotation(this)) / (Math.PI / 2) - 1;
-        value = Math.abs(value);
+        var value_1 = Math.abs(((this.segments[i].getRotation(this) + Math.PI / 2) + (current_segment.getRotation(this) + Math.PI / 2))) * 180 / Math.PI;
+        var value_2 = Math.abs(((this.segments[i].getRotation(this) + Math.PI / 2) - (current_segment.getRotation(this) + Math.PI / 2))) * 180 / Math.PI;
+        var value = value_1 < value_2 ? value_1 : value_2;
+
+        value = Math.abs(value - 180);
         if(value < best_value) {
           best_value = value;
           index = i;
