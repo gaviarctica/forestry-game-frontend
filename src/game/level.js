@@ -34,7 +34,7 @@ export default class Level {
         var currentPos = {x: spos.x, y: spos.y};
         var roadSprite;
         var distanceToEnd = 0;
-        
+
         while (!this.pastEndPosition(spos, epos, currentPos)) {
           roadSprite = new PIXI.Sprite.fromImage('/static/road.png');
           roadSprite.anchor.set(0.5, 0.0);
@@ -57,7 +57,7 @@ export default class Level {
       }
     }
 
-    for(var i = 0; i < this.routeNodes.length; ++i) {
+    for(i = 0; i < this.routeNodes.length; ++i) {
       var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
       intersectionSprite.anchor.set(0.5, 0.5);
       intersectionSprite.scale.set(0.1);

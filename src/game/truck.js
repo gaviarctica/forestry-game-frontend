@@ -324,9 +324,9 @@ export default class Truck {
     if (this.doLogAction && this.selectedItem instanceof Log) {
       if (this.pickLog(this.selectedItem) === true) {
           // remove it from level array and from pixi stage container (parent of the log)
-          var index = this.logsOnLevel.indexOf(this.selectedItem);
+          index = this.logsOnLevel.indexOf(this.selectedItem);
           this.logsOnLevel.splice(index, 1);
-          var index = this.selectableItems.indexOf(this.selectedItem);
+          index = this.selectableItems.indexOf(this.selectedItem);
           if (index !== -1) {
             this.selectableItems.splice(index, 1);
           }
@@ -418,7 +418,7 @@ export default class Truck {
           return true;
         }
         // if there is a chance that a log is on the same layer we try again
-        else if(layer < 0 || layer == log.layer) {
+        else if(layer < 0 || layer === log.layer) {
           layer = log.layer;
           //return false;
         } else {
