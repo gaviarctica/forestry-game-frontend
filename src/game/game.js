@@ -5,7 +5,7 @@ import Stats from './stats';
 
 export default class GameCanvas {
   constructor(mapData, updateUI) {
-    var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x7da66e});
+    var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x7da66e, antialias: true});
     this.game = game;
 
     this.mapData = mapData;
