@@ -5,24 +5,24 @@ var Height = 5;
 var Outline = 4;
 
 var LogSpriteByType = [
-  '/static/log_placeholder.png',
-  '/static/log_placeholder.png',
-  '/static/log_placeholder.png',
-  '/static/log_placeholder.jpg',
-  '/static/log_placeholder.jpg',
-  '/static/log_placeholder.jpg'
+  '/static/log0.png',
+  '/static/log1.png',
+  '/static/log2.png',
+  '/static/log3.png',
+  '/static/log4.png',
+  '/static/log5.png'
 ];
 
 export default class Log {
 
 	constructor(position, type, stage) {
     Log.LogColorByType = [
-      0xD85040,
-      0x5286EC,
-      0x58A55C,
-      0xBC8E56,
-      0xAD8BFF,
-      0xFF72BE
+      0xa28569,
+      0xe4d73d,
+      0xf27f1a,
+      0xd85040,
+      0x946fed,
+      0x2c57c3
     ];
     this.type = type;
 		this.stage = stage;
@@ -33,7 +33,7 @@ export default class Log {
 
     // Log color code outline when log can be picked up
     var graphics = new PIXI.Graphics();
-    graphics.beginFill(Log.LogColorByType[type], 1);
+    graphics.beginFill(0x000000, 1);
     graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
     graphics.alpha = 0.0;
 
