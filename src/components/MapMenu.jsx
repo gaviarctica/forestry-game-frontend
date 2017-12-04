@@ -129,7 +129,7 @@ export default class MapMenu extends Component {
       );
 
       var mapImage = {
-        backgroundImage: 'url(' + selMap.mapinfo.image + ')'
+        backgroundImage: 'url(/levelimage/' + selMap.id + '.svg)'
       };
     }
 
