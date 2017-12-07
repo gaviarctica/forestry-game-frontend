@@ -1,0 +1,242 @@
+:root {
+    /* Variables */
+    --log-load-border-width: 7px;
+    --game-stats-width: 180px;
+  }
+  
+  #canvas-editor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+  }
+  
+  html {
+      overflow-y: hidden;
+  }
+  
+  .Game {  
+    width: 100vw;
+    height: 100vh;
+    z-index: auto;
+  }
+  
+  #game-stats:hover, #logs-remaining:hover {
+    opacity: 1.0;
+  }
+  
+  #game-info {
+    position: fixed;
+      padding: 20px;
+    z-index: 10;
+  }
+  
+  #game-stats {
+      background-color: rgb(136,136,136);
+    opacity: 0.5;
+    width: var(--game-stats-width);
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+  
+  #game-stats-grouped {
+    padding: 10px;
+  }
+  
+  #user, #time, #distance, #unload-count, #fuel {
+    padding-bottom: 10px;
+    color: white;
+    font-size: 24px;
+    text-align: right;
+  }
+  
+  #logs-remaining {
+      background-color: rgb(136,136,136);
+      color: black;
+    width: var(--game-stats-width);
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+  
+  #logs-remaining-row {
+      padding: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .logs-remaining-count {
+      border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    padding: 9px;
+    background-color: yellow;
+    border: 1px solid #666;
+    color: #666;
+    text-align: center;
+    font: 16px;
+      display: inline-block;
+  }
+  
+  #log-load {
+    width: var(--game-stats-width);
+    position: relative;
+  }
+  
+  .log-load-row {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .log-load-fill {
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    padding: 9px;
+    background: transparent;
+    border: 1px dashed #666;
+    color: rgba(245, 245, 245, 0.8);
+    text-align: center;
+    font: 16px;
+    display: inline-block;
+    margin: 1px;
+  }
+  
+  .log-type-0 {
+    border: 1px solid #a28569;
+    background-color: #a28569;
+  }
+  
+  .log-type-1 {
+    border: 1px solid #e4d73d;
+    background-color: #e4d73d;
+  }
+  
+  .log-type-2 {
+    border: 1px solid #f27f1a;
+    background-color: #f27f1a;
+  }
+  
+  .log-type-3 {
+    border: 1px solid #d85040;
+    background-color: #d85040;
+  }
+  
+  .log-type-4 {
+    border: 1px solid #946fed;
+    background-color: #946fed;
+  }
+  
+  .log-type-5 {
+    border: 1px solid #2c57c3;
+    background-color: #2c57c3;
+  }
+  
+  .log-load-border {
+    background-color: #151515;
+    position: absolute;
+  }
+  
+  #log-load-border-1 {
+    left: 0;
+    top: 0;
+    width: var(--log-load-border-width);
+    height: 125px;
+    border-top-left-radius: calc(var(--log-load-border-width) / 2);
+    border-top-right-radius: calc(var(--log-load-border-width) / 2);
+    border-bottom-left-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  #log-load-border-2 {
+    right: 0;
+    top: 0;
+    width: var(--log-load-border-width);
+    height: 130px;
+    border-top-left-radius: calc(var(--log-load-border-width) / 2);
+    border-top-right-radius: calc(var(--log-load-border-width) / 2);
+    border-bottom-right-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  #log-load-border-3 {
+    left: 0;
+    top: calc(130px - var(--log-load-border-width));
+    width: 45px;
+    height: var(--log-load-border-width);
+    border-bottom-left-radius: calc(var(--log-load-border-width) / 2);
+    border-top-right-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  #log-load-border-4 {
+    right: 0;
+    top: calc(130px - var(--log-load-border-width));
+    width: 45px;
+    height: var(--log-load-border-width);
+    border-bottom-right-radius: calc(var(--log-load-border-width) / 2);
+    border-top-left-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  #log-load-border-5 {
+    left: calc(45px - var(--log-load-border-width));
+    top: calc(130px - var(--log-load-border-width));
+    width: var(--log-load-border-width);
+    height: 85px;
+    border-top-right-radius: calc(var(--log-load-border-width) / 2);
+    border-bottom-left-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  #log-load-border-6 {
+    right: calc(45px - var(--log-load-border-width));
+    top: calc(130px - var(--log-load-border-width));
+    width: var(--log-load-border-width);
+    height: 85px;
+    border-top-left-radius: calc(var(--log-load-border-width) / 2);
+    border-bottom-right-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  #log-load-border-7 {
+    left: calc(45px - var(--log-load-border-width));
+    top: calc(130px + 85px - 2 * var(--log-load-border-width));
+    width: 104px;
+    height: var(--log-load-border-width);
+    border-bottom-left-radius: calc(var(--log-load-border-width) / 2);
+    border-bottom-right-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  .log-load-border-notch {
+    background-color: var(--jd-yellow);
+    z-index: 11;
+  }
+  
+  #log-load-border-notch-1 {
+    left: 0;
+    top: 0;
+    width: var(--log-load-border-width);
+    height: 20px;
+    border-top-left-radius: calc(var(--log-load-border-width) / 2);
+    border-top-right-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  #log-load-border-notch-2 {
+    right: 0;
+    top: 0;
+    width: var(--log-load-border-width);
+    height: 20px;
+    border-top-left-radius: calc(var(--log-load-border-width) / 2);
+    border-top-right-radius: calc(var(--log-load-border-width) / 2);
+  }
+  
+  #game-end {
+    background-color: rgba(0,0,0,0.65);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    font-size: 72px;
+  }

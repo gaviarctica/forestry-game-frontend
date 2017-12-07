@@ -52,7 +52,8 @@ export const LANG = {
       logIn: "Log in",
       signUp: "Sign up",
       quit: "Quit",
-      report: "Report"
+      report: "Report",
+      road: "Road"
     },
     logs: {
       type1: "Type 1",
@@ -116,7 +117,8 @@ export const LANG = {
       logIn: "Kirjaudu sisään",
       signUp: "Rekisteröidy",
       quit: "Lopeta",
-      report: "Raportti"
+      report: "Raportti",
+      road: "Tie"
     },
     logs: {
       type1: "Tyyppi 1",

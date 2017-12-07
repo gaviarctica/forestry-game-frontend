@@ -43,6 +43,8 @@ export default class MainMenu extends Component {
 
     if (clicked === 'button-play' && this.state.activeTab !== 'play') {
       this.switchTab('play');
+    } else if (clicked === 'button-editor' && this.state.activeTab !== 'editor') {
+      this.props.switchView('editorview');
     } else if (clicked === 'button-profile' && this.state.activeTab !== 'profile') {
       this.switchTab('profile');
     } else if (clicked === 'button-login' && this.state.activeTab !== 'login') {
@@ -142,7 +144,6 @@ export default class MainMenu extends Component {
             lang={this.props.lang} />
         );
         break;
-
       case 'profile':
         view = (
           <Profile
