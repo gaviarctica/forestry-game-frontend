@@ -3,6 +3,7 @@ import Button from './Button';
 import './MapMenu.css';
 import { TranslateRight, TranslateLeft, FadeInFadeOut } from './animation';
 import './animation.css';
+import Loader from './Loader';
 import { API } from './api';
 import { LANG } from './lang';
 
@@ -14,7 +15,8 @@ export default class MapMenu extends Component {
       selectedMapIndex: 0,
       appearAnimation: false,
       viewAnimation: false,
-      scrollAnimationInProgress: false
+      scrollAnimationInProgress: false,
+      loadingContent: true
     }
   }
 
@@ -34,8 +36,10 @@ export default class MapMenu extends Component {
   componentDidMount() {
     this.setState({
       appearAnimation: true,
-      viewAnimation: true
+      viewAnimation: true,
+      loadingContent: false
     });
+
   }
 
   handleButtonClick(e) {
@@ -55,10 +59,17 @@ export default class MapMenu extends Component {
     if (!this.state.scrollAnimationInProgress) {
       this.setState({
         viewAnimation: false,
-        scrollAnimationInProgress: true
+        scrollAnimationInProgress: true,
+        loadingContent: true
       });
 
       var self = this;
+
+      setTimeout(function() {
+        self.setState({
+          loadingContent: false
+        });
+      }, 700);
       if (this.state.selectedMapIndex === 0) {
         setTimeout(function() {
           self.setState({
@@ -86,10 +97,17 @@ export default class MapMenu extends Component {
     if (!this.state.scrollAnimationInProgress) {
       this.setState({
         viewAnimation: false,
-        scrollAnimationInProgress: true
+        scrollAnimationInProgress: true,
+        loadingContent: true
       });
 
       var self = this;
+
+      setTimeout(function() {
+        self.setState({
+          loadingContent: false
+        });
+      }, 700);
       if (this.state.selectedMapIndex === this.state.maps.length - 1) {
         setTimeout(function() {
           self.setState({
@@ -107,7 +125,7 @@ export default class MapMenu extends Component {
             viewAnimation: true,
             scrollAnimationInProgress: false
           }));
-        }, 350);     
+        }, 350);
       }
     }
   }
@@ -136,19 +154,22 @@ export default class MapMenu extends Component {
     if (this.state.maps === undefined) {
       return (
         <div className="MapMenu">
-          Loading or no connection to backend or no maps in database
+          <Loader />
         </div>
       );
     } else {
       return (
-        <div className="MapMenu">        
+        <div className="MapMenu"> 
           <div id="map-menu">
-
             <div id="top">
-
+              
               <TranslateRight in={this.state.appearAnimation}>
                 <div id="left">
-
+                {
+                  this.state.loadingContent ? (
+                    <Loader />
+                  ) : ('')
+                }
                   <FadeInFadeOut in={this.state.viewAnimation}>
                     <div id="fading-content">
                       <div id="map-name">

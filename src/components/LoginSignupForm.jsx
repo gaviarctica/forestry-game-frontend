@@ -4,6 +4,7 @@ import './LoginSignupForm.css';
 import './api';
 import DjangoCSRFToken from 'django-react-csrftoken'
 import { LANG } from './lang';
+import Loader from './Loader';
 
 
 export default class LoginSignupForm extends Component {
