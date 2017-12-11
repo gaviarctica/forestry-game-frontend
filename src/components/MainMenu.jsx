@@ -89,16 +89,15 @@ export default class MainMenu extends Component {
 
   handleRegister(username, password, email) {
     var self = this;
-    API.register(username, password, email, function(err, message, un, em) {
+    API.register(username, password, email, function(err, message, username, email) {
       if (err) throw err;
-
       // Registering was not successful
-      if (message) {
+      if (err || message) {
         self.setState({
           formMsg: message
         });
       } else {
-        self.handleFormSuccess(un, em);
+        self.handleFormSuccess(username, email);
       }
     });
   }
