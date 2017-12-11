@@ -31,9 +31,16 @@ export const LANG = {
         email: "email",
         messages: {
           wrongUsernameOrPassword: "Wrong username or password",
-          noBlankFields: "Form fields may not be blank",
           usernameExists: "That username already exists",
-          emailExists: "An account with that email address already exists"
+          emailExists: "An account with that email address already exists",
+          usernameRequired: "Please enter a username",
+          passwordRequired: "Please enter a password",
+          emailRequired: "Please enter an email address",
+          usernameTooShort: "Username must be between 3 and 15 characters in length",
+          usernameTooLong: "Username must be between 3 and 15 characters in length",
+          passwordTooShort: "Password must be between 6 and 50 characters in length",
+          passwordTooLong: "Password must be between 6 and 50 characters in length",
+          emailInvalid: "Please enter a valid email address"
         }
       }
     },
@@ -95,9 +102,16 @@ export const LANG = {
         email: "sähköposti",
         messages: {
           wrongUsernameOrPassword: "Väärä käyttäjänimi tai salasana",
-          noBlankFields: "Lomakkeen kenttiä ei voi jättää tyhjäksi",
           usernameExists: "Käyttäjänimi on varattu",
-          emailExists: "Sähköpostiosoite on varattu"
+          emailExists: "Sähköpostiosoite on varattu",
+          usernameRequired: "Käyttäjänimi vaaditaan",
+          passwordRequired: "Salasana vaaditaan",
+          emailRequired: "Sähköpostiosoite vaaditaan",
+          usernameTooShort: "Käyttäjänimen on oltava 3-15 merkkiä pitkä",
+          usernameTooLong: "Käyttäjänimen on oltava 3-15 merkkiä pitkä",
+          passwordTooShort: "Salasanan on oltava 6-50 merkkiä pitkä",
+          passwordTooLong: "Salasanan on oltava 6-50 merkkiä pitkä",
+          emailInvalid: "Syötä sähköpostiosoite oikeassa muodossa"
         }
       }
     },
