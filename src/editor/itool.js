@@ -1,9 +1,7 @@
-import ITool from './itool.js';
+// abstract base class for tools to inherit and override
 
-export default class RoadTool extends ITool {
-    
-    constructor() {
-
+export class ITool {
+    constructor(){
     }
 
     activate() {}

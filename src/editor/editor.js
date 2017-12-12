@@ -15,6 +15,7 @@ export default class EditorCanvas {
     this.ui = new UserInterface(updateUI);
 
     this.currentTool = null;
+    this.tools = [];
 
     this.buildGrid();
     this.createTools();
@@ -102,22 +103,32 @@ export default class EditorCanvas {
   }
 
   selectTool(name) {
-    // TODO: remove add event listener
-
-    //this.currentTool = tools[name];
-      
     var self = this;
-    window.addEventListener(
-      "keydown", self.currentTool.keyDown, false
-    );
-    window.addEventListener(
-      "keyup", self.currentTool.keyUp, false
-    );
+    if (this.currentTool) {
+      window.removeEventListener(
+        "keydown", self.currentTool.keyDown, false
+      );
+      window.removeEventListener(
+        "keyup", self.currentTool.keyUp, false
+      );
+      this.currentTool.deactivate();
+    }
+    
+    this.currentTool = this.tools[name];
+    
+    if (this.currentTool !== null && this.currentTool !== undefined) {
+      window.addEventListener(
+        "keydown", self.currentTool.keyDown, false
+      );
+      window.addEventListener(
+        "keyup", self.currentTool.keyUp, false
+      ); 
+      this.currentTool.activate();
+    }
   }
 
   update(delta)
   {
-    
     this.ui.updateUI({
     });
   }
