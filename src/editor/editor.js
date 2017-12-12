@@ -96,8 +96,9 @@ export default class EditorCanvas {
         self.game.stage.scale.y +=  0.05;
       }
     }
-    document.getElementById('canvas-editor').addEventListener("mousewheel", mouseWheelEvent, false);
-
+    document.getElementById('canvas-editor').addEventListener("wheel", mouseWheelEvent, false);
+    this.game.stage.position.x += this.game.renderer.width / 2;
+    this.game.stage.position.y += this.game.renderer.height / 2;
   }
 
   selectTool(name) {

@@ -74,7 +74,7 @@ export default class GameCanvas {
         self.game.stage.scale.y +=  0.05;
       }
     }
-    document.getElementById('canvas-game').addEventListener("mousewheel", mouseWheelEvent, false);
+    document.getElementById('canvas-game').addEventListener("wheel", mouseWheelEvent, false);
 
     this.game.stage.pivot.set( this.mapData.startpoint.x,  this.mapData.startpoint.y);
     this.game.stage.position.x += this.game.renderer.width / 2;
