@@ -101,7 +101,13 @@ export default class LoginSignupForm extends Component {
             {
               this.state.message ? 
                 <div id="message">
-                  {LANG[this.props.lang].mainMenu.loginSignupForm.messages[this.state.message]}
+                  {this.state.message.map(msg => {
+                    return (
+                      <p>
+                        {LANG[this.props.lang].mainMenu.loginSignupForm.messages[msg]}
+                      </p>
+                    );
+                  })}
                 </div>
               : ''
             }

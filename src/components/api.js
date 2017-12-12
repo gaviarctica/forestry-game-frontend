@@ -41,21 +41,21 @@ export const API = {
       body: form
     };
 
-    var message = undefined;
+    var messages = [];
 
     fetch(url, init).then(function (response) {
       if(response.status === 200) {
         return response.json();
       } else if (response.status === 401) {
-        message = 'wrongUsernameOrPassword';
-        callback(err, message);
+        messages.push('wrongUsernameOrPassword');
+        callback(err, messages);
       } else {
         err = 'Error making login request.';
         callback(err);
       }
     }).then(function(responseJson) {
       if (responseJson) {
-        callback(err, message, responseJson.username, responseJson.email);
+        callback(err, messages, responseJson.username, responseJson.email);
       } else {
         err = 'Error making login request.';
         callback(err);
@@ -91,34 +91,30 @@ export const API = {
     var init = {
       method: 'POST',
       credentials: 'same-origin',
-      // headers: {
-      // 	'Accept': 'application/json',
-      // 	'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-      // },
       body: form
     };
 
-    var message = undefined;
+    var messages = [];
 
     fetch(url, init).then(function (response) {
       if(response.status === 200 || response.status === 400) {
         return response.json();
       } else {
-        err = 'Error making login request.';
+        err = 'Error making register request.';
         callback(err);
       }
     }).then(function(responseJson) {
       if (responseJson) {
-        if (responseJson.username && responseJson.username.indexOf("This field may not be blank.") !== -1 ||
-            responseJson.email && responseJson.email.indexOf("This field may not be blank.") !== -1 ||
-            responseJson.password && responseJson.password.indexOf("This field may not be blank.") !== -1) {
-          message = 'noBlankFields';
-        } else if (responseJson.username.indexOf("A user with that username already exists.") !== -1) {
-          message = 'usernameExists';
-        } else if (responseJson.email.indexOf("A user with that email already exists.") !== -1) {
-          message = 'emailExists';
+        // If form is valid but errors in create()
+        if (responseJson.username && responseJson.username.indexOf("A user with that username already exists.") !== -1) {
+          messages.push('usernameExists');
+        } else if (responseJson.email && responseJson.email.indexOf("A user with that email already exists.") !== -1) {
+          messages.push('emailExists');
+        } else {
+          // If form is not valid the errors come neatly in responseJson
+          messages = responseJson;
         }
-        callback(err, message, responseJson.username, responseJson.email);
+        callback(err, messages, responseJson.username, responseJson.email);
       }
     });
   },

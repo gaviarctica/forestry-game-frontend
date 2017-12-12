@@ -23,7 +23,8 @@ export default class Level {
 
   drawRoutes() {
     const roadSpriteLength = 50;
-    
+
+    var texture = PIXI.Texture.fromImage('/static/road.png');
     for(var i = 0; i < this.routeNodes.length; ++i) {
       var segments = this.routeNodes[i].getSegments();
       for(var j = 0; j < segments.length; ++j) {
@@ -34,7 +35,6 @@ export default class Level {
         var currentPos = {x: spos.x, y: spos.y};
         var roadSprite;
         var distanceToEnd = 0;
-        var texture = PIXI.Texture.fromImage('/static/road.png');
         var tilingSprite = new PIXI.extras.TilingSprite(
           texture, 
           roadSpriteLength,

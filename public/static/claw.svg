@@ -1,0 +1,35 @@
+<svg width="80" height="140" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="82" height="142" id="canvas_background" fill="none"/>
+  <g id="canvasGrid" display="none">
+   <rect id="svg_1" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <ellipse fill="#ffde00" stroke="#000" stroke-width="1.5" cx="51.761364" cy="52.784091" id="svg_2"/>
+  <rect fill="#e0c200" stroke-width="4" x="4.755297" y="52.888445" width="3.697901" height="33.450215" id="svg_23" transform="rotate(20 6.604247570037884,69.61355590820311) " stroke="#e0c200"/>
+  <rect fill="#e0c200" stroke-width="4" x="71.577188" y="52.77203" width="3.697901" height="33.450215" id="svg_28" transform="rotate(-20 73.4261398315429,69.49713897705075) " stroke="#e0c200"/>
+  <rect id="svg_4" height="10" width="1.625" y="54.0625" x="5.3125" stroke-width="4" stroke="#e0c200" fill="#e0c200"/>
+  <rect id="svg_7" height="10" width="1.625" y="55.9375" x="73.3125" stroke-width="4" stroke="#e0c200" fill="#e0c200"/>
+  <rect id="svg_9" height="7.5" width="70.625" y="53.6875" x="4.6875" stroke-width="4" stroke="#e0c200" fill="#e0c200"/>
+  <rect stroke="#ffd800" fill="none" stroke-width="4" x="2" y="52.429041" width="76" height="85.454545" id="svg_19" rx="1"/>
+  <rect stroke="#ffd800" id="svg_13" height="6.375" width="51.249998" y="14.708191" x="14.375" stroke-width="4" fill="#ffd800"/>
+  <rect id="svg_15" height="46.500002" width="3.375" y="12.8125" x="12.3125" stroke-width="4" fill="#ffde00"/>
+  <rect id="svg_16" height="46.500002" width="3.375" y="12.8125" x="64.3125" stroke-width="4" fill="#ffde00"/>
+  <rect id="svg_17" height="46.500002" width="3.375" y="12.8125" x="28" stroke-width="4" fill="#ffde00"/>
+  <rect id="svg_18" height="46.500002" width="3.375" y="12.8125" x="48" stroke-width="4" fill="#ffde00"/>
+  <rect stroke="null" transform="rotate(17 3.795883655548093,7.081704139709473) " id="svg_22" height="13.288494" width="4" y="0.437457" x="1.795884" stroke-width="4" fill="#ffd800"/>
+  <rect stroke="null" transform="rotate(-17 76.17088317871094,7.081704139709461) " id="svg_24" height="13.288494" width="4" y="0.437457" x="74.170884" stroke-width="4" fill="#ffd800"/>
+  <rect stroke="null" id="svg_25" height="4" width="71.999997" y="0.0625" x="3.9375" stroke-width="4" fill="#ffd800"/>
+  <rect id="svg_26" height="16.125" width="9.375" y="3.08319" x="35.3125" stroke-width="4" fill="#ffd800"/>
+  <rect rx="1" id="svg_27" height="13.5" width="6.625" y="30.333191" x="3.4375" stroke-width="4" fill="#e0c200"/>
+  <rect rx="1" id="svg_29" height="13.5" width="6.625" y="30.333191" x="70.0625" stroke-width="4" fill="#e0c200"/>
+  <rect stroke="#ffde00" id="svg_12" height="8.875" width="80" y="45.1875" x="0" stroke-width="4" fill="#ffde00"/>
+  <rect stroke="null" id="svg_20" height="30.625001" width="4" y="12.5625" x="0.125" stroke-width="4" fill="#ffd800"/>
+  <rect stroke="null" id="svg_21" height="30.625001" width="4" y="12.5625" x="76" stroke-width="4" fill="#ffd800"/>
+ </g>
+</svg>

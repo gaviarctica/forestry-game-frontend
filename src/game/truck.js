@@ -31,12 +31,18 @@ export default class Truck {
 
     this.currentSegment = startSegment;
 
+    this.clawSprite = PIXI.Sprite.fromImage('/static/claw.svg');
+    this.clawSprite.anchor.set(0.5);
+    this.clawSprite.scale.set(0.1);
+    this.clawSprite.alpha = 0;
+
     this.arrowSprite = PIXI.Sprite.fromImage('/static/arrow.svg');
     this.arrowSprite.anchor.set(0, 0.5);
     this.arrowSprite.scale.set(0.2);
 
     stage.addChild(this.arrowSprite);
     stage.addChild(this.sprite);
+    stage.addChild(this.clawSprite);
 
     // some key helpers
     this.leftWasDown = false;
@@ -502,12 +508,24 @@ export default class Truck {
     }
 
     this.selectGraphic.clear();
+    this.clawSprite.alpha = 0;
     if (this.selectedItem != null) {
       this.selectGraphic.beginFill();
-      this.selectGraphic.lineStyle(3, 0x000000);
+      this.selectGraphic.lineStyle(3, 0x151515);
       this.selectGraphic.moveTo(point.x, point.y);
       this.selectGraphic.lineTo(this.selectedItem.graphics.position.x, this.selectedItem.graphics.position.y);
       this.selectGraphic.endFill();
+
+      this.clawSprite.x = this.selectedItem.graphics.position.x;
+      this.clawSprite.y = this.selectedItem.graphics.position.y;
+      // Set claw angle
+      this.clawSprite.rotation = -Math.PI/2 + Math.atan2(
+        this.selectedItem.graphics.position.y - this.sprite.y,
+        this.selectedItem.graphics.position.x - this.sprite.x);
+      // Make claw be on top of line
+      this.stage.removeChild(this.clawSprite);
+      this.stage.addChild(this.clawSprite);
+      this.clawSprite.alpha = 1;
     }
   }
 }
