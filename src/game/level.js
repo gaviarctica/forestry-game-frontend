@@ -23,7 +23,7 @@ export default class Level {
 
   drawRoutes() {
     const roadSpriteLength = 50;
-
+    
     for(var i = 0; i < this.routeNodes.length; ++i) {
       var segments = this.routeNodes[i].getSegments();
       for(var j = 0; j < segments.length; ++j) {
@@ -34,26 +34,18 @@ export default class Level {
         var currentPos = {x: spos.x, y: spos.y};
         var roadSprite;
         var distanceToEnd = 0;
-
-        while (!this.pastEndPosition(spos, epos, currentPos)) {
-          roadSprite = new PIXI.Sprite.fromImage('/static/road.png');
-          roadSprite.anchor.set(0.5, 0.0);
-          roadSprite.scale.set(0.1);
-          roadSprite.rotation = angle + Math.PI;
-          roadSprite.x = currentPos.x;
-          roadSprite.y = currentPos.y;
-
-          // Make last texture chunk shorter if needed
-          distanceToEnd = distance(currentPos, epos);
-          if (distanceToEnd < roadSpriteLength) {
-            roadSprite.height = distanceToEnd;
-          }
-
-          this.stage.addChild(roadSprite);
-
-          // Calculate starting point for next texture chunk
-          currentPos = endpointByStartPointDistanceAndAngle(currentPos, roadSpriteLength, angle - Math.PI / 2);
-        }
+        var texture = PIXI.Texture.fromImage('/static/road.png');
+        var tilingSprite = new PIXI.extras.TilingSprite(
+          texture, 
+          roadSpriteLength,
+          distance(spos, epos)
+        );
+        tilingSprite.anchor.set(0.5, 0.0);
+        tilingSprite.tileScale.set(0.1);
+        tilingSprite.rotation = angle + Math.PI;
+        tilingSprite.x = currentPos.x;
+        tilingSprite.y = currentPos.y;
+        this.stage.addChild(tilingSprite);
       }
     }
 
