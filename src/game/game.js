@@ -9,8 +9,7 @@ export default class GameCanvas {
     this.game = game;
 
     this.mapData = mapData;
-    this.update = this.update.bind(this);
-    game.ticker.add(this.update);
+    
 
     document.getElementById('canvas-game').appendChild(game.view);
 
@@ -26,6 +25,8 @@ export default class GameCanvas {
                            this.stats);
 
     this.setupCameraControl();
+    this.update = this.update.bind(this);
+    game.ticker.add(this.update);
   }
 
   setupCameraControl() {
@@ -68,7 +69,7 @@ export default class GameCanvas {
     var mouseWheelEvent = function(event) {
       if ((event.wheelDelta < -1 || event.deltaY > 1) && self.game.stage.scale.x > 0.5) {
         self.game.stage.scale.x -=  0.05;
-        self.game.stage.scale.y -=   0.05;
+        self.game.stage.scale.y -=  0.05;
       } else if ((event.wheelDelta > 1 || event.deltaY < -1) && self.game.stage.scale.x < 3.0) {
         self.game.stage.scale.x +=  0.05;
         self.game.stage.scale.y +=  0.05;

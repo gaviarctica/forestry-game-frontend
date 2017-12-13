@@ -9,7 +9,7 @@ export default class Level {
   constructor(map, stage) {
     this.map = map;
     this.stage = stage;
-    this.routeNodes = [];
+    this.routeNodes = new Map();
     this.routeSegments = [];
     this.logs = [];
     this.logDeposits = [];
@@ -25,8 +25,8 @@ export default class Level {
     const roadSpriteLength = 50;
 
     var texture = PIXI.Texture.fromImage('/static/road.png');
-    for(var i = 0; i < this.routeNodes.length; ++i) {
-      var segments = this.routeNodes[i].getSegments();
+    for(let [id, routeNode] of this.routeNodes) {
+      var segments = routeNode.getSegments();
       for(var j = 0; j < segments.length; ++j) {
         var spos = segments[j].startNode.getPos();
         var epos = segments[j].endNode.getPos();
@@ -49,12 +49,12 @@ export default class Level {
       }
     }
 
-    for(i = 0; i < this.routeNodes.length; ++i) {
+    for(let [id, routeNode] of this.routeNodes) {
       var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
       intersectionSprite.anchor.set(0.5, 0.5);
       intersectionSprite.scale.set(0.1);
-      intersectionSprite.x = this.routeNodes[i].getPos().x;
-      intersectionSprite.y = this.routeNodes[i].getPos().y;
+      intersectionSprite.x = routeNode.getPos().x;
+      intersectionSprite.y = routeNode.getPos().y;
       this.stage.addChild(intersectionSprite);
     }
   }
@@ -71,14 +71,17 @@ export default class Level {
 
   parseNodes() {
     for (var i = 0; i < this.map.routes.length; ++i) {
-      this.routeNodes.push(new RouteNode(this.map.routes[i], []));
+      var routeNodeData = this.map.routes[i];
+      var id = routeNodeData.route_node;
+      var pos = {'x':routeNodeData.x, 'y': routeNodeData.y };
+      var to = routeNodeData.to;
+      this.routeNodes.set(id, new RouteNode(id, pos, to));
     }
   }
 
   parseRouteSegments() {
 
-    for (var i = 0; i < this.routeNodes.length; ++i) {
-      var startNode = this.routeNodes[i];
+    for (let [id, startNode] of this.routeNodes) {
       var endNode = null;
       var segment = null;
       // checking if there is multiple routes from this node
@@ -94,19 +97,15 @@ export default class Level {
       //
       // } else
 
-      if(Array.isArray(this.routeNodes[i].getPos().to)) {
-        for(var j = 0; j < this.routeNodes[i].getPos().to.length; ++j) {
-          var the_k = -1;
-          for (var k = 0; k < this.routeNodes.length; ++k) {
-            if(this.routeNodes[k].getPos().route_node === this.routeNodes[i].getPos().to[j]) {
-              endNode = this.routeNodes[k];
-              the_k = k;
-            }
-          }
-
+      // check if node has any waypoints and create segments between them
+      if(Array.isArray(startNode.getTo())) {
+        for(var j = 0; j < startNode.getTo().length; ++j) {
+          var toNodeId = startNode.getTo()[j];
+          endNode = this.routeNodes.get(toNodeId);
+          
           segment = new RouteSegment(startNode, endNode);
-          this.routeNodes[i].addSegment(segment);
-          this.routeNodes[the_k].addSegment(segment);
+          startNode.addSegment(segment);
+          endNode.addSegment(segment);
           this.routeSegments.push(segment);
         }
       }
