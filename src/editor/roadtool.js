@@ -1,16 +1,26 @@
-import ITool from './itool.js';
-
+import ITool from './itool';
+import * as PIXI from 'pixi.js';
 export default class RoadTool extends ITool {
     
-    constructor() {
+    constructor(stage) {
+        super(stage);
 
+        this.graphics = new PIXI.Graphics();
     }
 
-    activate() {}
-    mouseMove(mouseInput) {}
+    activate() {
+        super.activate();
+    }
+
+    mouseMove(mouseInput) {
+
+
+    }
     mouseDown() {}
     mouseUp() {}
     keyDown(event) {}
     keyUp(event) {}
-    deactivate() {}
+    deactivate() {
+        super.deactivate();
+    }
 }

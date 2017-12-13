@@ -1,7 +1,8 @@
 // abstract base class for tools to inherit and override
 
-export class ITool {
-    constructor(){
+export default class ITool {
+    constructor(stage){
+        this.stage = stage;
     }
 
     activate() {}
