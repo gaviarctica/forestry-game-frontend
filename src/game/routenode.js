@@ -1,7 +1,9 @@
 export default class RouteNode {
-  constructor(point, segments) {
+  constructor(id, point, to) {
+    this.id = id
     this.point = point;
-    this.segments = segments;
+    this.to = to;
+    this.segments = [];
   }
 
   addSegment( segment ) {
@@ -20,6 +22,14 @@ export default class RouteNode {
 
   getPos() {
     return this.point;
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  getTo() {
+    return this.to;
   }
 
   getSelectedSegment(current_segment, index, arrowSprite, dir = 1) {
