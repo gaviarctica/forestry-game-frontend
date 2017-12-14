@@ -4,26 +4,73 @@ import RouteSegment from './routesegment';
 import Log from './log';
 import LogDeposit from './logdeposit';
 import { endpointByStartPointDistanceAndAngle, distance } from './helpers';
+import {LogType} from './logtypes'
 
 export default class Level {
-  constructor(map, stage) {
+  constructor(map) {
     this.map = map;
+<<<<<<< HEAD
+    this.stage = new PIXI.Container();
+    this.routeContainer = new PIXI.Container();
+    this.stage.addChild(this.routeContainer);
+=======
     this.stage = stage;
+>>>>>>> origin/master
     this.routeNodes = new Map();
     this.routeSegments = [];
     this.logs = [];
     this.logDeposits = [];
+    this.routeTexture = PIXI.Texture.fromImage('/static/road.png');
+    
+    if (map) {
+      this.parseRouteNodes();
+      this.parseLogs();
+      this.parseLogDeposits();
 
-    this.parseNodes();
-    this.parseRouteSegments();
-    this.drawRoutes();
-    this.parseLogs();
-    this.parseLogDeposits();
+      this.generateRouteSegments();
+      this.drawRoutes();
+    }
+
+  }
+
+  getStage() {
+    return this.stage;
+  }
+
+  // used by map editor
+  getRouteNodes() {
+    return this.routeNodes;
+  }
+
+  // used by map editor
+  getNextRouteNodeId() {
+    return this.routeNodes.size + 1;
   }
 
   drawRoutes() {
     const roadSpriteLength = 50;
 
+<<<<<<< HEAD
+    for(var j = 0; j < this.routeSegments.length; ++j) {
+      var spos = this.routeSegments[j].startNode.getPos();
+      var epos = this.routeSegments[j].endNode.getPos();
+
+      var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
+      var currentPos = {x: spos.x, y: spos.y};
+      var roadSprite;
+      var distanceToEnd = 0;
+      var tilingSprite = new PIXI.extras.TilingSprite(
+        this.routeTexture, 
+        roadSpriteLength,
+        distance(spos, epos)
+      );
+      tilingSprite.anchor.set(0.5, 0.0);
+      tilingSprite.tileScale.set(0.1);
+      tilingSprite.rotation = angle + Math.PI;
+      tilingSprite.x = currentPos.x;
+      tilingSprite.y = currentPos.y;
+      this.stage.addChild(tilingSprite);
+=======
     var texture = PIXI.Texture.fromImage('/static/road.png');
     for(let [id, routeNode] of this.routeNodes) {
       var segments = routeNode.getSegments();
@@ -47,6 +94,7 @@ export default class Level {
         tilingSprite.y = currentPos.y;
         this.stage.addChild(tilingSprite);
       }
+>>>>>>> origin/master
     }
 
     for(let [id, routeNode] of this.routeNodes) {
@@ -69,17 +117,35 @@ export default class Level {
     return false;
   }
 
-  parseNodes() {
+  parseRouteNodes() {
     for (var i = 0; i < this.map.routes.length; ++i) {
       var routeNodeData = this.map.routes[i];
       var id = routeNodeData.route_node;
-      var pos = {'x':routeNodeData.x, 'y': routeNodeData.y };
+      var pos = {x: routeNodeData.x, y: routeNodeData.y };
       var to = routeNodeData.to;
-      this.routeNodes.set(id, new RouteNode(id, pos, to));
+      this.addRouteNode(id, pos, to);
     }
   }
 
-  parseRouteSegments() {
+  addRouteNode(id, pos, to) {
+    this.routeNodes.set(id, new RouteNode(id, pos, to));
+  }
+
+  // used by map editor
+  refreshRoutes() {
+    this.routeSegments = [];
+    this.routeContainer.removeChildren();
+
+    // reset, mainly to remove segments from them
+    for (let [id, node] of this.routeNodes) {
+      node.reset(id, node.point, node.to);
+    }
+
+    this.generateRouteSegments();
+    this.drawRoutes();
+  }
+
+  generateRouteSegments() {
 
     for (let [id, startNode] of this.routeNodes) {
       var endNode = null;
@@ -103,6 +169,10 @@ export default class Level {
           var toNodeId = startNode.getTo()[j];
           endNode = this.routeNodes.get(toNodeId);
           
+          // don't add segment twice if already connected
+          if (startNode.hasSegmentWithNodes(endNode, startNode))
+            continue;
+
           segment = new RouteSegment(startNode, endNode);
           startNode.addSegment(segment);
           endNode.addSegment(segment);
@@ -137,20 +207,27 @@ export default class Level {
     // }
   }
 
+  addLog(position, rotation, type) {
+    var log = new Log(position, rotation, type, this.stage);
+    this.logs.push(log);
+  }
 
   parseLogs() {
     for (var i = 0; i < this.map.logs.length; ++i) {
       var logData = this.map.logs[i];
-      var log = new Log({x: logData.x, y: logData.y}, logData.type, this.stage);
-      this.logs.push(log);
+      this.addLog({x: logData.x, y: logData.y}, logData.rot, logData.type);
     }
+  }
+
+  addDeposit(position, rotation, type) {
+    var logDeposit = new LogDeposit(position, rotation, type, this.stage);
+    this.logDeposits.push(logDeposit);
   }
 
   parseLogDeposits() {
     for (var i = 0; i < this.map.logdeposits.length; ++i) {
       var depoData = this.map.logdeposits[i];
-      var logDeposit = new LogDeposit({x: depoData.x, y: depoData.y}, depoData.type, this.stage);
-      this.logDeposits.push(logDeposit);
+      this.addDeposit({x: depoData.x, y: depoData.y}, depoData.rot, depoData.type);
     }
   }
 
@@ -168,5 +245,60 @@ export default class Level {
 
   getLogDeposits() {
     return this.logDeposits;
+  }
+
+  serialize() {
+    var routes = [];
+    for (let [id, node] of this.routeNodes) {
+      var pos = node.getPos();
+      routes.push({route_node: id, x: pos.x, y: pos.y, to: node.to});
+    }
+
+    var logs = []
+    for (var log of this.logs) {
+      var pos = log.getPosition();
+      logs.push({x: pos.x, y: pos.y, rot: log.getRotation(), type: log.type});
+    }
+
+    var deposits = [];
+    for (var deposit of this.logDeposits) {
+      var pos = deposit.getPosition();
+      deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.type});
+    }
+
+    return {
+      startpoint: this.getStartingSegment().getPositionAt(0),
+      routes: routes, 
+      logs: logs, 
+      logdeposits: deposits
+    };
+  }
+
+  getInfo() {
+
+    var pileTypes = [];
+    for (var log of this.logs) {
+      for (var pileType of pileTypes) {
+        if (pileTypes.type === log.type) {
+          pileTypes.amount += 1;
+          break;
+        }
+      }
+
+      pileTypes.push({name: LogType[log.type].name, type: log.type, amount: 1});
+    }
+
+    var totalRouteLength = 0;
+    for (var segment of this.routeSegments) {
+      totalRouteLength += segment.getLength();
+    }
+
+    return {
+      pileTypes: pileTypes, 
+      routeLength: Math.round(totalRouteLength), 
+      storageAreas: this.logDeposits.length,
+      passingLimit: false
+    };
+
   }
 }

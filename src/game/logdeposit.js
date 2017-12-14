@@ -1,31 +1,45 @@
 import * as PIXI from 'pixi.js';
 import Log from './log';
+import {LogType} from './logtypes'
 
 var Width = 150;
 var Height = 50;
 var Outline = 4;
 var Color = 0xAAAAAA;
 
+export function createLogDepositGraphics() {
+  var graphics = new PIXI.Graphics();
+  graphics.beginFill(Color, 1);
+  // draw centered
+  graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
+
+  graphics.interactive = true;
+  graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -Height/2, Width, Height);
+  return graphics;
+}
+
 export default class LogDeposit {
-  constructor(position, type, stage) {
+  constructor(position, rotation, type, stage) {
     // type is defined when first log is unloaded
-    this.type = null;
+    this.type = type;
     this.stage = stage;
+
+    if (!rotation) {
+      rotation = 0;
+    }
+
+    if (!type) {
+      this.type = -1; // no type predefined
+    }
 
     this._isMarkedForPickUp = false;
     this._canBeUnloadedTo = false;
     this._isHighlighted = false;
 
-    var graphics = new PIXI.Graphics();
-    graphics.beginFill(Color, 1);
-    // draw centered
-    graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
-
-    graphics.interactive = true;
-    graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -Height/2, Width, Height);
+    var graphics = createLogDepositGraphics();
     graphics.position = new PIXI.Point(position.x, position.y);
-
     graphics.owner = this;
+    graphics.rotation = rotation;
 
     this.numOfLogs = 0;
 
@@ -57,10 +71,10 @@ export default class LogDeposit {
   addLog(log) {
 
     // if we have no type, we assign type and mark it with appropriate color
-    if( this.type === null ) {
+    if( this.type === -1 ) {
       this.type = log.type;
 
-      this.graphics.beginFill(Log.LogColorByType[this.type], 1);
+      this.graphics.beginFill(LogType[this.type].color, 1);
       this.graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
       this.graphics.beginFill(Color, 1);
       this.graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
@@ -115,5 +129,9 @@ export default class LogDeposit {
 
   getPosition() {
     return this.graphics.position;
+  }
+
+  getRotation() {
+    return this.graphics.rotation;
   }
 }

@@ -59,7 +59,11 @@ export const LANG = {
       logIn: "Log in",
       signUp: "Sign up",
       quit: "Quit",
-      report: "Report"
+      report: "Report",
+      road: "Road",
+      logs: "Logs",
+      deposits: "Deposits",
+      save: "Save"
     },
     logs: {
       type1: "Type 1",
@@ -130,7 +134,11 @@ export const LANG = {
       logIn: "Kirjaudu sisään",
       signUp: "Rekisteröidy",
       quit: "Lopeta",
-      report: "Raportti"
+      report: "Raportti",
+      road: "Tie",
+      logs: "Tukki",
+      deposits: "Säilö",
+      save: "Tallenna"
     },
     logs: {
       type1: "Tyyppi 1",

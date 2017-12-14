@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import MainMenu from './MainMenu';
 import Game from './Game';
+import Editor from './Editor';
 import { FadeInFadeOut } from './animation';
 import './animation.css';
 import { API } from './api';
@@ -140,7 +141,23 @@ export default class App extends Component {
             lang={this.state.lang} />
         );
         break;
-
+      case 'editorview':
+        var username = "";
+        if (this.state.loggedIn) {
+          username = this.state.username;
+        } else {
+          var rndNumber = Math.floor(Math.random() * 999999) + 1;
+          username = 'guest' + rndNumber.toString();
+        }
+        view = (
+          <Editor 
+            switchView={this.switchView.bind(this)}
+            viewData={this.state.viewData}
+            loggedIn={this.state.loggedIn}
+            username={username}
+            lang={this.state.lang} />
+        );
+        break;
       default:
         view = <div></div>;
         break;
