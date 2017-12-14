@@ -149,7 +149,7 @@ export const API = {
     var url = '/api/v1/level?id=' + id;
     var init = {
       method: 'GET',
-      credentials: 'same-origin',
+      credentials: 'same-origin'
     };
 
     fetch(url, init).then(function(response) {
@@ -169,13 +169,26 @@ export const API = {
     });
   },
 
-  addMap: function(callback) {
+  addMap: function(levelName, mapData, callback) {
     var err = undefined;
     var url = '/api/v1/level';
+    var form = new FormData();
+    form.append('levelName', levelName);
+    form.append('mapData', mapData);
     var init = {
       method: 'POST',
       credentials: 'same-origin',
+      //body: form
     };
+
+    fetch(url, init).then(function(response) {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        err = 'Error adding map data.';
+        callback(err);
+      }
+    });
   },
 
   getReports: function(n, callback) {

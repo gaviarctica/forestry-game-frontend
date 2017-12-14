@@ -206,4 +206,26 @@ export default class Level {
   getLogDeposits() {
     return this.logDeposits;
   }
+
+  serialize() {
+    var routes = [];
+    for (let [id, node] of this.routeNodes) {
+      var pos = node.getPos();
+      routes.push({route_node: id, x: pos.x, y: pos.y, to: node.to});
+    }
+
+    var logs = []
+    for (var log of this.logs) {
+      var pos = log.getPosition();
+      logs.push({x: pos.x, y: pos.y, rot: log.getRotation(), type: log.type});
+    }
+
+    var deposits = [];
+    for (var deposit of this.logDeposits) {
+      var pos = deposit.getPosition();
+      deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.type});
+    }
+
+    return {routes: routes, logs: logs, logdeposits: deposits};
+  }
 }

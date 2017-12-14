@@ -151,6 +151,10 @@ export default class EditorCanvas {
     }
   }
 
+  serializeLevel() {
+    return this.level.serialize();
+  }
+
   update(delta)
   {
     this.ui.updateUI({

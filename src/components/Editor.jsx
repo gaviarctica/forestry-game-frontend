@@ -48,6 +48,12 @@ export default class Editor extends Component {
     if (clicked === 'button-deposits') {
       this.editorCanvas.selectTool('deposit');
     }
+    if (clicked === 'button-save') {
+      var mapData = this.editorCanvas.serializeLevel();
+      API.addMap("editorMap", JSON.stringify(mapData), function(err) {
+        console.log(err);
+      });
+    }
   }
 
   render() {
@@ -84,6 +90,12 @@ export default class Editor extends Component {
         <Button 
           id="button-deposits"
           text={LANG[this.props.lang].buttons.deposits}
+          buttonType='default'
+          style={quitButtonStyle}
+          handleClick={this.handleButtonClick.bind(this)} />
+        <Button 
+          id="button-save"
+          text={LANG[this.props.lang].buttons.save}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />

@@ -26,7 +26,11 @@ export default class LogDeposit {
     if (!rotation) {
       rotation = 0;
     }
-    
+
+    if (!type) {
+      type = -1; // no type predefined
+    }
+
     this._isMarkedForPickUp = false;
     this._canBeUnloadedTo = false;
     this._isHighlighted = false;
@@ -124,5 +128,9 @@ export default class LogDeposit {
 
   getPosition() {
     return this.graphics.position;
+  }
+
+  getRotation() {
+    return this.graphics.rotation;
   }
 }

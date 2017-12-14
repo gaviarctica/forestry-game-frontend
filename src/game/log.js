@@ -124,4 +124,7 @@ export default class Log {
   getPosition() {
     return this.container.position;
   }
+  getRotation() {
+    return this.container.rotation;
+  }
 }
