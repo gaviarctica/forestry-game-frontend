@@ -57,18 +57,24 @@ export default class Editor extends Component {
       <div className="Editor">
         <div id="canvas-editor"></div>
         <div id="game-info">
-          <Button 
-                id="button-quit"
-                text={LANG[this.props.lang].buttons.quit}
-                buttonType='default'
-                style={quitButtonStyle}
-                handleClick={this.handleButtonClick.bind(this)} />
         <Button 
-                id="button-road"
-                text={LANG[this.props.lang].buttons.road}
-                buttonType='default'
-                style={quitButtonStyle}
-                handleClick={this.handleButtonClick.bind(this)} />
+          id="button-quit"
+          text={LANG[this.props.lang].buttons.quit}
+          buttonType='default'
+          style={quitButtonStyle}
+          handleClick={this.handleButtonClick.bind(this)} />
+        <Button 
+          id="button-road"
+          text={LANG[this.props.lang].buttons.road}
+          buttonType='default'
+          style={quitButtonStyle}
+          handleClick={this.handleButtonClick.bind(this)} />
+        <Button 
+          id="button-logs"
+          text={LANG[this.props.lang].buttons.logs}
+          buttonType='default'
+          style={quitButtonStyle}
+          handleClick={this.handleButtonClick.bind(this)} />
         </div>
         
       </div>

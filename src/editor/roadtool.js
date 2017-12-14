@@ -8,15 +8,22 @@ var ToolState = {
 };
 
 export default class RoadTool extends ITool {
-  
-  
   constructor(stage, level) {
     super(stage);
    
     this.level = level;
-    this.pointerSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
-    this.pointerSprite.anchor.set(0.5, 0.5);
-    this.pointerSprite.scale.set(0.1);
+    
+    var pointerSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
+    pointerSprite.anchor.set(0.5, 0.5);
+    pointerSprite.scale.set(0.1);
+
+    var pointerCircle = new PIXI.Graphics();
+    pointerCircle.lineStyle(2, 0xffd900);
+    pointerCircle.drawCircle(0,0,50 / 2.0);
+
+    this.pointerContainer = new PIXI.Container();
+    this.pointerContainer.addChild(pointerSprite);
+    this.pointerContainer.addChild(pointerCircle);
 
     this.roadStartSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
     this.roadStartSprite.anchor.set(0.5, 0.5);
@@ -34,16 +41,31 @@ export default class RoadTool extends ITool {
     
     this.previousNodeId = -1;
     this.state = ToolState.Idle;
+
+    this.snappedToNodeId = -1;
+    this.snappingDistance = 25;
   }
 
   activate() {
     super.activate();
-    this.stage.addChild(this.pointerSprite);
+    this.stage.addChild(this.pointerContainer);
   }
 
   mouseMove(mouseInput) {
     var epos = mouseInput.worldPosition;
-    this.pointerSprite.position.set(epos.x, epos.y);
+
+    // do a search for nearest node in snapping distance
+    this.snappedToNodeId = -1;
+    for (let [id, routeNode] of this.level.getRouteNodes()) {
+      if (distance(mouseInput.worldPosition, routeNode.getPos()) < this.snappingDistance) {
+        this.pointerContainer.position.set(routeNode.getPos().x, routeNode.getPos().y);
+        this.snappedToNodeId = id;
+        epos = routeNode.getPos();
+        break;
+      }
+    }
+
+    this.pointerContainer.position.set(epos.x, epos.y);
     
     if (this.state === ToolState.Drawing) {
       var spos = this.startPoint;
@@ -66,42 +88,79 @@ export default class RoadTool extends ITool {
     // mouse moved aka moved the viewport so don't do the action
     if (length(mouseInput.absDeltaDuringMouseDown) > 20)
       return;
-
+    console.log("roadtool mouseup")
     switch(this.state) {
       case ToolState.Idle:
         this.state = ToolState.Drawing;
         
-        this.startPoint = mouseInput.worldPosition;
+        if (this.snappedToNodeId < 0) {
+          this.startPoint = mouseInput.worldPosition;
+        } else {
+          this.startPoint = this.level.getRouteNodes().get(this.snappedToNodeId).getPos();
+        }
+
         this.roadStartSprite.position.set(this.startPoint.x, this.startPoint.y);
         this.stage.addChild(this.tilingRoad);
         this.stage.addChild(this.roadStartSprite);
+        // .. make the 'pointer' to draw on top
+        this.stage.swapChildren(this.roadStartSprite, this.pointerContainer);
+
+        if (this.snappedToNodeId > 0) {
+          this.previousNodeId = this.snappedToNodeId;
+        }
 
         break;
       case ToolState.Drawing:
         
-        if (this.previousNodeId > 0) {
-          var id = this.level.getNextRouteNodeId();
-          this.level.addRouteNode(id, mouseInput.worldPosition, []);
-          this.level.getRouteNodes().get(this.previousNodeId).to.push(id);
-          this.previousNodeId = id;
-          
+        this.endPoint = mouseInput.worldPosition;
+        if (distance(this.startPoint, this.endPoint) < 20) {
+          this.state = ToolState.Idle;
+          this.stage.removeChild(this.tilingRoad);
+          this.stage.removeChild(this.roadStartSprite);
+          this.previousNodeId = -1;
         } else {
-          var id = this.level.getNextRouteNodeId();
-          this.level.addRouteNode(id, this.startPoint, [id + 1]);
-          this.level.addRouteNode(id + 1, mouseInput.worldPosition, []);
-          this.previousNodeId = id + 1;
+          this.addRouteSegment(this.previousNodeId, this.snappedToNodeId);
         }
-        this.startPoint = mouseInput.worldPosition;
+
+        if (this.previousNodeId < 0) {
+          this.startPoint = mouseInput.worldPosition;
+        } else {
+          this.startPoint = this.level.getRouteNodes().get(this.previousNodeId).getPos();
+        }
         
         this.level.refreshRoutes();
 
         break;
     }
   }
+
+  addRouteSegment(startNodeId, endNodeId) {
+
+    // if no start node, create a new node
+    if (startNodeId < 0) {
+      startNodeId = this.level.getNextRouteNodeId();
+      this.level.addRouteNode(startNodeId, this.startPoint, []);
+    }
+
+    // also if no end node, create a new node
+    if (endNodeId < 0) {
+      endNodeId = this.level.getNextRouteNodeId();
+      this.level.addRouteNode(endNodeId, this.endPoint, []);
+    }
+
+    // build segment between'em
+    this.level.getRouteNodes().get(startNodeId).to.push(endNodeId);
+    this.level.getRouteNodes().get(endNodeId).to.push(startNodeId);
+
+    this.previousNodeId = endNodeId;
+  }
+
   keyDown(event) {}
   keyUp(event) {}
   deactivate() {
     super.deactivate();
-    this.stage.removeChild(this.pointerSprite);
+    this.stage.removeChild(this.pointerContainer);
+    this.stage.removeChild(this.tilingRoad);
+    this.stage.removeChild(this.roadStartSprite);
   }
 }

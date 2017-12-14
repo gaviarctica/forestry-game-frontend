@@ -16,15 +16,15 @@ export default class EditorCanvas {
 
     this.ui = new UserInterface(updateUI);
     this.level = new Level();
-    pixiApp.stage.addChild(this.level.getStage());
-
+    
     this.currentTool = null;
     this.tools = [];
 
     this.buildGrid();
     this.createTools();
     this.setupCameraControl();
-  }
+    pixiApp.stage.addChild(this.level.getStage());
+ }
   
   buildGrid() {
     var graphics = new PIXI.Graphics();
@@ -54,7 +54,7 @@ export default class EditorCanvas {
   }
 
   setupCameraControl() {
-    var interaction = new PIXI.interaction.InteractionManager(this.pixiApp.renderer);
+    var interaction = this.pixiApp.renderer.plugins.interaction;
     var mouseInput = {
       position: {
         x: 0,
@@ -71,13 +71,13 @@ export default class EditorCanvas {
     this.pixiApp.stage.hitArea = new PIXI.Rectangle(-1000000, -1000000, 1000000000, 1000000000);
 
     this.pixiApp.stage.interactive = true;
-    this.pixiApp.stage.pointerdown = function() {
+    this.pixiApp.stage.mousedown = function() {
       mouseInput.isDown = true;
       mouseInput.pointerId = interaction.mouse.pointerId;
       if (self.currentTool)
         self.currentTool.mouseDown(mouseInput);
     };
-    this.pixiApp.stage.pointerup = function() {
+    this.pixiApp.stage.mouseup = function() {
       mouseInput.isDown = false;
       mouseInput.pointerId = interaction.mouse.pointerId;
       if (self.currentTool)
