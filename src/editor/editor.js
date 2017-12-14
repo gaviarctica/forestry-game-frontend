@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import UserInterface from './ui';
 import RoadTool from './roadtool';
+import Level from '../game/level';
 
 export default class EditorCanvas {
   constructor(updateUI) {
@@ -14,6 +15,7 @@ export default class EditorCanvas {
     document.getElementById('canvas-editor').appendChild(pixiApp.view);
 
     this.ui = new UserInterface(updateUI);
+    this.level = new Level();
 
     this.currentTool = null;
     this.tools = [];
@@ -27,15 +29,19 @@ export default class EditorCanvas {
     var graphics = new PIXI.Graphics();
     graphics.lineStyle(1, 0xffd900, 1);
     
-    for (var j = 0; j < 100; j++) {
+    var numLines = 100;
+    var gridSpacing = 100;
+    // offset for centering
+    var offset = -(numLines * gridSpacing) / 2;
+    for (var j = 0; j < numLines; j++) {
       graphics.beginFill(0xFF3300);
-      graphics.moveTo(0, 100 * j);
-      graphics.lineTo(100 * 100, 100 * j);
+      graphics.moveTo(offset, (gridSpacing * j) + offset);
+      graphics.lineTo((gridSpacing * numLines) + offset, (gridSpacing * j) + offset);
       graphics.endFill();
       
       graphics.beginFill(0xFF3300);
-      graphics.moveTo(100 * j, 0);
-      graphics.lineTo(100 * j, 100 * 100);
+      graphics.moveTo((gridSpacing * j) + offset, offset);
+      graphics.lineTo((gridSpacing * j) + offset, (gridSpacing * numLines) + offset);
       graphics.endFill();
     }
 
@@ -52,6 +58,10 @@ export default class EditorCanvas {
       position: {
         x: 0,
         y: 0
+      },
+      absDeltaDuringMouseDown: {
+        x: 0,
+        y: 0
       }
     };
 
@@ -62,27 +72,35 @@ export default class EditorCanvas {
     this.pixiApp.stage.interactive = true;
     this.pixiApp.stage.pointerdown = function() {
       mouseInput.isDown = true;
+      mouseInput.pointerId = interaction.mouse.pointerId;
       if (self.currentTool)
-        self.currentTool.mouseDown();
+        self.currentTool.mouseDown(mouseInput);
     };
     this.pixiApp.stage.pointerup = function() {
       mouseInput.isDown = false;
+      mouseInput.pointerId = interaction.mouse.pointerId;
       if (self.currentTool)
-        self.currentTool.mouseUp();
+        self.currentTool.mouseUp(mouseInput);
     };
     this.pixiApp.stage.pointerupoutside = function() {
+      mouseInput.pointerId = interaction.mouse.pointerId;
       mouseInput.isDown = false;
     };
 
     this.pixiApp.stage.pointermove = function() {
 
+      mouseInput.pointerId = interaction.mouse.pointerId;
       mouseInput.lastPosition = {x: mouseInput.position.x, y: mouseInput.position.y};
       mouseInput.position = {x: interaction.mouse.global.x, y: interaction.mouse.global.y};
       mouseInput.delta = {x: mouseInput.lastPosition.x - mouseInput.position.x, y: mouseInput.lastPosition.y - mouseInput.position.y};
-
+      mouseInput.worldPosition = interaction.mouse.getLocalPosition(self.pixiApp.stage);
       if (mouseInput.isDown === true) {
         self.pixiApp.stage.pivot.x +=  mouseInput.delta.x / self.pixiApp.stage.scale.x
         self.pixiApp.stage.pivot.y +=  mouseInput.delta.y / self.pixiApp.stage.scale.y
+        mouseInput.absDeltaDuringMouseDown.x += Math.abs(mouseInput.delta.x);
+        mouseInput.absDeltaDuringMouseDown.y += Math.abs(mouseInput.delta.y);
+      } else {
+        mouseInput.absDeltaDuringMouseDown = {x:0, y:0};
       }
       
       if (self.currentTool)

@@ -15,7 +15,9 @@ export default class GameCanvas {
 
     this.stats = new Stats(updateUI);
 
-    this.map = new Level(this.mapData, this.game.stage);
+    this.map = new Level(this.mapData);
+    this.game.stage.addChild(this.map.getStage());
+
     this.truck = new Truck(this.mapData.startpoint.x,
                            this.mapData.startpoint.y,
                            this.game.stage,
@@ -60,10 +62,11 @@ export default class GameCanvas {
       mouseInput.delta = {x: mouseInput.lastPosition.x - mouseInput.position.x, y: mouseInput.lastPosition.y - mouseInput.position.y};
 
       if (mouseInput.isDown === true) {
-        self.game.stage.pivot.x +=  mouseInput.delta.x / self.game.stage.scale.x
-        self.game.stage.pivot.y +=  mouseInput.delta.y / self.game.stage.scale.y
+        self.game.stage.pivot.x +=  mouseInput.delta.x / self.game.stage.scale.x;
+        self.game.stage.pivot.y +=  mouseInput.delta.y / self.game.stage.scale.y;
       }
 
+      
     }
 
     var mouseWheelEvent = function(event) {

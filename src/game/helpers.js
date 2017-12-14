@@ -11,6 +11,10 @@ export function distance(point1, point2) {
   return Math.sqrt(x*x + y*y);
 }
 
+export function length(v) {
+  return Math.sqrt(v.x*v.x + v.y*v.y);
+}
+
 export function endpointByStartPointDistanceAndAngle(startpoint, distance, angle) {
   var endpoint = {
     x: startpoint.x + Math.cos(angle) * distance,

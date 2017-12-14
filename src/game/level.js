@@ -6,19 +6,26 @@ import LogDeposit from './logdeposit';
 import { endpointByStartPointDistanceAndAngle, distance } from './helpers';
 
 export default class Level {
-  constructor(map, stage) {
+  constructor(map) {
     this.map = map;
-    this.stage = stage;
+    this.stage = new PIXI.Container();
     this.routeNodes = new Map();
     this.routeSegments = [];
     this.logs = [];
     this.logDeposits = [];
 
-    this.parseNodes();
-    this.parseRouteSegments();
-    this.drawRoutes();
-    this.parseLogs();
-    this.parseLogDeposits();
+    if (map) {
+      this.parseNodes();
+      this.parseLogs();
+      this.parseLogDeposits();
+
+      this.generateRouteSegments();
+      this.drawRoutes();
+    }
+  }
+
+  getStage() {
+    return this.stage;
   }
 
   drawRoutes() {
@@ -73,13 +80,17 @@ export default class Level {
     for (var i = 0; i < this.map.routes.length; ++i) {
       var routeNodeData = this.map.routes[i];
       var id = routeNodeData.route_node;
-      var pos = {'x':routeNodeData.x, 'y': routeNodeData.y };
+      var pos = {x: routeNodeData.x, y: routeNodeData.y };
       var to = routeNodeData.to;
-      this.routeNodes.set(id, new RouteNode(id, pos, to));
+      this.addNode(id, pos, to);
     }
   }
 
-  parseRouteSegments() {
+  addNode(id, pos, to) {
+    this.routeNodes.set(id, new RouteNode(id, pos, to));
+  }
+
+  generateRouteSegments() {
 
     for (let [id, startNode] of this.routeNodes) {
       var endNode = null;
