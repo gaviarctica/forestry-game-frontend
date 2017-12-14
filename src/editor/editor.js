@@ -16,6 +16,7 @@ export default class EditorCanvas {
 
     this.ui = new UserInterface(updateUI);
     this.level = new Level();
+    pixiApp.stage.addChild(this.level.getStage());
 
     this.currentTool = null;
     this.tools = [];
@@ -49,7 +50,7 @@ export default class EditorCanvas {
   }
 
   createTools() {
-    this.tools['road'] = new RoadTool(this.pixiApp.stage);
+    this.tools['road'] = new RoadTool(this.pixiApp.stage, this.level);
   }
 
   setupCameraControl() {

@@ -32,7 +32,7 @@ export default class RoadTool extends ITool {
     this.tilingRoad.anchor.set(0.5, 0.0);
     this.tilingRoad.tileScale.set(0.1);
     
-
+    this.previousNodeId = -1;
     this.state = ToolState.Idle;
   }
 
@@ -64,18 +64,37 @@ export default class RoadTool extends ITool {
   }
   mouseUp(mouseInput) {
     // mouse moved aka moved the viewport so don't do the action
-    if (length(mouseInput.absDeltaDuringMouseDown) > 10)
+    if (length(mouseInput.absDeltaDuringMouseDown) > 20)
       return;
 
     switch(this.state) {
       case ToolState.Idle:
         this.state = ToolState.Drawing;
-        break;
-      case ToolState.Drawing:
+        
         this.startPoint = mouseInput.worldPosition;
         this.roadStartSprite.position.set(this.startPoint.x, this.startPoint.y);
         this.stage.addChild(this.tilingRoad);
         this.stage.addChild(this.roadStartSprite);
+
+        break;
+      case ToolState.Drawing:
+        
+        if (this.previousNodeId > 0) {
+          var id = this.level.getNextRouteNodeId();
+          this.level.addRouteNode(id, mouseInput.worldPosition, []);
+          this.level.getRouteNodes().get(this.previousNodeId).to.push(id);
+          this.previousNodeId = id;
+          
+        } else {
+          var id = this.level.getNextRouteNodeId();
+          this.level.addRouteNode(id, this.startPoint, [id + 1]);
+          this.level.addRouteNode(id + 1, mouseInput.worldPosition, []);
+          this.previousNodeId = id + 1;
+        }
+        this.startPoint = mouseInput.worldPosition;
+        
+        this.level.refreshRoutes();
+
         break;
     }
   }

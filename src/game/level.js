@@ -15,7 +15,7 @@ export default class Level {
     this.logDeposits = [];
 
     if (map) {
-      this.parseNodes();
+      this.parseRouteNodes();
       this.parseLogs();
       this.parseLogDeposits();
 
@@ -26,6 +26,16 @@ export default class Level {
 
   getStage() {
     return this.stage;
+  }
+
+  // used by map editor
+  getRouteNodes() {
+    return this.routeNodes;
+  }
+
+  // used by map editor
+  getNextRouteNodeId() {
+    return this.routeNodes.size + 1;
   }
 
   drawRoutes() {
@@ -76,18 +86,27 @@ export default class Level {
     return false;
   }
 
-  parseNodes() {
+  parseRouteNodes() {
     for (var i = 0; i < this.map.routes.length; ++i) {
       var routeNodeData = this.map.routes[i];
       var id = routeNodeData.route_node;
       var pos = {x: routeNodeData.x, y: routeNodeData.y };
       var to = routeNodeData.to;
-      this.addNode(id, pos, to);
+      this.addRouteNode(id, pos, to);
     }
   }
 
-  addNode(id, pos, to) {
+  addRouteNode(id, pos, to) {
     this.routeNodes.set(id, new RouteNode(id, pos, to));
+  }
+
+  // used by map editor
+  refreshRoutes() {
+    this.routeSegments = [];
+    this.stage.removeChildren();
+
+    this.generateRouteSegments();
+    this.drawRoutes();
   }
 
   generateRouteSegments() {
