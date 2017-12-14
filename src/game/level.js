@@ -13,7 +13,8 @@ export default class Level {
     this.routeSegments = [];
     this.logs = [];
     this.logDeposits = [];
-
+    this.routeTexture = PIXI.Texture.fromImage('/static/road.png');
+    
     if (map) {
       this.parseRouteNodes();
       this.parseLogs();
@@ -22,6 +23,7 @@ export default class Level {
       this.generateRouteSegments();
       this.drawRoutes();
     }
+
   }
 
   getStage() {
@@ -41,29 +43,25 @@ export default class Level {
   drawRoutes() {
     const roadSpriteLength = 50;
 
-    var texture = PIXI.Texture.fromImage('/static/road.png');
-    for(let [id, routeNode] of this.routeNodes) {
-      var segments = routeNode.getSegments();
-      for(var j = 0; j < segments.length; ++j) {
-        var spos = segments[j].startNode.getPos();
-        var epos = segments[j].endNode.getPos();
+    for(var j = 0; j < this.routeSegments.length; ++j) {
+      var spos = this.routeSegments[j].startNode.getPos();
+      var epos = this.routeSegments[j].endNode.getPos();
 
-        var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
-        var currentPos = {x: spos.x, y: spos.y};
-        var roadSprite;
-        var distanceToEnd = 0;
-        var tilingSprite = new PIXI.extras.TilingSprite(
-          texture, 
-          roadSpriteLength,
-          distance(spos, epos)
-        );
-        tilingSprite.anchor.set(0.5, 0.0);
-        tilingSprite.tileScale.set(0.1);
-        tilingSprite.rotation = angle + Math.PI;
-        tilingSprite.x = currentPos.x;
-        tilingSprite.y = currentPos.y;
-        this.stage.addChild(tilingSprite);
-      }
+      var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
+      var currentPos = {x: spos.x, y: spos.y};
+      var roadSprite;
+      var distanceToEnd = 0;
+      var tilingSprite = new PIXI.extras.TilingSprite(
+        this.routeTexture, 
+        roadSpriteLength,
+        distance(spos, epos)
+      );
+      tilingSprite.anchor.set(0.5, 0.0);
+      tilingSprite.tileScale.set(0.1);
+      tilingSprite.rotation = angle + Math.PI;
+      tilingSprite.x = currentPos.x;
+      tilingSprite.y = currentPos.y;
+      this.stage.addChild(tilingSprite);
     }
 
     for(let [id, routeNode] of this.routeNodes) {
