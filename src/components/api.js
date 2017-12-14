@@ -1,7 +1,11 @@
-
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
 export const API = {
 
-  validateSession: function(callback) {
+  validateSession: function (callback) {
     var err = undefined;
     var url = '/api/v1/validate';
     var init = {
@@ -9,27 +13,27 @@ export const API = {
       credentials: 'same-origin',
     };
 
-    fetch(url, init).then(function(response) {
+    fetch(url, init).then(function (response) {
       if (response.status === 200) {
-      	return response.json();
+        return response.json();
       }
-      else if(response.status === 204) {
+      else if (response.status === 204) {
         callback(err);
       } else {
-      	err = 'Error getting CSRF cookie.';
+        err = 'Error getting CSRF cookie.';
         callback(err);
       }
-    }).then(function(responseJson) {
-    	if (responseJson) {
-    		callback(err, responseJson.username, responseJson.email);
-    	} else {
-      	err = 'Error getting CSRF cookie.';
+    }).then(function (responseJson) {
+      if (responseJson) {
+        callback(err, responseJson.username, responseJson.email);
+      } else {
+        err = 'Error getting CSRF cookie.';
         callback(err);
       }
     });
   },
 
-  login: function(username, password, callback) {
+  login: function (username, password, callback) {
     var err = undefined;
     var url = '/api/v1/auth/login';
     var form = new FormData();
@@ -44,7 +48,7 @@ export const API = {
     var messages = [];
 
     fetch(url, init).then(function (response) {
-      if(response.status === 200) {
+      if (response.status === 200) {
         return response.json();
       } else if (response.status === 401) {
         messages.push('wrongUsernameOrPassword');
@@ -53,7 +57,7 @@ export const API = {
         err = 'Error making login request.';
         callback(err);
       }
-    }).then(function(responseJson) {
+    }).then(function (responseJson) {
       if (responseJson) {
         callback(err, messages, responseJson.username, responseJson.email);
       } else {
@@ -63,7 +67,7 @@ export const API = {
     });
   },
 
-  logout: function(callback) {
+  logout: function (callback) {
     var err = undefined;
     var url = '/api/v1/auth/logout';
     var init = {
@@ -72,7 +76,7 @@ export const API = {
     };
 
     fetch(url, init).then(function (response) {
-      if(response.status === 200) {
+      if (response.status === 200) {
         callback(err);
       } else {
         err = 'Error making logout request.';
@@ -97,13 +101,13 @@ export const API = {
     var messages = [];
 
     fetch(url, init).then(function (response) {
-      if(response.status === 200 || response.status === 400) {
+      if (response.status === 200 || response.status === 400) {
         return response.json();
       } else {
         err = 'Error making register request.';
         callback(err);
       }
-    }).then(function(responseJson) {
+    }).then(function (responseJson) {
       if (responseJson) {
         // If form is valid but errors in create()
         if (responseJson.username && responseJson.username.indexOf("A user with that username already exists.") !== -1) {
@@ -119,7 +123,7 @@ export const API = {
     });
   },
 
-  getAllMapsInfo: function(callback) {
+  getAllMapsInfo: function (callback) {
     var err = undefined;
     var url = '/api/v1/level';
     var init = {
@@ -127,14 +131,14 @@ export const API = {
       credentials: 'same-origin',
     };
 
-    fetch(url, init).then(function(response) {
+    fetch(url, init).then(function (response) {
       if (response.status === 200) {
         return response.json();
       } else {
         err = 'Error fetching map info.';
         callback(err);
       }
-    }).then(function(responseJson) {
+    }).then(function (responseJson) {
       if (responseJson) {
         callback(err, responseJson);
       } else {
@@ -144,7 +148,7 @@ export const API = {
     });
   },
 
-  getMapData: function(id, callback) {
+  getMapData: function (id, callback) {
     var err = undefined;
     var url = '/api/v1/level?id=' + id;
     var init = {
@@ -152,14 +156,14 @@ export const API = {
       credentials: 'same-origin'
     };
 
-    fetch(url, init).then(function(response) {
+    fetch(url, init).then(function (response) {
       if (response.status === 200) {
         return response.json();
       } else {
         err = 'Error fetching map data.';
         callback(err);
       }
-    }).then(function(responseJson) {
+    }).then(function (responseJson) {
       if (responseJson) {
         callback(err, responseJson);
       } else {
@@ -169,21 +173,23 @@ export const API = {
     });
   },
 
-  addMap: function(levelName, mapData, callback) {
+  addMap: function (levelName, mapData, mapInfo, callback) {
     var err = undefined;
-    var url = '/api/v1/level';
+    var url = '/api/v1/level/';
     var form = new FormData();
     form.append('levelName', levelName);
     form.append('mapData', mapData);
+    form.append('mapInfo', mapInfo);
     var init = {
       method: 'POST',
       credentials: 'same-origin',
-      //body: form
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+      body: form
     };
 
-    fetch(url, init).then(function(response) {
+    fetch(url, init).then(function (response) {
       if (response.status === 200) {
-        return response.json();
+        return;
       } else {
         err = 'Error adding map data.';
         callback(err);
@@ -191,7 +197,7 @@ export const API = {
     });
   },
 
-  getReports: function(n, callback) {
+  getReports: function (n, callback) {
     var err = undefined;
     var url = '/api/v1/report?n=' + n;
     var init = {
@@ -199,14 +205,14 @@ export const API = {
       credentials: 'same-origin',
     };
 
-    fetch(url, init).then(function(response) {
+    fetch(url, init).then(function (response) {
       if (response.status === 200) {
         return response.json();
       } else {
         err = 'Error fetching reports.';
         callback(err);
       }
-    }).then(function(responseJson) {
+    }).then(function (responseJson) {
       if (responseJson) {
         callback(err, responseJson);
       } else {
@@ -216,7 +222,7 @@ export const API = {
     });
   },
 
-  getMyLatestScores: function(callback) {
+  getMyLatestScores: function (callback) {
     var err = undefined;
     var url = '/api/v1/report';
     var init = {
@@ -224,14 +230,14 @@ export const API = {
       credentials: 'same-origin',
     };
 
-    fetch(url, init).then(function(response) {
+    fetch(url, init).then(function (response) {
       if (response.status === 200) {
         return response.json();
       } else {
         err = 'Error fetching reports.';
         callback(err);
       }
-    }).then(function(responseJson) {
+    }).then(function (responseJson) {
       if (responseJson) {
         callback(err, responseJson);
       } else {
@@ -241,7 +247,7 @@ export const API = {
     });
   },
 
-  postReport: function(callback) {
+  postReport: function (callback) {
     var err = undefined;
     var url = '/api/v1/report';
     var init = {

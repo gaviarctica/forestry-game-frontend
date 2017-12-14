@@ -4,6 +4,7 @@ import RouteSegment from './routesegment';
 import Log from './log';
 import LogDeposit from './logdeposit';
 import { endpointByStartPointDistanceAndAngle, distance } from './helpers';
+import {LogType} from './logtypes'
 
 export default class Level {
   constructor(map) {
@@ -226,6 +227,39 @@ export default class Level {
       deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.type});
     }
 
-    return {routes: routes, logs: logs, logdeposits: deposits};
+    return {
+      startpoint: {x:0,y:0},
+      routes: routes, 
+      logs: logs, 
+      logdeposits: deposits
+    };
+  }
+
+  getInfo() {
+
+    var pileTypes = [];
+    for (var log of this.logs) {
+      for (var pileType of pileTypes) {
+        if (pileTypes.type === log.type) {
+          pileTypes.amount += 1;
+          break;
+        }
+      }
+
+      pileTypes.push({name: LogType[log.type].name, type: log.type, amount: 1});
+    }
+
+    var totalRouteLength = 0;
+    for (var segment of this.routeSegments) {
+      totalRouteLength += segment.getLength();
+    }
+
+    return {
+      pileTypes: pileTypes, 
+      routeLength: Math.round(totalRouteLength), 
+      storageAreas: this.logDeposits.length,
+      passingLimit: false
+    };
+
   }
 }

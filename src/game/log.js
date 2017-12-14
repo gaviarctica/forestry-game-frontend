@@ -1,29 +1,16 @@
 import * as PIXI from 'pixi.js';
 
+import {LogType} from './logtypes'
+
 var Width = 50;
 var Height = 5;
 var Outline = 4;
 
-var LogSpriteByType = [
-  '/static/log0.png',
-  '/static/log1.png',
-  '/static/log2.png',
-  '/static/log3.png',
-  '/static/log4.png',
-  '/static/log5.png'
-];
 
 export default class Log {
 
 	constructor(position, rotation, type, stage) {
-    Log.LogColorByType = [
-      0xa28569,
-      0xe4d73d,
-      0xf27f1a,
-      0xd85040,
-      0x946fed,
-      0x2c57c3
-    ];
+    
     this.type = type;
 		this.stage = stage;
 
@@ -48,7 +35,7 @@ export default class Log {
     graphics.alpha = 0.0;
 
     // Apply log sprite
-    var logSprite = PIXI.Sprite.fromImage(LogSpriteByType[type]);
+    var logSprite = PIXI.Sprite.fromImage(LogType[this.type].sprite);
     logSprite.anchor.set(0.5, 0.5);
     logSprite.scale.set(0.1);
 

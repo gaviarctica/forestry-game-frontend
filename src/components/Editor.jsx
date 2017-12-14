@@ -50,7 +50,8 @@ export default class Editor extends Component {
     }
     if (clicked === 'button-save') {
       var mapData = this.editorCanvas.serializeLevel();
-      API.addMap("editorMap", JSON.stringify(mapData), function(err) {
+      var mapInfo = this.editorCanvas.levelInfo();
+      API.addMap("editorMap", JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
         console.log(err);
       });
     }

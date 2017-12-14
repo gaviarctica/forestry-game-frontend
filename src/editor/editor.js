@@ -155,6 +155,10 @@ export default class EditorCanvas {
     return this.level.serialize();
   }
 
+  levelInfo() {
+    return this.level.getInfo();
+  }
+
   update(delta)
   {
     this.ui.updateUI({

@@ -20,7 +20,7 @@ export function createLogDepositGraphics() {
 export default class LogDeposit {
   constructor(position, rotation, type, stage) {
     // type is defined when first log is unloaded
-    this.type = null;
+    this.type = type;
     this.stage = stage;
 
     if (!rotation) {
@@ -28,7 +28,7 @@ export default class LogDeposit {
     }
 
     if (!type) {
-      type = -1; // no type predefined
+      this.type = -1; // no type predefined
     }
 
     this._isMarkedForPickUp = false;
@@ -70,7 +70,7 @@ export default class LogDeposit {
   addLog(log) {
 
     // if we have no type, we assign type and mark it with appropriate color
-    if( this.type === null ) {
+    if( this.type === -1 ) {
       this.type = log.type;
 
       this.graphics.beginFill(Log.LogColorByType[this.type], 1);
