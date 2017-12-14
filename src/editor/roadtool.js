@@ -21,7 +21,6 @@ export default class RoadTool extends ITool {
     pointerCircle.lineStyle(2, 0xffd900);
     pointerCircle.drawCircle(0,0,50 / 2.0);
 
-    this.pointerContainer = new PIXI.Container();
     this.pointerContainer.addChild(pointerSprite);
     this.pointerContainer.addChild(pointerCircle);
 
@@ -48,12 +47,11 @@ export default class RoadTool extends ITool {
 
   activate() {
     super.activate();
-    this.stage.addChild(this.pointerContainer);
   }
 
   mouseMove(mouseInput) {
     var epos = mouseInput.worldPosition;
-
+    
     // do a search for nearest node in snapping distance
     this.snappedToNodeId = -1;
     for (let [id, routeNode] of this.level.getRouteNodes()) {
@@ -66,6 +64,7 @@ export default class RoadTool extends ITool {
     }
 
     this.pointerContainer.position.set(epos.x, epos.y);
+    this.pointerPos = epos;
     
     if (this.state === ToolState.Drawing) {
       var spos = this.startPoint;
@@ -88,17 +87,13 @@ export default class RoadTool extends ITool {
     // mouse moved aka moved the viewport so don't do the action
     if (length(mouseInput.absDeltaDuringMouseDown) > 20)
       return;
-    console.log("roadtool mouseup")
+
     switch(this.state) {
       case ToolState.Idle:
         this.state = ToolState.Drawing;
         
-        if (this.snappedToNodeId < 0) {
-          this.startPoint = mouseInput.worldPosition;
-        } else {
-          this.startPoint = this.level.getRouteNodes().get(this.snappedToNodeId).getPos();
-        }
-
+        this.startPoint = this.pointerPos;
+        
         this.roadStartSprite.position.set(this.startPoint.x, this.startPoint.y);
         this.stage.addChild(this.tilingRoad);
         this.stage.addChild(this.roadStartSprite);
@@ -113,7 +108,8 @@ export default class RoadTool extends ITool {
       case ToolState.Drawing:
         
         this.endPoint = mouseInput.worldPosition;
-        if (distance(this.startPoint, this.endPoint) < 20) {
+        // stop drawing if distance too small
+        if (distance(this.startPoint, this.endPoint) < (this.snappingDistance + 1)) {
           this.state = ToolState.Idle;
           this.stage.removeChild(this.tilingRoad);
           this.stage.removeChild(this.roadStartSprite);
@@ -122,11 +118,7 @@ export default class RoadTool extends ITool {
           this.addRouteSegment(this.previousNodeId, this.snappedToNodeId);
         }
 
-        if (this.previousNodeId < 0) {
-          this.startPoint = mouseInput.worldPosition;
-        } else {
-          this.startPoint = this.level.getRouteNodes().get(this.previousNodeId).getPos();
-        }
+        this.startPoint = this.pointerPos;
         
         this.level.refreshRoutes();
 
@@ -159,7 +151,6 @@ export default class RoadTool extends ITool {
   keyUp(event) {}
   deactivate() {
     super.deactivate();
-    this.stage.removeChild(this.pointerContainer);
     this.stage.removeChild(this.tilingRoad);
     this.stage.removeChild(this.roadStartSprite);
   }

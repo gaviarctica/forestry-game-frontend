@@ -6,26 +6,35 @@ var Height = 50;
 var Outline = 4;
 var Color = 0xAAAAAA;
 
+export function createLogDepositGraphics() {
+  var graphics = new PIXI.Graphics();
+  graphics.beginFill(Color, 1);
+  // draw centered
+  graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
+
+  graphics.interactive = true;
+  graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -Height/2, Width, Height);
+  return graphics;
+}
+
 export default class LogDeposit {
-  constructor(position, type, stage) {
+  constructor(position, rotation, type, stage) {
     // type is defined when first log is unloaded
     this.type = null;
     this.stage = stage;
 
+    if (!rotation) {
+      rotation = 0;
+    }
+    
     this._isMarkedForPickUp = false;
     this._canBeUnloadedTo = false;
     this._isHighlighted = false;
 
-    var graphics = new PIXI.Graphics();
-    graphics.beginFill(Color, 1);
-    // draw centered
-    graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
-
-    graphics.interactive = true;
-    graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -Height/2, Width, Height);
+    var graphics = createLogDepositGraphics();
     graphics.position = new PIXI.Point(position.x, position.y);
-
     graphics.owner = this;
+    graphics.rotation = rotation;
 
     this.numOfLogs = 0;
 

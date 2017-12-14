@@ -9,6 +9,8 @@ export default class Level {
   constructor(map) {
     this.map = map;
     this.stage = new PIXI.Container();
+    this.routeContainer = new PIXI.Container();
+    this.stage.addChild(this.routeContainer);
     this.routeNodes = new Map();
     this.routeSegments = [];
     this.logs = [];
@@ -101,7 +103,7 @@ export default class Level {
   // used by map editor
   refreshRoutes() {
     this.routeSegments = [];
-    this.stage.removeChildren();
+    this.routeContainer.removeChildren();
 
     this.generateRouteSegments();
     this.drawRoutes();
@@ -165,20 +167,27 @@ export default class Level {
     // }
   }
 
+  addLog(position, rotation, type) {
+    var log = new Log(position, rotation, type, this.stage);
+    this.logs.push(log);
+  }
 
   parseLogs() {
     for (var i = 0; i < this.map.logs.length; ++i) {
       var logData = this.map.logs[i];
-      var log = new Log({x: logData.x, y: logData.y}, logData.type, this.stage);
-      this.logs.push(log);
+      this.addLog({x: logData.x, y: logData.y}, logData.rot, logData.type);
     }
+  }
+
+  addDeposit(position, rotation, type) {
+    var logDeposit = new LogDeposit(position, rotation, type, this.stage);
+    this.logDeposits.push(logDeposit);
   }
 
   parseLogDeposits() {
     for (var i = 0; i < this.map.logdeposits.length; ++i) {
       var depoData = this.map.logdeposits[i];
-      var logDeposit = new LogDeposit({x: depoData.x, y: depoData.y}, depoData.type, this.stage);
-      this.logDeposits.push(logDeposit);
+      this.addDeposit({x: depoData.x, y: depoData.y}, depoData.rot, depoData.type);
     }
   }
 

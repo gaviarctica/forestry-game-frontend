@@ -23,3 +23,36 @@ export function endpointByStartPointDistanceAndAngle(startpoint, distance, angle
 
   return endpoint;
 }
+
+export function distanceToSegment(p, segStart, segEnd) {
+  
+    var A = p.x - segStart.x;
+    var B = p.y - segStart.y;
+    var C = segEnd.x - segStart.x;
+    var D = segEnd.y - segStart.y;
+  
+    var dot = A * C + B * D;
+    var len_sq = C * C + D * D;
+    var param = -1;
+    if (len_sq != 0) //in case of 0 length line
+        param = dot / len_sq;
+  
+    var xx, yy;
+  
+    if (param < 0) {
+      xx = segStart.x;
+      yy = segStart.y;
+    }
+    else if (param > 1) {
+      xx = segEnd.x;
+      yy = segEnd.y;
+    }
+    else {
+      xx = segStart.x + param * C;
+      yy = segStart.y + param * D;
+    }
+  
+    var dx = p.x - xx;
+    var dy = p.y - yy;
+    return Math.sqrt(dx * dx + dy * dy);
+  }

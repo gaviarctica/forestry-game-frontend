@@ -42,6 +42,12 @@ export default class Editor extends Component {
     if (clicked === 'button-road') {
       this.editorCanvas.selectTool('road');
     }
+    if (clicked === 'button-logs') {
+      this.editorCanvas.selectTool('log');
+    }
+    if (clicked === 'button-deposits') {
+      this.editorCanvas.selectTool('deposit');
+    }
   }
 
   render() {
@@ -72,6 +78,12 @@ export default class Editor extends Component {
         <Button 
           id="button-logs"
           text={LANG[this.props.lang].buttons.logs}
+          buttonType='default'
+          style={quitButtonStyle}
+          handleClick={this.handleButtonClick.bind(this)} />
+        <Button 
+          id="button-deposits"
+          text={LANG[this.props.lang].buttons.deposits}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />

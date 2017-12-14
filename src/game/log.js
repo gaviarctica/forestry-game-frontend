@@ -15,7 +15,7 @@ var LogSpriteByType = [
 
 export default class Log {
 
-	constructor(position, type, stage) {
+	constructor(position, rotation, type, stage) {
     Log.LogColorByType = [
       0xa28569,
       0xe4d73d,
@@ -27,10 +27,20 @@ export default class Log {
     this.type = type;
 		this.stage = stage;
 
+    if (!rotation) {
+      rotation = 0;
+    }
+
     this._isMarkedForPickUp = false;
 		this._canBePickedUp = false;
     this._isHighlighted = false;
 
+    this.container = new PIXI.Container();
+    this.container.rotation = rotation;
+    this.container.x = position.x;
+    this.container.y = position.y;
+    
+    stage.addChild(this.container);
     // Log color code outline when log can be picked up
     var graphics = new PIXI.Graphics();
     graphics.beginFill(0x000000, 1);
@@ -41,14 +51,10 @@ export default class Log {
     var logSprite = PIXI.Sprite.fromImage(LogSpriteByType[type]);
     logSprite.anchor.set(0.5, 0.5);
     logSprite.scale.set(0.1);
-    logSprite.x = position.x;
-    logSprite.y = position.y;
 
     graphics.interactive = true;
     // make hit area bigger rectangle than the log itself, easier to hit
     graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -(Height+20)/2.0, Width, Height+20);
-
-    graphics.position = new PIXI.Point(position.x, position.y);
 
     graphics.owner = this;
     graphics.pointerdown = function() {
@@ -71,8 +77,8 @@ export default class Log {
       this.owner.setHighlighted(false);
     }
 
-    this.stage.addChild(graphics);
-    this.stage.addChild(logSprite);
+    this.container.addChild(graphics);
+    this.container.addChild(logSprite);
     this.graphics = graphics;
     this.logSprite = logSprite;
 	}
@@ -116,6 +122,6 @@ export default class Log {
   }
 
   getPosition() {
-    return this.graphics.position;
+    return this.container.position;
   }
 }

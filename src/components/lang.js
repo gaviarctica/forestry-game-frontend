@@ -61,7 +61,8 @@ export const LANG = {
       quit: "Quit",
       report: "Report",
       road: "Road",
-      logs: "Logs"
+      logs: "Logs",
+      deposits: "Deposits"
     },
     logs: {
       type1: "Type 1",
@@ -134,7 +135,8 @@ export const LANG = {
       quit: "Lopeta",
       report: "Raportti",
       road: "Tie",
-      logs: "Tukki"
+      logs: "Tukki",
+      deposits: "Säilö"
     },
     logs: {
       type1: "Tyyppi 1",

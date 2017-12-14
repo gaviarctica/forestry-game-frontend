@@ -513,15 +513,15 @@ export default class Truck {
       this.selectGraphic.beginFill();
       this.selectGraphic.lineStyle(3, 0x151515);
       this.selectGraphic.moveTo(point.x, point.y);
-      this.selectGraphic.lineTo(this.selectedItem.graphics.position.x, this.selectedItem.graphics.position.y);
+      this.selectGraphic.lineTo(this.selectedItem.getPosition().x, this.selectedItem.getPosition().y);
       this.selectGraphic.endFill();
 
-      this.clawSprite.x = this.selectedItem.graphics.position.x;
-      this.clawSprite.y = this.selectedItem.graphics.position.y;
+      this.clawSprite.x = this.selectedItem.getPosition().x;
+      this.clawSprite.y = this.selectedItem.getPosition().y;
       // Set claw angle
       this.clawSprite.rotation = -Math.PI/2 + Math.atan2(
-        this.selectedItem.graphics.position.y - this.sprite.y,
-        this.selectedItem.graphics.position.x - this.sprite.x);
+        this.selectedItem.getPosition().y - this.sprite.y,
+        this.selectedItem.getPosition().x - this.sprite.x);
       // Make claw be on top of line
       this.stage.removeChild(this.clawSprite);
       this.stage.addChild(this.clawSprite);

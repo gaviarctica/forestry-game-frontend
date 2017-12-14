@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js';
 import UserInterface from './ui';
 import RoadTool from './roadtool';
 import Level from '../game/level';
+import LogTool from './logtool';
+import DepositTool from './deposittool';
 
 export default class EditorCanvas {
   constructor(updateUI) {
@@ -51,6 +53,8 @@ export default class EditorCanvas {
 
   createTools() {
     this.tools['road'] = new RoadTool(this.pixiApp.stage, this.level);
+    this.tools['log'] = new LogTool(this.pixiApp.stage, this.level);
+    this.tools['deposit'] = new DepositTool(this.pixiApp.stage, this.level);
   }
 
   setupCameraControl() {
@@ -122,7 +126,7 @@ export default class EditorCanvas {
     this.pixiApp.stage.position.y += this.pixiApp.renderer.height / 2;
   }
 
-  selectTool(name) {
+  selectTool(name, placeType) {
     var self = this;
     if (this.currentTool) {
       window.removeEventListener(
@@ -135,7 +139,7 @@ export default class EditorCanvas {
     }
     
     this.currentTool = this.tools[name];
-    
+
     if (this.currentTool !== null && this.currentTool !== undefined) {
       window.addEventListener(
         "keydown", self.currentTool.keyDown, false
