@@ -9,9 +9,13 @@ import {LogType} from './logtypes'
 export default class Level {
   constructor(map) {
     this.map = map;
+<<<<<<< HEAD
     this.stage = new PIXI.Container();
     this.routeContainer = new PIXI.Container();
     this.stage.addChild(this.routeContainer);
+=======
+    this.stage = stage;
+>>>>>>> origin/master
     this.routeNodes = new Map();
     this.routeSegments = [];
     this.logs = [];
@@ -46,6 +50,7 @@ export default class Level {
   drawRoutes() {
     const roadSpriteLength = 50;
 
+<<<<<<< HEAD
     for(var j = 0; j < this.routeSegments.length; ++j) {
       var spos = this.routeSegments[j].startNode.getPos();
       var epos = this.routeSegments[j].endNode.getPos();
@@ -65,6 +70,31 @@ export default class Level {
       tilingSprite.x = currentPos.x;
       tilingSprite.y = currentPos.y;
       this.stage.addChild(tilingSprite);
+=======
+    var texture = PIXI.Texture.fromImage('/static/road.png');
+    for(let [id, routeNode] of this.routeNodes) {
+      var segments = routeNode.getSegments();
+      for(var j = 0; j < segments.length; ++j) {
+        var spos = segments[j].startNode.getPos();
+        var epos = segments[j].endNode.getPos();
+
+        var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
+        var currentPos = {x: spos.x, y: spos.y};
+        var roadSprite;
+        var distanceToEnd = 0;
+        var tilingSprite = new PIXI.extras.TilingSprite(
+          texture, 
+          roadSpriteLength,
+          distance(spos, epos)
+        );
+        tilingSprite.anchor.set(0.5, 0.0);
+        tilingSprite.tileScale.set(0.1);
+        tilingSprite.rotation = angle + Math.PI;
+        tilingSprite.x = currentPos.x;
+        tilingSprite.y = currentPos.y;
+        this.stage.addChild(tilingSprite);
+      }
+>>>>>>> origin/master
     }
 
     for(let [id, routeNode] of this.routeNodes) {
