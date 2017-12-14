@@ -106,6 +106,11 @@ export default class Level {
     this.routeSegments = [];
     this.routeContainer.removeChildren();
 
+    // reset, mainly to remove segments from them
+    for (let [id, node] of this.routeNodes) {
+      node.reset(id, node.point, node.to);
+    }
+
     this.generateRouteSegments();
     this.drawRoutes();
   }
@@ -134,6 +139,10 @@ export default class Level {
           var toNodeId = startNode.getTo()[j];
           endNode = this.routeNodes.get(toNodeId);
           
+          // don't add segment twice if already connected
+          if (startNode.hasSegmentWithNodes(endNode, startNode))
+            continue;
+
           segment = new RouteSegment(startNode, endNode);
           startNode.addSegment(segment);
           endNode.addSegment(segment);
@@ -228,7 +237,7 @@ export default class Level {
     }
 
     return {
-      startpoint: {x:0,y:0},
+      startpoint: this.getStartingSegment().getPositionAt(0),
       routes: routes, 
       logs: logs, 
       logdeposits: deposits

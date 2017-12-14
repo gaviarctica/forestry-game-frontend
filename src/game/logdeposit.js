@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Log from './log';
+import {LogType} from './logtypes'
 
 var Width = 150;
 var Height = 50;
@@ -73,7 +74,7 @@ export default class LogDeposit {
     if( this.type === -1 ) {
       this.type = log.type;
 
-      this.graphics.beginFill(Log.LogColorByType[this.type], 1);
+      this.graphics.beginFill(LogType[this.type].color, 1);
       this.graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
       this.graphics.beginFill(Color, 1);
       this.graphics.drawRect(-Width/2.0, -Height/2, Width, Height);

@@ -457,7 +457,7 @@ export default class Truck {
 
       // check if deposit is close to truck
       var distanceToDeposit = distance(this.sprite.position, deposit.getPosition());
-      if (distanceToDeposit < 200) {
+      if (distanceToDeposit < 100) {
         deposit.setCanBeUnloadedTo(true);
 
         if (this.selectableItems.indexOf(deposit) === -1) {
