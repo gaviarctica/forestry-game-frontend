@@ -18,10 +18,9 @@ export default class GameCanvas {
     this.map = new Level(this.mapData);
     this.game.stage.addChild(this.map.getStage());
 
-    this.truck = new Truck(this.mapData.startpoint.x,
-                           this.mapData.startpoint.y,
-                           this.game.stage,
+    this.truck = new Truck(this.game.stage,
                            this.map.getStartingSegment(),
+                           this.map.getStaringInterpolation(),
                            this.map.getLogs(),
                            this.map.getLogDeposits(),
                            this.stats);

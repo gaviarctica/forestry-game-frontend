@@ -56,3 +56,12 @@ export function distanceToSegment(p, segStart, segEnd) {
     var dy = p.y - yy;
     return Math.sqrt(dx * dx + dy * dy);
   }
+
+export function normalize(vector2) {
+  var d = length(vector2);
+  return {x: vector2.x / d, y: vector2.y / d};
+}
+
+export function isLeft(p1, p2, p){
+  return ((p2.x - p1.x)*(p.y - p1.y) - (p2.y - p1.y)*(p.x - p1.x)) > 0;
+}

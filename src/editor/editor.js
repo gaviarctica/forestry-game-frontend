@@ -4,6 +4,7 @@ import RoadTool from './roadtool';
 import Level from '../game/level';
 import LogTool from './logtool';
 import DepositTool from './deposittool';
+import TruckTool from './trucktool';
 
 export default class EditorCanvas {
   constructor(updateUI) {
@@ -55,6 +56,7 @@ export default class EditorCanvas {
     this.tools['road'] = new RoadTool(this.pixiApp.stage, this.level);
     this.tools['log'] = new LogTool(this.pixiApp.stage, this.level);
     this.tools['deposit'] = new DepositTool(this.pixiApp.stage, this.level);
+    this.tools['truck'] = new TruckTool(this.pixiApp.stage, this.level);
   }
 
   setupCameraControl() {

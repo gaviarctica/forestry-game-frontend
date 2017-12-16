@@ -25,6 +25,18 @@ export default class Level {
 
       this.generateRouteSegments();
       this.drawRoutes();
+
+      if (map.startseg) {
+        this.startingSegment = this.routeSegments[map.startseg]; 
+      } else {
+        this.startingSegment = this.routeSegments[0];
+      }
+
+      if (map.startinterp) {
+        this.startingInterpolation = map.startinterp;
+      } else {
+        this.startingInterpolation = 0;
+      }
     }
 
   }
@@ -205,8 +217,17 @@ export default class Level {
     return this.routeSegments;
   }
 
+  setStartingSegment(segment, interp) {
+    this.startingSegment = segment;
+    this.startingInterpolation = interp;
+  }
+
   getStartingSegment() {
-    return this.routeSegments[0];
+    return this.startingSegment;
+  }
+
+  getStaringInterpolation() {
+    return this.startingInterpolation;
   }
 
   getLogs() {
@@ -236,8 +257,18 @@ export default class Level {
       deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.type});
     }
 
+    var startingSegmentIdx = 0;
+    for (var i = 0; i < this.routeSegments.length; ++i) {
+      if (this.routeSegments[i] === this.startingSegment) {
+        startingSegmentIdx = i;
+        break;
+      }
+    }
+
     return {
-      startpoint: this.getStartingSegment().getPositionAt(0),
+      startpoint: this.getStartingSegment().getPositionAt(this.startingInterpolation),
+      startseg: startingSegmentIdx,
+      startinterp: this.startingInterpolation,
       routes: routes, 
       logs: logs, 
       logdeposits: deposits

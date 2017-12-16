@@ -7,7 +7,7 @@ import LogDeposit from './logdeposit';
 export default class Truck {
 
 
-  constructor(x, y, stage, startSegment, logsOnLevel, depositsOnLevel, stats) {
+  constructor(stage, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats) {
     // store the stage so we can control the camera when we need it
     this.stage = stage;
 
@@ -19,13 +19,10 @@ export default class Truck {
     this.sprite.anchor.set(0.5);
     this.sprite.scale.set(0.1);
 
-    this.sprite.x = x;
-    this.sprite.y = y;
-
     this.velocity = 5.0;
 
     // 0.00 - 1.00, interpolation between route segment start and end
-    this.pointDelta = 0;
+    this.pointDelta = startInterp;
 
     this.routeIndex = 0;
 

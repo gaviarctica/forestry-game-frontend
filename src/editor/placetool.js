@@ -61,7 +61,7 @@ export default class PlaceTool extends ITool {
       return;
 
     if (this.allowPlacement) {
-      this.placeItem(mouseInput.worldPosition, this.angle);
+      this.placeItem(this.pointerPos, this.angle);
     }
   }
 

@@ -63,6 +63,7 @@ export const LANG = {
       road: "Road",
       logs: "Logs",
       deposits: "Deposits",
+      truck: "Truck",
       save: "Save"
     },
     logs: {
@@ -137,6 +138,7 @@ export const LANG = {
       report: "Raportti",
       road: "Tie",
       logs: "Tukki",
+      truck: "Metsäkone",
       deposits: "Säilö",
       save: "Tallenna"
     },

@@ -48,6 +48,9 @@ export default class Editor extends Component {
     if (clicked === 'button-deposits') {
       this.editorCanvas.selectTool('deposit');
     }
+    if (clicked === 'button-truck') {
+      this.editorCanvas.selectTool('truck');
+    }
     if (clicked === 'button-save') {
       var mapData = this.editorCanvas.serializeLevel();
       var mapInfo = this.editorCanvas.levelInfo();
@@ -91,6 +94,12 @@ export default class Editor extends Component {
         <Button 
           id="button-deposits"
           text={LANG[this.props.lang].buttons.deposits}
+          buttonType='default'
+          style={quitButtonStyle}
+          handleClick={this.handleButtonClick.bind(this)} />
+        <Button 
+          id="button-truck"
+          text={LANG[this.props.lang].buttons.truck}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />
