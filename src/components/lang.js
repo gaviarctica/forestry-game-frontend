@@ -66,6 +66,7 @@ export const LANG = {
       logs: "Logs",
       deposits: "Deposits",
       truck: "Truck",
+      remove: "Remove",
       save: "Save"
     },
     logs: {
@@ -144,6 +145,7 @@ export const LANG = {
       logs: "Tukki",
       truck: "Metsäkone",
       deposits: "Säilö",
+      remove: "Poista",
       save: "Tallenna"
     },
     logs: {

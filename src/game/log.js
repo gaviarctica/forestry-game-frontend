@@ -22,12 +22,6 @@ export default class Log {
 		this._canBePickedUp = false;
     this._isHighlighted = false;
 
-    this.container = new PIXI.Container();
-    this.container.rotation = rotation;
-    this.container.x = position.x;
-    this.container.y = position.y;
-    
-    stage.addChild(this.container);
     // Log color code outline when log can be picked up
     var graphics = new PIXI.Graphics();
     graphics.beginFill(0x000000, 1);
@@ -39,12 +33,19 @@ export default class Log {
     logSprite.anchor.set(0.5, 0.5);
     logSprite.scale.set(0.1);
 
-    graphics.interactive = true;
+    this.container = new PIXI.Container();
+    this.container.rotation = rotation;
+    this.container.x = position.x;
+    this.container.y = position.y;
+    
+    stage.addChild(this.container);
+   
+    this.container.interactive = true;
     // make hit area bigger rectangle than the log itself, easier to hit
-    graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -(Height+20)/2.0, Width, Height+20);
+    this.container.hitArea = new PIXI.Rectangle(-Width/2.0, -(Height+20)/2.0, Width, Height+20);
 
-    graphics.owner = this;
-    graphics.pointerdown = function() {
+    this.container.owner = this;
+    this.container.pointerdown = function() {
       // check if truck is in pickup range (flag managed by truck)
       if (this.owner.canBePickedUp()) {
         this.owner.setMarkedForPickUp(true);
@@ -52,15 +53,15 @@ export default class Log {
         this.owner.setMarkedForPickUp(false);
       }
     };
-    graphics.pointerup = function() {
+    this.container.pointerup = function() {
       this.owner.setMarkedForPickUp(false);
     }
 
-    graphics.pointerover = function() {
+    this.container.pointerover = function() {
       this.owner.setHighlighted(true);
     }
 
-    graphics.pointerout = function() {
+    this.container.pointerout = function() {
       this.owner.setHighlighted(false);
     }
 
@@ -69,6 +70,10 @@ export default class Log {
     this.graphics = graphics;
     this.logSprite = logSprite;
 	}
+
+  removeFromStage() {
+    this.removeFromParent();
+  }
 
   removeFromParent() {
     if (this.graphics.parent) {

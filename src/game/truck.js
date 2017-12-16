@@ -381,9 +381,7 @@ export default class Truck {
     var logContainerX = this.logContainerTraverseOrder[i][0];
     var logContainerY = this.logContainerTraverseOrder[i][1];
 
-
-
-    return { "log" : this.logsInTruck[logContainerX][logContainerY], "layer" : logContainerX };
+    return { log: this.logsInTruck[logContainerX][logContainerY], layer: logContainerX };
   }
 
   setLogAtPriorityIndex(i, log) {

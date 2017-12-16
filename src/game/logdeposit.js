@@ -134,4 +134,10 @@ export default class LogDeposit {
   getRotation() {
     return this.graphics.rotation;
   }
+
+  removeFromStage() {
+    if (this.graphics.parent) {
+      this.graphics.parent.removeChild(this.graphics);
+    }
+  }
 }

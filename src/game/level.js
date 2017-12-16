@@ -194,6 +194,14 @@ export default class Level {
     this.logs.push(log);
   }
 
+  removeLog(log) {
+    log.removeFromStage();
+    var index = this.logs.indexOf(log);
+    if (index !== -1) {
+      this.logs.splice(index, 1);
+    }
+  }
+
   parseLogs() {
     for (var i = 0; i < this.map.logs.length; ++i) {
       var logData = this.map.logs[i];
@@ -204,6 +212,14 @@ export default class Level {
   addDeposit(position, rotation, type) {
     var logDeposit = new LogDeposit(position, rotation, type, this.stage);
     this.logDeposits.push(logDeposit);
+  }
+
+  removeDeposit(deposit) {
+    deposit.removeFromStage();
+    var index = this.logDeposits.indexOf(deposit);
+    if (index !== -1) {
+      this.logDeposits.splice(index, 1);
+    }
   }
 
   parseLogDeposits() {

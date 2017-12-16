@@ -5,6 +5,7 @@ import Level from '../game/level';
 import LogTool from './logtool';
 import DepositTool from './deposittool';
 import TruckTool from './trucktool';
+import RemoveTool from './removetool';
 
 export default class EditorCanvas {
   constructor(updateUI) {
@@ -57,6 +58,7 @@ export default class EditorCanvas {
     this.tools['log'] = new LogTool(this.pixiApp.stage, this.level);
     this.tools['deposit'] = new DepositTool(this.pixiApp.stage, this.level);
     this.tools['truck'] = new TruckTool(this.pixiApp.stage, this.level);
+    this.tools['remove'] = new RemoveTool(this.pixiApp.stage, this.level);
   }
 
   setupCameraControl() {
@@ -95,7 +97,6 @@ export default class EditorCanvas {
     };
 
     this.pixiApp.stage.pointermove = function() {
-
       mouseInput.pointerId = interaction.mouse.pointerId;
       mouseInput.lastPosition = {x: mouseInput.position.x, y: mouseInput.position.y};
       mouseInput.position = {x: interaction.mouse.global.x, y: interaction.mouse.global.y};
