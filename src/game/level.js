@@ -312,7 +312,7 @@ export default class Level {
 
     return {
       pileTypes: pileTypes, 
-      routeLength: Math.round(totalRouteLength), 
+      routeLength: Math.round(totalRouteLength / 10), 
       storageAreas: this.logDeposits.length,
       passingLimit: false
     };
