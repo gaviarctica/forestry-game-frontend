@@ -14,7 +14,8 @@ export default class LoginSignupForm extends Component {
       username: '',
       password: '',
       email: '',
-      message: undefined
+      message: undefined,
+      loading: false
     }
   }
 
@@ -24,12 +25,18 @@ export default class LoginSignupForm extends Component {
         message: nextProps.message,
         username: '',
         password: '',
-        email: ''
+        email: '',
+        loading: false
       });
     } else {
       this.setState({
         message: nextProps.message
       });
+      if (this.state.loading) {
+        this.setState({
+          loading: false
+        })
+      }
     }
   }
 
@@ -46,6 +53,9 @@ export default class LoginSignupForm extends Component {
   handleSubmit(e) {
     e.preventDefault();
     this.props.handleSubmit(e.target.id, this.state.username, this.state.password, this.state.email);
+    this.setState({
+      loading: true
+    })
   }
 
   render() {
@@ -61,6 +71,7 @@ export default class LoginSignupForm extends Component {
 
     var emailField;
     var formButton;
+    var loadingButton;
     if (this.props.view === 'signup') {
       emailField = (
         <input 
@@ -81,6 +92,14 @@ export default class LoginSignupForm extends Component {
           handleClick={() => document.getElementById('form-submit').click()} />
       );
 
+      loadingButton = (
+        <Button
+          id="button-sign-up"
+          text={LANG[this.props.lang].buttons.loadingSignUp}
+          buttonType="primary"
+          style={buttonStyle} />
+      );
+
     } else {
 
       formButton = (
@@ -91,8 +110,16 @@ export default class LoginSignupForm extends Component {
           style={buttonStyle}
           handleClick={() => document.getElementById('form-submit').click()} />
       );
-    }
 
+      loadingButton = (
+        <Button
+          id="button-sign-up"
+          text={LANG[this.props.lang].buttons.loadingLogIn}
+          buttonType="primary"
+          style={buttonStyle} />
+      );
+    }
+    
     return (
         <div className="LoginForm">
 
@@ -137,7 +164,16 @@ export default class LoginSignupForm extends Component {
 
             </form>
 
-            {formButton}
+            {
+              this.state.loading ?
+                <div>
+                  {loadingButton}
+                </div>
+                : 
+                <div>
+                  {formButton}
+                </div>
+            }
 
           </div>
         </div>

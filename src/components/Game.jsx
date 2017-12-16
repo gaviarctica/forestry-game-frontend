@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Game.css';
 import Button from './Button';
 import GameCanvas from '../game/game';
+import Loader from './Loader';
 import { API } from './api';
 import { LANG } from './lang';
 
@@ -19,7 +20,8 @@ export default class Game extends Component {
         ['', '', '', '', ''],
         ['', '', '', '', ''],
       ],
-      gameEnd: false
+      gameEnd: false,
+      loadingContent: true
     }
   }
 
@@ -36,6 +38,11 @@ export default class Game extends Component {
         self.gameCanvas = new GameCanvas(responseJson[0].mapdata, self.updateUI.bind(self));
       }
     });
+    setTimeout(function() {
+      self.setState({
+        loadingContent: false
+      });
+    }, 700);
   }
 
   handleButtonClick(e) {
@@ -58,6 +65,11 @@ export default class Game extends Component {
     };
     return (
       <div className="Game">
+        {
+          this.state.loadingContent ? (
+            <Loader />
+          ) : ('')
+        }
         <div id="canvas-game"></div>
         {this.state.gameEnd == true &&
         <div id="game-end">

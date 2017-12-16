@@ -94,7 +94,7 @@ export default class MainMenu extends Component {
     API.register(username, password, email, function(err, message, username, email) {
       if (err) throw err;
       // Registering was not successful
-      if (err || message) {
+      if (err || message.length > 0) {
         self.setState({
           formMsg: message
         });
@@ -109,7 +109,8 @@ export default class MainMenu extends Component {
     API.login(username, password, function(err, message, un, em) {
       if (err) throw err;
       // Login was not successful
-      if (message) {
+      console.log(message);
+      if (message.length > 0) {
         self.setState({
           formMsg: message
         });
