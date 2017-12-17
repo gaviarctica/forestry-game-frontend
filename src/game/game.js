@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import Truck from './truck';
 import Level from './level';
 import Stats from './stats';
+import Forest from './forest';
 
 export default class GameCanvas {
   constructor(mapData, updateUI) {
@@ -24,6 +25,9 @@ export default class GameCanvas {
                            this.map.getLogs(),
                            this.map.getLogDeposits(),
                            this.stats);
+
+    this.forest = new Forest(this.game.stage, mapData);
+    this.forest.buildTrees();
 
     this.setupCameraControl();
     this.update = this.update.bind(this);
