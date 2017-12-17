@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg13373"
+   version="1.1"
+   viewBox="0 0 26.458333 31.750001"
+   height="120"
+   width="100">
+  <defs
+     id="defs13367">
+    <linearGradient
+       id="linearGradient13929">
+      <stop
+         id="stop13925"
+         offset="0"
+         style="stop-color:#808080;stop-opacity:1;" />
+      <stop
+         id="stop13927"
+         offset="1"
+         style="stop-color:#4c4c4c;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(-0.96967169,1.0569208,-0.92773502,-0.99709787,289.39956,550.59879)"
+       r="11.378847"
+       fy="283.93811"
+       fx="13.065633"
+       cy="283.93811"
+       cx="13.065633"
+       id="radialGradient13933"
+       xlink:href="#linearGradient13929" />
+    <radialGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.74476802,0.27760197,-0.42657196,1.1444341,120.1093,-47.132077)"
+       r="11.378847"
+       fy="281.32306"
+       fx="17.480619"
+       cy="281.32306"
+       cx="17.480619"
+       id="radialGradient13933-0-1"
+       xlink:href="#linearGradient13929" />
+    <filter
+       height="1.0679914"
+       y="-0.033995687"
+       width="1.0765109"
+       x="-0.03825546"
+       id="filter13999"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur14001"
+         stdDeviation="0.3252938" />
+    </filter>
+    <filter
+       height="1.0456694"
+       y="-0.022834708"
+       width="1.050894"
+       x="-0.025446982"
+       id="filter14071"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur14073"
+         stdDeviation="0.24129779" />
+    </filter>
+  </defs>
+  <metadata
+     id="metadata13370">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(0,-265.24998)"
+     id="layer1">
+    <path
+       transform="matrix(1.083453,0,0,1.1726702,-0.81172423,-51.671721)"
+       id="path13377-7"
+       d="m 2.101913,291.65366 c -0.534539,-0.70159 -1.20271334,-15.23437 1.503391,-17.23889 2.706104,-2.00452 9.588296,-4.94449 14.499374,-2.03793 4.911077,2.90656 7.349912,11.35896 5.813112,15.63527 -1.5368,4.27631 -19.343634,14.56619 -21.815877,3.64155 z"
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter14071)" />
+    <path
+       id="path13377"
+       d="m 1.5076556,290.46046 c -0.57914791,-0.82274 -1.30308287,-17.86489 1.6288537,-20.21553 2.9319364,-2.35065 10.3884657,-5.79826 15.7093877,-2.38982 5.320921,3.40843 7.963284,13.32031 6.298234,18.33501 -1.665051,5.01471 -20.9579161,17.08134 -23.6364754,4.27034 z"
+       style="fill:url(#radialGradient13933);fill-opacity:1;stroke:none;stroke-width:0.29823285px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  </g>
+</svg>
