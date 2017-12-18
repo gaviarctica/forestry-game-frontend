@@ -21,6 +21,34 @@ export default class GameCanvas {
     this.map = new Level(this.mapData);
     this.game.stage.addChild(this.map.getStage());
 
+    // counting different log types
+    var logtype_amount = 0;
+    var logs_amount = this.map.getLogs().length;
+    var log_types = [];
+
+    for(var i = 0; i < logs_amount; ++i) {
+      var has_type = false;
+
+      for(var j = 0; j < log_types.length; ++j) {
+        if(log_types[j].type === this.map.getLogs()[i].type) {
+          log_types[j].amount++;
+          has_type = true;
+        }
+      }
+
+      if(!has_type) {
+        log_types.push({"type": this.map.getLogs()[i].type, "amount":1});
+      }
+    }
+
+    var deposit_amount = this.map.getLogDeposits().length;
+    for(var i = 0; i < deposit_amount; ++i) {
+      if(log_types.length === deposit_amount)
+        this.map.getLogDeposits()[i].setMaxTypes(1);
+      else
+        this.map.getLogDeposits()[i].setMaxTypes(Math.ceil(log_types.length/deposit_amount));
+    }
+
     this.truck = new Truck(this.game.stage,
                            this.map.getStartingSegment(),
                            this.map.getStaringInterpolation(),

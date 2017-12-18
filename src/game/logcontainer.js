@@ -139,7 +139,10 @@ class LogRow {
   depositTypeExists(type, deposits) {
     for (var i = 0; i < deposits.length; ++i) {
       var deposit = deposits[i];
-      if(type === deposit.type) return true;
+      for(var j = 0; j < deposit.types.length; ++j) {
+        if(type === deposit.types[j]) return true;
+      }
+
     }
 
     return false;

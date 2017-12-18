@@ -19,17 +19,19 @@ export function createLogDepositGraphics() {
 }
 
 export default class LogDeposit {
-  constructor(position, rotation, type, stage) {
+  constructor(position, rotation, types, stage, max_types = 1) {
     // type is defined when first log is unloaded
-    this.type = type;
+    this.types = [];
     this.stage = stage;
+    this.max_types = max_types;
 
     if (!rotation) {
       rotation = 0;
     }
 
-    if (!type) {
-      this.type = -1; // no type predefined
+    // legacy support for single value
+    if (types) {
+      this.types.push(types); // no type predefined
     }
 
     this._isMarkedForPickUp = false;
@@ -68,19 +70,32 @@ export default class LogDeposit {
     this.graphics = graphics;
   }
 
+  setMaxTypes(max_types) {
+    this.max_types = max_types;
+  }
+
   addLog(log, levelHasType) {
-
     // if we have no type, we assign type and mark it with appropriate color
-    if( !levelHasType && this.type === -1 ) {
-      this.type = log.type;
+    if( !levelHasType && this.types.length < this.max_types) {
+      this.types.push(log.type);
 
-      this.graphics.beginFill(LogType[this.type].color, 1);
+      this.graphics.beginFill(LogType[log.type].color, 1);
       this.graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
       this.graphics.beginFill(Color, 1);
       this.graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
     }
 
-    if(this.type === log.type) {
+    // checking if wanted type is included
+    var can_add = false;
+
+    for(var i = 0; i < this.types.length; ++i) {
+      if(this.types[i] === log.type) {
+        can_add = true;
+        break;
+      }
+    }
+
+    if(can_add) {
       // reset the state for clicking
       this.setMarkedForUnload(false);
       // in this case parent is truck
