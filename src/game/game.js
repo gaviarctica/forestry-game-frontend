@@ -10,7 +10,9 @@ export default class GameCanvas {
     this.game = game;
 
     this.mapData = mapData;
-    
+
+    this.forest = new Forest(this.game.stage, mapData);
+    this.forest.buildGround();
 
     document.getElementById('canvas-game').appendChild(game.view);
 
@@ -26,7 +28,6 @@ export default class GameCanvas {
                            this.map.getLogDeposits(),
                            this.stats);
 
-    this.forest = new Forest(this.game.stage, mapData);
     this.forest.buildTrees();
 
     this.setupCameraControl();

@@ -11,7 +11,8 @@ export default class Forest {
 			'/static/tree1.svg',
 			'/static/tree1.svg', // Make tree1 twice as likely
 			'/static/tree2.svg',
-			'/static/tree3.svg'
+			'/static/tree3.svg',
+			'/static/stump.svg'
 		];
 		this.scales = [0.09, 0.095, 0.1, 0.105, 0.11];
 		this.obstacles = [];
@@ -40,6 +41,19 @@ export default class Forest {
 			}
 			this.updateMinMax(this.mapdata.routes[i]);
 		}
+	}
+
+	buildGround() {
+		var texure = PIXI.Texture.fromImage('/static/ground.svg');
+		var tilingSprite = new PIXI.extras.TilingSprite(
+			texure, 
+			10000,
+			10000
+		  );
+		tilingSprite.x = -5000;
+		tilingSprite.y = -5000;
+		tilingSprite.tileScale.set(0.05);
+		this.stage.addChild(tilingSprite);
 	}
 
 	buildTrees() {
