@@ -47,7 +47,7 @@ export default class LogContainer {
       3  |  x  4  3  x
       4  |  x  2  1  x
     */
-    
+
     // 4x5 array matrix for logs in truck
     var logsInTruck = [];
     for (var i = 0; i < 4; ++i) {
@@ -87,7 +87,6 @@ class LogRow {
   addLog(log,sprite) {
     for (var i = 0; i < this.logs.length; ++i) {
       if(this.logs[this.type.traverse_order[i]] === null) {
-        console.log("Log being added: " + this.type.traverse_order[i]);
         this.logs[this.type.traverse_order[i]] = log;
         // clear state
         log.setCanBePickedUp(false);
@@ -95,7 +94,7 @@ class LogRow {
         // setup graphics for truck visuals
         log.removeFromParent();
         sprite.addChild(log.logSprite);
-        // setting indexc to be correct even in short case
+        // setting index to be correct even in short case
         var point_index = this.type.log_amount == 4 ? this.type.traverse_order[i] : this.type.traverse_order[i]+1;
         log.logSprite.position = new PIXI.Point((point_index * 60) - 90, 250);
         log.logSprite.rotation = Math.PI/2;
