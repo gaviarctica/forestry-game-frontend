@@ -45,7 +45,7 @@ export default class Truck {
     this.leftWasDown = false;
     this.rightWasDown = false;
 
-    this.previous_direction = 1;
+    this.previous_direction = -1;
     this.logsOnLevel = logsOnLevel;
     this.depositsOnLevel = depositsOnLevel;
 
@@ -386,7 +386,7 @@ export default class Truck {
 
   setLogAtContainerPos(x, y, log) {
     this.logsInTruck[x][y] = log;
-    
+
     if (log != null) {
 
       // clear state
@@ -400,7 +400,7 @@ export default class Truck {
       log.logSprite.scale.set(1.0);
     }
   }
-  
+
   setLogAtPriorityIndex(i, log) {
     var logContainerX = this.logContainerTraverseOrder[i][0];
     var logContainerY = this.logContainerTraverseOrder[i][1];
@@ -495,12 +495,12 @@ export default class Truck {
 
     this.sprite.rotation = this.currentSegment.getRotation();
 
-    var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite) :
-      this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
-
-    if(seg['seg'] !== null) {
-      this.routeIndex = seg['index'];
-    }
+    // var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite) :
+    //   this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
+    //
+    // if(seg['seg'] !== null) {
+    //   this.routeIndex = seg['index'];
+    // }
 
     this.selectGraphic.clear();
     this.clawSprite.alpha = 0;
