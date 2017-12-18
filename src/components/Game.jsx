@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Game.css';
 import Button from './Button';
+import Report from './Report';
 import GameCanvas from '../game/game';
 import Loader from './Loader';
 import { API } from './api';
@@ -10,6 +11,7 @@ export default class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      timestring: '00:00:00',
       time: 0,
       distance: 0,
       score: 0,
@@ -21,12 +23,34 @@ export default class Game extends Component {
         ['', '', '', '', ''],
       ],
       gameEnd: false,
+      gameEndDate: undefined,
+      mapdata: undefined,
+      mapname: undefined,
+      mapID: undefined,
       loadingContent: true
     }
   }
 
   updateUI(update) {
-    this.setState(update);
+    if (!this.state.gameEnd) {
+      this.setState(update);
+    }
+    if (update.gameEnd && !this.state.gameEndDate) {
+      var d = new Date();
+      this.setState({
+        gameEndDate: d.toISOString()
+      });
+      API.postReport({
+        distance: this.state.distance,
+        time: this.state.time,
+        fuel: this.state.fuel,
+        logs: JSON.stringify(this.parseLogs(this.state.mapdata.logs)),
+        enddate: this.state.gameEndDate,
+        id: this.state.mapID
+      }, function(err) {
+        if (err) throw err;
+      })
+    }
   }
 
   componentDidMount() {
@@ -36,6 +60,11 @@ export default class Game extends Component {
 
       if (responseJson.length > 0) {
         self.gameCanvas = new GameCanvas(responseJson[0].mapdata, self.updateUI.bind(self));
+        self.setState({
+          mapdata: responseJson[0].mapdata,
+          mapname: responseJson[0].name,
+          mapID: responseJson[0].id
+        });
       }
     });
     setTimeout(function() {
@@ -54,6 +83,19 @@ export default class Game extends Component {
     }
   }
 
+  parseLogs(logs) {
+    var logsParsed = {};
+
+    for (var i = 0; i < logs.length; i++) {
+      if (logsParsed.hasOwnProperty(logs[i].type)) {
+        logsParsed[logs[i].type] += 1;
+      } else {
+        logsParsed[logs[i].type] = 1;
+      }
+    }
+    return logsParsed;
+  }
+
   render() {
     var buttonStyle = {
       width: '100%'
@@ -63,6 +105,7 @@ export default class Game extends Component {
       height: '40px',
       lineHeight: '40px'
     };
+    
     return (
       <div className="Game">
         {
@@ -73,8 +116,29 @@ export default class Game extends Component {
         <div id="canvas-game"></div>
         {this.state.gameEnd == true &&
         <div id="game-end">
-          Game is over!
-          Maybe show some report and buttons here
+          <div id="game-end-container">
+            <div id="game-end-menu">
+              <h1>{LANG[this.props.lang].game.levelFinished}</h1>
+              <Button 
+                id="button-quit"
+                text={LANG[this.props.lang].buttons.quit}
+                buttonType='default'
+                style={quitButtonStyle}
+                handleClick={this.handleButtonClick.bind(this)} />
+            </div>
+            <div id="game-end-report">
+              <Report
+                type="endgame_report"
+                lang={this.props.lang}
+                enddate={this.state.gameEndDate}
+                mapname={this.state.mapname}
+                time={this.state.timestring}
+                duration={this.state.time}
+                distance={this.state.distance}
+                fuel={this.state.fuel}
+                logs={this.parseLogs(this.state.mapdata.logs)} />
+            </div>
+          </div>
         </div>
         }
         <div id="game-info">
@@ -87,7 +151,7 @@ export default class Game extends Component {
           <div id="game-stats">
             <div id="game-stats-grouped">
               <div id="user">{this.props.username}</div>
-              <div id="time">{this.state.time}</div>
+              <div id="time">{this.state.timestring}</div>
               <div id="distance">{this.state.distance} m</div>
               <div id="fuel">{this.state.fuel} l</div>
               <div id="unload-count">{this.state.score} pts</div>

@@ -224,7 +224,7 @@ export const API = {
 
   getMyLatestScores: function (callback) {
     var err = undefined;
-    var url = '/api/v1/report';
+    var url = '/api/v1/report/';
     var init = {
       method: 'GET',
       credentials: 'same-origin',
@@ -247,12 +247,27 @@ export const API = {
     });
   },
 
-  postReport: function (callback) {
+  postReport: function (data, callback) {
     var err = undefined;
-    var url = '/api/v1/report';
+    var url = '/api/v1/report/';
+    var form = new FormData();
+    Object.keys(data).forEach(function(key) {
+      form.append(key, data[key]);
+    });
     var init = {
       method: 'POST',
       credentials: 'same-origin',
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+      body: form
     };
+
+    fetch(url, init).then(function (response) {
+      if (response.status === 200) {
+        callback(err);
+      } else {
+        err = 'Error posting report.';
+        callback(err);
+      }
+    });
   },
 }

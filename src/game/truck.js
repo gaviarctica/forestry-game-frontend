@@ -80,7 +80,7 @@ export default class Truck {
     }
 
     if((this.previousPoint.x !== point.x) || (this.previousPoint.y !== point.y)) {
-      this.distanceMoved += 1;
+      this.distanceMoved += distance(this.previousPoint, {x:this.sprite.x, y:this.sprite.y})/10;
       this.calcFuelBurned();
       this.previousPoint = point;
     }

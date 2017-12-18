@@ -17,6 +17,7 @@ export default class GameCanvas {
     document.getElementById('canvas-game').appendChild(game.view);
 
     this.stats = new Stats(updateUI);
+    this.gameEnded = false;
 
     this.map = new Level(this.mapData);
     this.game.stage.addChild(this.map.getStage());
@@ -121,10 +122,12 @@ export default class GameCanvas {
 
   update(delta)
   {
-    if (this.isInEndGameState()) {
+    if (this.isInEndGameState() && !this.gameEnded) {
       this.stats.updateUI({
         gameEnd: true
       });
+      this.stats.stopCounter();
+      this.gameEnded = true;
     }
 
     var totalDistance = this.truck.getDistanceMoved()
@@ -133,7 +136,7 @@ export default class GameCanvas {
 
     this.truck.update(delta);
     this.stats.updateUI({
-      distance: totalDistance,
+      distance: Math.round(totalDistance),
       fuel: totalfuelBurned,
       score: score.toFixed(0)
     });

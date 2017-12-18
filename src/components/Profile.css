@@ -9,6 +9,11 @@
 	display:inline-block;
 	margin: 20px;
 	vertical-align: middle;
+	min-width: 500px;
+}
+
+#left-content table {
+	width: 100%;
 }
 
 ul {
@@ -18,26 +23,16 @@ ul {
 #right-content {
 	display:inline-block;
 	background-color: var(--jd-gray);
-	width: 400px;
+	width: 300px;
 	height: 500px;
 	margin: 20px;
 	vertical-align: middle;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 #right-content > h1 {
 	text-align: center;
-}
-
-#report {
-	margin: 20px;
-}
-
-#report span {
-	float: right;
-}
-
-#report-general, #report-stats {
-	margin: 10px;
 }
 
 #profile-header, #user-info, #profile-content {
