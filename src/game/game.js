@@ -130,15 +130,15 @@ export default class GameCanvas {
       this.gameEnded = true;
     }
 
-    var totalDistance = this.truck.getDistanceMoved()
-    var totalfuelBurned = this.truck.getFuelBurned()
-    var score = totalDistance * totalfuelBurned;
+    var totalDistance = this.stats.getDistanceMoved()
+    var totalfuelBurned = this.stats.getFuelUsed()
+    var cost = this.stats.getCost();
 
     this.truck.update(delta);
     this.stats.updateUI({
       distance: Math.round(totalDistance),
       fuel: totalfuelBurned,
-      score: score.toFixed(0)
+      cost: cost.toFixed(2)
     });
   }
 

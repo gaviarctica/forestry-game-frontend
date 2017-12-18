@@ -14,7 +14,7 @@ export default class Game extends Component {
       timestring: '00:00:00',
       time: 0,
       distance: 0,
-      score: 0,
+      cost: 0,
       fuel: 0,
       logs: [
         ['', '', '', '', ''],
@@ -136,6 +136,7 @@ export default class Game extends Component {
                 duration={this.state.time}
                 distance={this.state.distance}
                 fuel={this.state.fuel}
+                cost={this.state.cost}
                 logs={this.parseLogs(this.state.mapdata.logs)} />
             </div>
           </div>
@@ -154,7 +155,7 @@ export default class Game extends Component {
               <div id="time">{this.state.timestring}</div>
               <div id="distance">{this.state.distance} m</div>
               <div id="fuel">{this.state.fuel} l</div>
-              <div id="unload-count">{this.state.score} pts</div>
+              <div id="unload-count">{this.state.cost} Euros</div>
               <Button 
                 id="button-show-report"
                 text="Show report"
