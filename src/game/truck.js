@@ -49,6 +49,7 @@ export default class Truck {
     this.previous_direction = -1;
     this.logsOnLevel = logsOnLevel;
     this.depositsOnLevel = depositsOnLevel;
+    this.maxDistanceToDeposit = 150;
 
     // 4x5 array matrix for logs in truck
     this.logsInTruck = [];
@@ -443,7 +444,11 @@ export default class Truck {
         var log = this.logsInTruck[x][y];
         if (!log) continue;
         triedAdd = true;
-        if (deposit.addLog(log)) {
+
+        // checking if level already has current log type
+        var levelHasType = this.depositTypeExists(log.type);
+
+        if (deposit.addLog(log, levelHasType)) {
           this.setLogAtContainerPos(x, y, null);
           this.stats.updateLogs(this.logsInTruck);
           return true;
@@ -456,13 +461,22 @@ export default class Truck {
     return false;
   }
 
+  depositTypeExists(type) {
+    for (var i = 0; i < this.depositsOnLevel.length; ++i) {
+      var deposit = this.depositsOnLevel[i];
+      if(type === deposit.type) return true;
+    }
+
+    return false;
+  }
+
   checkDeposits() {
     for (var i = 0; i < this.depositsOnLevel.length; ++i) {
       var deposit = this.depositsOnLevel[i];
 
       // check if deposit is close to truck
       var distanceToDeposit = distance(this.sprite.position, deposit.getPosition());
-      if (distanceToDeposit < 150) {
+      if (distanceToDeposit < this.maxDistanceToDeposit) {
         deposit.setCanBeUnloadedTo(true);
 
         if (this.selectableItems.indexOf(deposit) === -1) {
