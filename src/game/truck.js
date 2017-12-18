@@ -10,6 +10,7 @@ export default class Truck {
   constructor(stage, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats) {
     // store the stage so we can control the camera when we need it
     this.stage = stage;
+    this.forceCameraMovement = true;
 
     // can be lower with reverse
     Truck.MIN_VELOCITY = 1.0;
@@ -45,9 +46,10 @@ export default class Truck {
     this.leftWasDown = false;
     this.rightWasDown = false;
 
-    this.previous_direction = 1;
+    this.previous_direction = -1;
     this.logsOnLevel = logsOnLevel;
     this.depositsOnLevel = depositsOnLevel;
+    this.maxDistanceToDeposit = 150;
 
     // 4x5 array matrix for logs in truck
     this.logsInTruck = [];
@@ -137,7 +139,9 @@ export default class Truck {
       return reverse ?  velocity * Truck.REVERSE_VELOCITY_FACTOR :  velocity;
   }
 
-  update(timeDelta) {
+  update(timeDelta, stopAutomaticCamera = false) {
+    // stopping automatic camera updates untill we move truck next time
+    if(stopAutomaticCamera) this.forceCameraMovement = false;
     this.move(timeDelta);
     this.updateCamera();
     this.checkLogs();
@@ -149,7 +153,10 @@ export default class Truck {
   move(timeDelta) {
     var direction = 0;
 
+
     if(Key.up.isDown) {
+      // when we start moving we force the camera to center again
+      this.forceCameraMovement = true;
 
       // when direction changes
       if(this.previous_direction == -1) {
@@ -162,6 +169,8 @@ export default class Truck {
     }
 
     if(Key.down.isDown) {
+      // when we start moving we force the camera to center again
+      this.forceCameraMovement = true;
 
       // when direction changes
       if(this.previous_direction == 1) {
@@ -297,10 +306,12 @@ export default class Truck {
   }
 
   updateCamera() {
-    var upfactor = 1 / 60;
-    var upvector =  [(this.stage.pivot.x - this.sprite.x)*upfactor, (this.stage.pivot.y - this.sprite.y) * upfactor];
-    this.stage.pivot.x -= upvector[0];
-    this.stage.pivot.y -= upvector[1];
+    if(this.forceCameraMovement) {
+      var upfactor = 1 / 60;
+      var upvector =  [(this.stage.pivot.x - this.sprite.x)*upfactor, (this.stage.pivot.y - this.sprite.y) * upfactor];
+      this.stage.pivot.x -= upvector[0];
+      this.stage.pivot.y -= upvector[1];
+    }
   }
 
   checkLogs() {
@@ -386,7 +397,7 @@ export default class Truck {
 
   setLogAtContainerPos(x, y, log) {
     this.logsInTruck[x][y] = log;
-    
+
     if (log != null) {
 
       // clear state
@@ -400,7 +411,7 @@ export default class Truck {
       log.logSprite.scale.set(1.0);
     }
   }
-  
+
   setLogAtPriorityIndex(i, log) {
     var logContainerX = this.logContainerTraverseOrder[i][0];
     var logContainerY = this.logContainerTraverseOrder[i][1];
@@ -433,7 +444,11 @@ export default class Truck {
         var log = this.logsInTruck[x][y];
         if (!log) continue;
         triedAdd = true;
-        if (deposit.addLog(log)) {
+
+        // checking if level already has current log type
+        var levelHasType = this.depositTypeExists(log.type);
+
+        if (deposit.addLog(log, levelHasType)) {
           this.setLogAtContainerPos(x, y, null);
           this.stats.updateLogs(this.logsInTruck);
           return true;
@@ -446,13 +461,22 @@ export default class Truck {
     return false;
   }
 
+  depositTypeExists(type) {
+    for (var i = 0; i < this.depositsOnLevel.length; ++i) {
+      var deposit = this.depositsOnLevel[i];
+      if(type === deposit.type) return true;
+    }
+
+    return false;
+  }
+
   checkDeposits() {
     for (var i = 0; i < this.depositsOnLevel.length; ++i) {
       var deposit = this.depositsOnLevel[i];
 
       // check if deposit is close to truck
       var distanceToDeposit = distance(this.sprite.position, deposit.getPosition());
-      if (distanceToDeposit < 100) {
+      if (distanceToDeposit < this.maxDistanceToDeposit) {
         deposit.setCanBeUnloadedTo(true);
 
         if (this.selectableItems.indexOf(deposit) === -1) {
@@ -495,12 +519,13 @@ export default class Truck {
 
     this.sprite.rotation = this.currentSegment.getRotation();
 
-    var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite) :
-      this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
-
-    if(seg['seg'] !== null) {
-      this.routeIndex = seg['index'];
-    }
+    // REMOVED in 18_12 bugfixes (doesn't seem to be needed anymore)
+    // var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite) :
+    //   this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
+    //
+    // if(seg['seg'] !== null) {
+    //   this.routeIndex = seg['index'];
+    // }
 
     this.selectGraphic.clear();
     this.clawSprite.alpha = 0;

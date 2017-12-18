@@ -22,7 +22,7 @@ export default class RouteNode {
 
   hasSegmentWithNodes(node1, node2) {
     for (var seg of this.segments) {
-      if ((seg.startNode === node1 && seg.endNode === node2) 
+      if ((seg.startNode === node1 && seg.endNode === node2)
           || seg.startNode === node2 && seg.endNode === node1) {
             return true;
       }
@@ -107,6 +107,7 @@ export default class RouteNode {
     }
 
     this.segments[index].setSelected();
+
     this.setArrowPos(arrowSprite, this.segments[index].getRotation(this));
     return {'seg':this.segments[index], 'index':index};
 

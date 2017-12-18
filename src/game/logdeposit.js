@@ -68,10 +68,10 @@ export default class LogDeposit {
     this.graphics = graphics;
   }
 
-  addLog(log) {
+  addLog(log, levelHasType) {
 
     // if we have no type, we assign type and mark it with appropriate color
-    if( this.type === -1 ) {
+    if( !levelHasType && this.type === -1 ) {
       this.type = log.type;
 
       this.graphics.beginFill(LogType[this.type].color, 1);
