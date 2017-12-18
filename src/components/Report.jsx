@@ -22,7 +22,6 @@ export default function Report(props) {
           <h3>{LANG[props.lang].report.logsCollected}:</h3>
           <ul>
             {Object.keys(props.logs).map(function(key) {
-              console.log('type'+(parseInt(key)+1));
               return <li key={key}>{LANG[props.lang].logs['type'+(parseInt(key)+1)]}: <span>{props.logs[key]}</span></li>
             })}
           </ul>
