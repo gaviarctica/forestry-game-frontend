@@ -5,7 +5,6 @@ import { LANG } from './lang';
 export default function Report(props) {
 
   var date = new Date(props.enddate);
-  console.log(props.lang);
 
   return (
     <div id={props.type == "endgame_report" ? "endgame-report" : "report"}>
@@ -23,7 +22,8 @@ export default function Report(props) {
           <h3>{LANG[props.lang].report.logsCollected}:</h3>
           <ul>
             {Object.keys(props.logs).map(function(key) {
-              return <li key={key}>{key}: <span>{props.logs[key]}</span></li>
+              console.log('type'+(parseInt(key)+1));
+              return <li key={key}>{LANG[props.lang].logs['type'+(parseInt(key)+1)]}: <span>{props.logs[key]}</span></li>
             })}
           </ul>
           <hr/>
