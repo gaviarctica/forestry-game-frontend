@@ -10,7 +10,7 @@ export default class GameCanvas {
     this.game = game;
 
     this.mapData = mapData;
-    
+
 
     document.getElementById('canvas-game').appendChild(game.view);
 
@@ -29,12 +29,12 @@ export default class GameCanvas {
     this.forest = new Forest(this.game.stage, mapData);
     this.forest.buildTrees();
 
-    this.setupCameraControl();
+    this.setupCameraControl(this.truck);
     this.update = this.update.bind(this);
     game.ticker.add(this.update);
   }
 
-  setupCameraControl() {
+  setupCameraControl(truck) {
     var interaction = new PIXI.interaction.InteractionManager(this.game.renderer);
     var mouseInput = {
       position: {
@@ -49,6 +49,8 @@ export default class GameCanvas {
 
     this.game.stage.interactive = true;
     this.game.stage.pointerdown = function() {
+      // stopping camera updates when we want to control the camera manually
+      truck.update(0,true);
       mouseInput.isDown = true;
     };
     this.game.stage.pointerup = function() {
@@ -69,7 +71,7 @@ export default class GameCanvas {
         self.game.stage.pivot.y +=  mouseInput.delta.y / self.game.stage.scale.y;
       }
 
-      
+
     }
 
     var mouseWheelEvent = function(event) {

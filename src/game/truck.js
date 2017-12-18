@@ -10,6 +10,7 @@ export default class Truck {
   constructor(stage, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats) {
     // store the stage so we can control the camera when we need it
     this.stage = stage;
+    this.forceCameraMovement = true;
 
     // can be lower with reverse
     Truck.MIN_VELOCITY = 1.0;
@@ -137,7 +138,9 @@ export default class Truck {
       return reverse ?  velocity * Truck.REVERSE_VELOCITY_FACTOR :  velocity;
   }
 
-  update(timeDelta) {
+  update(timeDelta, stopAutomaticCamera = false) {
+    // stopping automatic camera updates untill we move truck next time
+    if(stopAutomaticCamera) this.forceCameraMovement = false;
     this.move(timeDelta);
     this.updateCamera();
     this.checkLogs();
@@ -149,7 +152,10 @@ export default class Truck {
   move(timeDelta) {
     var direction = 0;
 
+
     if(Key.up.isDown) {
+      // when we start moving we force the camera to center again
+      this.forceCameraMovement = true;
 
       // when direction changes
       if(this.previous_direction == -1) {
@@ -162,6 +168,8 @@ export default class Truck {
     }
 
     if(Key.down.isDown) {
+      // when we start moving we force the camera to center again
+      this.forceCameraMovement = true;
 
       // when direction changes
       if(this.previous_direction == 1) {
@@ -297,10 +305,12 @@ export default class Truck {
   }
 
   updateCamera() {
-    var upfactor = 1 / 60;
-    var upvector =  [(this.stage.pivot.x - this.sprite.x)*upfactor, (this.stage.pivot.y - this.sprite.y) * upfactor];
-    this.stage.pivot.x -= upvector[0];
-    this.stage.pivot.y -= upvector[1];
+    if(this.forceCameraMovement) {
+      var upfactor = 1 / 60;
+      var upvector =  [(this.stage.pivot.x - this.sprite.x)*upfactor, (this.stage.pivot.y - this.sprite.y) * upfactor];
+      this.stage.pivot.x -= upvector[0];
+      this.stage.pivot.y -= upvector[1];
+    }
   }
 
   checkLogs() {
@@ -452,7 +462,7 @@ export default class Truck {
 
       // check if deposit is close to truck
       var distanceToDeposit = distance(this.sprite.position, deposit.getPosition());
-      if (distanceToDeposit < 100) {
+      if (distanceToDeposit < 150) {
         deposit.setCanBeUnloadedTo(true);
 
         if (this.selectableItems.indexOf(deposit) === -1) {
@@ -495,6 +505,7 @@ export default class Truck {
 
     this.sprite.rotation = this.currentSegment.getRotation();
 
+    // REMOVED in 18_12 bugfixes (doesn't seem to be needed anymore)
     // var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite) :
     //   this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
     //
