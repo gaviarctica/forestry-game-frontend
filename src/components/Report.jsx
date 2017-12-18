@@ -26,7 +26,7 @@ export default function Report(props) {
             })}
           </ul>
           <hr/>
-          <p><b>{LANG[props.lang].report.finalCost}:<span>{props.type == "endgame_report" ? (15/3600*props.duration+1.5*props.fuel).toFixed(2) : props.score} €</span></b></p>
+          <p><b>{LANG[props.lang].report.finalCost}:<span>{props.cost} €</span></b></p>
         </div>
       </div>
     </div>

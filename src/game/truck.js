@@ -61,10 +61,6 @@ export default class Truck {
     this.selectGraphic = new PIXI.Graphics();
     stage.addChild(this.selectGraphic);
 
-    this.distanceMoved = 0;
-    this.fuelBurned = 0;
-    this.previousPoint = null;
-
     this.stats = stats;
   }
 
@@ -86,31 +82,6 @@ export default class Truck {
     }
   }
 
-  getDistanceMoved() {
-    return this.distanceMoved;
-  }
-
-  // Calculates the fuel consumed by truck in one instance of gameplay
-  calcFuelBurned() {
-    // If there are logs in the truck increase fuel consumption by a load factor
-    var loadFactor = this.logCount();
-
-    switch(loadFactor) {
-      case 0:
-        this.fuelBurned += 0.001;
-        break;
-      case 1:
-        this.fuelBurned += 0.002;
-        break;
-      default:
-        this.fuelBurned += 0.001+0.001*loadFactor;
-    }
-  }
-
-  getFuelBurned() {
-    return this.fuelBurned.toFixed(2);
-  }
-
   getSpeed(reverse = false) {
 
       // If there are logs in the truck increase fuel consumption by a load factor
@@ -128,7 +99,8 @@ export default class Truck {
     this.checkLogs();
     this.checkDeposits();
     this.draw();
-    this.calcDistance(this.currentSegment.getPositionAt(this.pointDelta));
+    this.stats.calculateDistance(this.currentSegment.getPositionAt(this.pointDelta)); 
+    this.stats.calculateFuel(this.logContainer.getLogCount());       
   }
 
   move(timeDelta) {
