@@ -13,10 +13,12 @@ export default class Stats {
       ]
     };
 
-    logUpdate.forEach((column, i) => {
+    var logUpdateX = logUpdate.getFormattedLogUpdate();
+
+    logUpdateX.forEach((column, i) => {
       column.forEach((slot, j) => {
         if (slot !== null) {
-          formattedLogUpdate.logs[i][j] = slot.type;
+          formattedLogUpdate.logs[i][4-j] = slot.type;
         }
       });
     });

@@ -3,6 +3,7 @@ import * as Key from './controls';
 import {lerp, distance} from './helpers';
 import Log from './log';
 import LogDeposit from './logdeposit';
+import LogContainer from './logcontainer';
 
 export default class Truck {
 
@@ -51,26 +52,8 @@ export default class Truck {
     this.depositsOnLevel = depositsOnLevel;
     this.maxDistanceToDeposit = 150;
 
-    // 4x5 array matrix for logs in truck
-    this.logsInTruck = [];
-    for (var i = 0; i < 4; ++i) {
-      this.logsInTruck[i] = [];
-      for (var j = 0; j < 5; ++j) {
-        this.logsInTruck[i][j] = null;
-      }
-    }
-
-    //  fill priority order for log array matrix
-    /*
-        x/i 0  1  2  3
-    y/j  ______________
-      0  |  14 16 15 13
-      1  |  10 12 11 9
-      2  |  6  8  7  5
-      3  |  x  4  3  x
-      4  |  x  2  1  x
-    */
-    this.logContainerTraverseOrder = [[2, 4], [1, 4], [2, 3], [1, 3], [3, 2], [0, 2], [2, 2], [1, 2], [3, 1], [0, 1], [2, 1], [1, 1], [3, 0], [0, 0], [2, 0], [1, 0]];
+    // experimental logcontainer
+    this.logContainer = new LogContainer();
 
     // currently selected item (either automaticly, by mouse or q/e keys)
     this.selectedItem = null;
@@ -87,9 +70,7 @@ export default class Truck {
 
   // TODO: maybe keep up with the log count in pickLog, depositLog functions to avoid unnecessary for looping
   logCount() {
-    var logCount = 0;
-    this.logsInTruck.forEach(x => x.forEach(y => {if(y !== null) logCount += 1}));
-    return logCount;
+    return this.logContainer.getLogCount();
   }
 
   // Calculates the distance truck has moved during an instance of gameplay
@@ -420,51 +401,18 @@ export default class Truck {
 
   // returns boolean if the log was picked up
   pickLog(log) {
-
-    // traverse the container in fill priority order to find empty position
-    for (var i = 0; i < this.logContainerTraverseOrder.length; ++i) {
-      var logAtPos = this.getLogAtPriorityIndex(i);
-      // check if null.. aka no log at that pos
-      if (!logAtPos) {
-        this.setLogAtPriorityIndex(i, log);
-        this.stats.updateLogs(this.logsInTruck);
-        return true;
-      }
+    if(this.logContainer.addLog(log, this.sprite)) {
+      this.stats.updateLogs(this.logContainer);
+      return true;
     }
 
-    // truck is full
     return false;
   }
 
   unloadLogTo(deposit) {
-    for (var y = 0; y < 5; ++y) {
-      var triedAdd = false;
-      // try to add every log on one layer to deposit
-      for (var x = 0; x < 4; ++x) {
-        var log = this.logsInTruck[x][y];
-        if (!log) continue;
-        triedAdd = true;
-
-        // checking if level already has current log type
-        var levelHasType = this.depositTypeExists(log.type);
-
-        if (deposit.addLog(log, levelHasType)) {
-          this.setLogAtContainerPos(x, y, null);
-          this.stats.updateLogs(this.logsInTruck);
-          return true;
-        }
-      }
-      if (triedAdd) {
-        return false;
-      }
-    }
-    return false;
-  }
-
-  depositTypeExists(type) {
-    for (var i = 0; i < this.depositsOnLevel.length; ++i) {
-      var deposit = this.depositsOnLevel[i];
-      if(type === deposit.type) return true;
+    if(this.logContainer.unloadLogTo(deposit, this.depositsOnLevel)) {
+      this.stats.updateLogs(this.logContainer);
+      return true;
     }
 
     return false;
