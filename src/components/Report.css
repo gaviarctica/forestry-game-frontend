@@ -1,0 +1,12 @@
+#endgame-report {
+	min-width: 250px;
+  float: right;
+}
+
+#endgame-report span, #report span {
+  float: right;
+}
+
+#endgame-report h1, #endgame-report h2, #endgame-report h3 {
+  color: #eee;
+}

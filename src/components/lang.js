@@ -21,7 +21,7 @@ export const LANG = {
       profileTab: {
         profile: "Profile",
         noScoresFound: "You don't have any scores yet!",
-        latestScores: "Latest scores",
+        cost: "Cost",
         map: "Map",
         info: "Info"
       },
@@ -48,11 +48,14 @@ export const LANG = {
       report: "Report",
       map: "Map",
       stats: "Stats",
-      workingTime: "Working time (hh:mm:ss)",
+      workingTime: "Working time",
       distanceTravelled: "Distance travelled",
       fuelConsumed: "Fuel consumed",
       logsCollected: "Logs collected",
-      finalScore: "Final score"
+      finalCost: "Total cost"
+    },
+    game: {
+      levelFinished: 'Level finished!'
     },
     buttons: {
       startGame: "Start game",
@@ -100,7 +103,7 @@ export const LANG = {
       profileTab: {
         profile: "Profiili",
         noScoresFound: "Sinulla ei ole vielä tuloksia!",
-        latestScores: "Uusimmat tulokset",
+        cost: "Kulut",
         map: "Kartta",
         info: "Tiedot"
       },
@@ -127,11 +130,14 @@ export const LANG = {
       report: "Raportti",
       map: "Kartta",
       stats: "Tilastot",
-      workingTime: "Työskentelyaika (tt:mm:ss)",
+      workingTime: "Työskentelyaika",
       distanceTravelled: "Matkustettu etäisyys",
       fuelConsumed: "Polttoaineen kulutus",
       logsCollected: "Puita kerätty",
-      finalScore: "Lopullinen tulos"
+      finalCost: "Työn kulut"
+    },
+    game: {
+      levelFinished: 'Taso läpäisty!'
     },
     buttons: {
       startGame: "Aloita peli",

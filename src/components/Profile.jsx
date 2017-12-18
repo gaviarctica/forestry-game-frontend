@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from './Button';
 import './Profile.css';
+import Report from './Report';
 import { API } from './api';
 import { LANG } from './lang';
 import Icon from 'react-icons-kit';
@@ -13,13 +14,16 @@ const Rows = (props) => {
 	var tableButtonStyle = {
 		height: '30px',
 		lineHeight: '30px',
-		width: '100px',
+		width: '100%',
+		fontSize: '1em',
+		boxShadow: 'var(--menu-shadow-2)',
+		borderRadius: '5px',
 		backgroundColor: 'var(--jd-yellow)'
 	}
 
 	for (let i = 0; i < props.data.length; i++) {
 		rows.push(<tr key={props.data[i].id}>
-				    <td>{props.data[i].m_score}</td>
+				    <td>{props.data[i].m_score} €</td>
 				    <td>{props.data[i].level}</td>
 				    <td>
 				    	<Button
@@ -34,9 +38,9 @@ const Rows = (props) => {
 	return (<table id="profile-score-info">
 			  <thead>
 			  	<tr>
-				    <th>{LANG[props.lang].mainMenu.profileTab.latestScores}</th>
+				    <th>{LANG[props.lang].mainMenu.profileTab.cost}</th>
 				    <th>{LANG[props.lang].mainMenu.profileTab.map}</th>
-				    <th>{LANG[props.lang].mainMenu.profileTab.info}</th>
+				    <th style={{"width": "100px"}}>{LANG[props.lang].mainMenu.profileTab.info}</th>
 				</tr>
 			  </thead>
 			  <tbody>
@@ -113,27 +117,15 @@ export default class Profile extends Component {
 
 			rightContent = (
 				<div id="right-content">
-					<h1>{LANG[this.props.lang].report.report}</h1>
-					<div id="report">
-						<div id="report-general">
-							<p>{date.getDate()}.{date.getMonth()}.{date.getFullYear()}, {date.getHours()}:{date.getMinutes()<10?'0':''}{date.getMinutes()}</p>
-							<p>{LANG[this.props.lang].report.map}: {this.state.content.level}</p>
-						</div>
-						<div id="report-stats">
-							<h2>{LANG[this.props.lang].report.stats}</h2>
-							<p>{LANG[this.props.lang].report.workingTime}:<span>{workingtime}</span></p>
-							<p>{LANG[this.props.lang].report.distanceTravelled}:<span>{this.state.content.distance}m</span></p>
-							<p>{LANG[this.props.lang].report.fuelConsumed}:<span>{this.state.content.gas_consumption}l</span></p>
-							<h3>{LANG[this.props.lang].report.logsCollected}:</h3>
-							<ul>
-								{this.state.content.logs.map(function(logs, index) {
-									return <li key={index}>{logs.name}: <span>{logs.amount}</span></li>
-								})}
-							</ul>
-							<hr/>
-							<p><b>{LANG[this.props.lang].report.finalScore}:<span>{this.state.content.m_score}</span></b></p>
-						</div>
-					</div>
+					<Report type="profile_report"
+							lang={this.props.lang}
+			                enddate={date}
+			                mapname={this.state.content.level}
+			                time={workingtime}
+			                distance={this.state.content.distance}
+			                fuel={this.state.content.gas_consumption}
+			                logs={this.state.content.logs} 
+			                score={this.state.content.m_score}/>
 				</div>
         	);
 		}
