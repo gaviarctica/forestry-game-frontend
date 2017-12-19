@@ -38,6 +38,7 @@ export default class Truck {
     this.arrowSprite = PIXI.Sprite.fromImage('/static/arrow.svg');
     this.arrowSprite.anchor.set(0, 0.5);
     this.arrowSprite.scale.set(0.2);
+    this.arrowSprite.alpha = 0;
 
     stage.addChild(this.arrowSprite);
     stage.addChild(this.sprite);
