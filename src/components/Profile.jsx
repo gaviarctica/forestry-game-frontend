@@ -124,8 +124,8 @@ export default class Profile extends Component {
 			                time={workingtime}
 			                distance={this.state.content.distance}
 			                fuel={this.state.content.gas_consumption}
-			                logs={this.state.content.logs} 
-			                score={this.state.content.m_score}/>
+			                logs={this.state.content.logs}
+			                cost={this.state.content.m_score}/>
 				</div>
         	);
 		}
