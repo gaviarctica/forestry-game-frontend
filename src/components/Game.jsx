@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Game.css';
 import Button from './Button';
+import GameStat from './GameStat';
 import Report from './Report';
 import GameCanvas from '../game/game';
 import Loader from './Loader';
@@ -77,7 +78,7 @@ export default class Game extends Component {
   handleButtonClick(e) {
     var clicked = e.target.getAttribute('id');
 
-    if (clicked === 'button-quit') {
+    if (clicked === 'button-quit' || clicked === 'game-end-button-quit') {
       this.gameCanvas.destroy();
       this.props.switchView('mainmenu');
     }
@@ -97,13 +98,8 @@ export default class Game extends Component {
   }
 
   render() {
-    var buttonStyle = {
-      width: '100%'
-    };
     var quitButtonStyle = {
-      width: '180px',
-      height: '40px',
-      lineHeight: '40px'
+      
     };
     
     return (
@@ -120,7 +116,7 @@ export default class Game extends Component {
             <div id="game-end-menu">
               <h1>{LANG[this.props.lang].game.levelFinished}</h1>
               <Button 
-                id="button-quit"
+                id="game-end-button-quit"
                 text={LANG[this.props.lang].buttons.quit}
                 buttonType='default'
                 style={quitButtonStyle}
@@ -142,63 +138,65 @@ export default class Game extends Component {
           </div>
         </div>
         }
+        <Button 
+          id="button-quit"
+          text={LANG[this.props.lang].buttons.quit}
+          buttonType='default'
+          style={quitButtonStyle}
+          handleClick={this.handleButtonClick.bind(this)} />
         <div id="game-info">
-          <Button 
-                id="button-quit"
-                text={LANG[this.props.lang].buttons.quit}
-                buttonType='default'
-                style={quitButtonStyle}
-                handleClick={this.handleButtonClick.bind(this)} />
-          <div id="game-stats">
-            <div id="game-stats-grouped">
-              <div id="user">{this.props.username}</div>
-              <div id="time">{this.state.timestring}</div>
-              <div id="distance">{this.state.distance} m</div>
-              <div id="fuel">{this.state.fuel} l</div>
-              <div id="unload-count">{this.state.cost} Euros</div>
-              <Button 
-                id="button-show-report"
-                text="Show report"
-                buttonType='primary'
-                style={buttonStyle} />
-            </div>
-          </div>
-
-          <div id="logs-remaining">
-            <div id="logs-remaining-row">
-              <div className="logs-remaining-count">1</div>
-              <div className="logs-remaining-count">2</div>
-              <div className="logs-remaining-count">3</div>
-              <div className="logs-remaining-count">4</div>
-            </div>
-          </div>
-
+          <GameStat
+            header={LANG[this.props.lang].game.time}
+            value={this.state.timestring} />
+          <GameStat
+            header={LANG[this.props.lang].game.distance}
+            value={this.state.distance + ' m'} />
+          <GameStat
+            header={LANG[this.props.lang].game.fuelConsumed}
+            value={this.state.fuel + ' l'} />
+          <GameStat
+            header={LANG[this.props.lang].game.cost}
+            value={this.state.cost + ' €'} />
+          <GameStat
+            header={LANG[this.props.lang].game.logsRemaining}
+            content={
+              <div id="logs-remaining">
+                <div className="logs-remaining-count log-type-0">1</div>
+                <div className="logs-remaining-count log-type-1">2</div>
+                <div className="logs-remaining-count log-type-2">3</div>
+                <div className="logs-remaining-count log-type-3">4</div>
+                <div className="logs-remaining-count log-type-4">5</div>
+                <div className="logs-remaining-count log-type-5">6</div>
+              </div>
+            } />          
+        </div>
+        <div id="log-load-container">
           <div id="log-load">
-          <div className="log-load-row">
-            <div className={'log-load-fill log-type-' + this.state.logs[0][0]}>{this.state.logs[0][0]}</div>
-            <div className={'log-load-fill log-type-' + this.state.logs[1][0]}>{this.state.logs[1][0]}</div>
-            <div className={'log-load-fill log-type-' + this.state.logs[2][0]}>{this.state.logs[2][0]}</div>
-            <div className={'log-load-fill log-type-' + this.state.logs[3][0]}>{this.state.logs[3][0]}</div>
+            <div className="log-load-row">
+              <div className={'log-load-fill log-type-' + this.state.logs[0][0]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[1][0]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][0]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[3][0]}></div>
             </div>
             <div className="log-load-row">
-              <div className={'log-load-fill log-type-' + this.state.logs[0][1]}>{this.state.logs[0][1]}</div>
-              <div className={'log-load-fill log-type-' + this.state.logs[1][1]}>{this.state.logs[1][1]}</div>
-              <div className={'log-load-fill log-type-' + this.state.logs[2][1]}>{this.state.logs[2][1]}</div>
-              <div className={'log-load-fill log-type-' + this.state.logs[3][1]}>{this.state.logs[3][1]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[0][1]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[1][1]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][1]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[3][1]}></div>
             </div>
             <div className="log-load-row">
-              <div className={'log-load-fill log-type-' + this.state.logs[0][2]}>{this.state.logs[0][2]}</div>
-              <div className={'log-load-fill log-type-' + this.state.logs[1][2]}>{this.state.logs[1][2]}</div>
-              <div className={'log-load-fill log-type-' + this.state.logs[2][2]}>{this.state.logs[2][2]}</div>
-              <div className={'log-load-fill log-type-' + this.state.logs[3][2]}>{this.state.logs[3][2]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[0][2]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[1][2]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][2]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[3][2]}></div>
             </div>
             <div className="log-load-row">
-              <div className={'log-load-fill log-type-' + this.state.logs[1][3]}>{this.state.logs[1][3]}</div>
-              <div className={'log-load-fill log-type-' + this.state.logs[2][3]}>{this.state.logs[2][3]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[1][3]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][3]}></div>
             </div>
             <div className="log-load-row">
-              <div className={'log-load-fill log-type-' + this.state.logs[1][4]}>{this.state.logs[1][4]}</div>
-              <div className={'log-load-fill log-type-' + this.state.logs[2][4]}>{this.state.logs[2][4]}</div>
+              <div className={'log-load-fill log-type-' + this.state.logs[1][4]}></div>
+              <div className={'log-load-fill log-type-' + this.state.logs[2][4]}></div>
             </div>
             <div className="log-load-border log-load-border-notch" id="log-load-border-notch-1"></div>
             <div className="log-load-border log-load-border-notch" id="log-load-border-notch-2"></div>

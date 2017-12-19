@@ -55,6 +55,11 @@ export const LANG = {
       finalCost: "Total cost"
     },
     game: {
+      time: "Time",
+      distance: "Distance",
+      fuelConsumed: "Fuel consumed",
+      cost: "Cost",
+      logsRemaining: "Logs remaining",
       levelFinished: 'Level finished!'
     },
     buttons: {
@@ -137,6 +142,11 @@ export const LANG = {
       finalCost: "Työn kulut"
     },
     game: {
+      time: "Aika",
+      distance: "Matka",
+      fuelConsumed: "Polttoaine",
+      cost: "Kustannukset",
+      logsRemaining: "Tukkeja jäljellä",
       levelFinished: 'Taso läpäisty!'
     },
     buttons: {
