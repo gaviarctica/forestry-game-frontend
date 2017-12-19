@@ -1,16 +1,13 @@
 import * as PIXI from 'pixi.js';
 
-import {LogType} from './logtypes'
-
-var Width = 50;
-var Height = 5;
-var Outline = 4;
-
+import {LogType} from './logtypes';
+import Settings from './settings';
 
 export default class Log {
 
 	constructor(position, rotation, type, stage) {
-    
+		this.settings = (new Settings).log;
+
     this.type = type;
 		this.stage = stage;
 
@@ -25,24 +22,27 @@ export default class Log {
     // Log color code outline when log can be picked up
     var graphics = new PIXI.Graphics();
     graphics.beginFill(0x000000, 1);
-    graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
+    graphics.drawRoundedRect(-(this.settings.Width+this.settings.Outline)/2.0,
+			-(this.settings.Height+this.settings.Outline)/2,
+			this.settings.Width+this.settings.Outline, this.settings.Height+this.settings.Outline, 3);
     graphics.alpha = 0.0;
 
     // Apply log sprite
     var logSprite = PIXI.Sprite.fromImage(LogType[this.type].sprite);
-    logSprite.anchor.set(0.5, 0.5);
-    logSprite.scale.set(0.1);
+    logSprite.anchor.set(this.settings.SPRITE_ANCHOR, this.settings.SPRITE_ANCHOR);
+    logSprite.scale.set(this.settings.SPRITE_SCALE);
 
     this.container = new PIXI.Container();
     this.container.rotation = rotation;
     this.container.x = position.x;
     this.container.y = position.y;
-    
+
     stage.addChild(this.container);
-   
+
     this.container.interactive = true;
     // make hit area bigger rectangle than the log itself, easier to hit
-    this.container.hitArea = new PIXI.Rectangle(-Width/2.0, -(Height+20)/2.0, Width, Height+20);
+    this.container.hitArea = new PIXI.Rectangle(-this.settings.Width/2.0,
+			-(this.settings.Height+20)/2.0, this.settings.Width, this.settings.Height+20);
 
     this.container.owner = this;
     this.container.pointerdown = function() {

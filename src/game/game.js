@@ -3,6 +3,7 @@ import Truck from './truck';
 import Level from './level';
 import Stats from './stats';
 import Forest from './forest';
+import Settings from './settings'
 
 export default class GameCanvas {
   constructor(mapData, updateUI) {
@@ -105,12 +106,14 @@ export default class GameCanvas {
     }
 
     var mouseWheelEvent = function(event) {
+      var settings = (new Settings).map;
       if ((event.wheelDelta < -1 || event.deltaY > 1) && self.game.stage.scale.x > 0.5) {
-        self.game.stage.scale.x -=  0.05;
-        self.game.stage.scale.y -=  0.05;
+        console.log(this.settings);
+        self.game.stage.scale.x -=  settings.MOUSE_WHEEL_SCALE[0];
+        self.game.stage.scale.y -=  settings.MOUSE_WHEEL_SCALE[1];
       } else if ((event.wheelDelta > 1 || event.deltaY < -1) && self.game.stage.scale.x < 3.0) {
-        self.game.stage.scale.x +=  0.05;
-        self.game.stage.scale.y +=  0.05;
+        self.game.stage.scale.x +=  settings.MOUSE_WHEEL_SCALE[0];
+        self.game.stage.scale.y +=  settings.MOUSE_WHEEL_SCALE[1];
       }
     }
     document.getElementById('canvas-game').addEventListener("wheel", mouseWheelEvent, false);

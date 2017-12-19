@@ -4,10 +4,12 @@ import RouteSegment from './routesegment';
 import Log from './log';
 import LogDeposit from './logdeposit';
 import { endpointByStartPointDistanceAndAngle, distance } from './helpers';
-import {LogType} from './logtypes'
+import {LogType} from './logtypes';
+import Settings from './settings';
 
 export default class Level {
   constructor(map) {
+    this.settings = (new Settings).map;
     this.map = map;
     this.stage = new PIXI.Container();
     this.routeContainer = new PIXI.Container();
@@ -17,7 +19,7 @@ export default class Level {
     this.logs = [];
     this.logDeposits = [];
     this.routeTexture = PIXI.Texture.fromImage('/static/road.png');
-    
+
     if (map) {
       this.parseRouteNodes();
       this.parseLogs();
@@ -27,7 +29,7 @@ export default class Level {
       this.drawRoutes();
 
       if (map.startseg) {
-        this.startingSegment = this.routeSegments[map.startseg]; 
+        this.startingSegment = this.routeSegments[map.startseg];
       } else {
         this.startingSegment = this.routeSegments[0];
       }
@@ -56,7 +58,6 @@ export default class Level {
   }
 
   drawRoutes() {
-    const roadSpriteLength = 50;
 
     for(var j = 0; j < this.routeSegments.length; ++j) {
       var spos = this.routeSegments[j].startNode.getPos();
@@ -67,12 +68,12 @@ export default class Level {
       var roadSprite;
       var distanceToEnd = 0;
       var tilingSprite = new PIXI.extras.TilingSprite(
-        this.routeTexture, 
-        roadSpriteLength,
+        this.routeTexture,
+        this.settings.ROAD_SPRITE_LENGTH,
         distance(spos, epos)
       );
-      tilingSprite.anchor.set(0.5, 0.0);
-      tilingSprite.tileScale.set(0.1);
+      tilingSprite.anchor.set(this.settings.TILING_SPRITE_ANCHOR[0], this.settings.TILING_SPRITE_ANCHOR[1]);
+      tilingSprite.tileScale.set(this.settings.TILING_SPRITE_SCALE);
       tilingSprite.rotation = angle + Math.PI;
       tilingSprite.x = currentPos.x;
       tilingSprite.y = currentPos.y;
@@ -81,8 +82,8 @@ export default class Level {
 
     for(let [id, routeNode] of this.routeNodes) {
       var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
-      intersectionSprite.anchor.set(0.5, 0.5);
-      intersectionSprite.scale.set(0.1);
+      intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
+      intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
       intersectionSprite.x = routeNode.getPos().x;
       intersectionSprite.y = routeNode.getPos().y;
       this.stage.addChild(intersectionSprite);
@@ -150,7 +151,7 @@ export default class Level {
         for(var j = 0; j < startNode.getTo().length; ++j) {
           var toNodeId = startNode.getTo()[j];
           endNode = this.routeNodes.get(toNodeId);
-          
+
           // don't add segment twice if already connected
           if (startNode.hasSegmentWithNodes(endNode, startNode))
             continue;
@@ -285,8 +286,8 @@ export default class Level {
       startpoint: this.getStartingSegment().getPositionAt(this.startingInterpolation),
       startseg: startingSegmentIdx,
       startinterp: this.startingInterpolation,
-      routes: routes, 
-      logs: logs, 
+      routes: routes,
+      logs: logs,
       logdeposits: deposits
     };
   }
@@ -311,8 +312,8 @@ export default class Level {
     }
 
     return {
-      pileTypes: pileTypes, 
-      routeLength: Math.round(totalRouteLength / 10), 
+      pileTypes: pileTypes,
+      routeLength: Math.round(totalRouteLength / this.settings.PIXELS_TO_METERS),
       storageAreas: this.logDeposits.length,
       passingLimit: false
     };

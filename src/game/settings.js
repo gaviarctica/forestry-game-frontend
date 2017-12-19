@@ -2,7 +2,15 @@ export default class Settings {
   // assigning in constants in constructor as workaround of not having class variables
   constructor() {
     this.map = {
-      PIXELS_TO_METERS : 10
+      PIXELS_TO_METERS : 10,
+      // Graphics
+      ROAD_SPRITE_LENGTH : 50,
+      TILING_SPRITE_ANCHOR : [0.5,0.0],
+      TILING_SPRITE_SCALE : 0.1,
+      INTERSECTION_SPRITE_ANCHOR : 0.5,
+      INTERSECTION_SPRITE_SCALE : 0.1,
+      // actions
+      MOUSE_WHEEL_SCALE : [0.05,0.05]
     };
 
     this.truck = {
@@ -48,6 +56,15 @@ export default class Settings {
       Outline : 4,
       Color : 0xAAAAAA,
       LOG_SPRITE_SCALE : 0.1
+    }
+
+    this.log = {
+      Width : 50,
+      Height : 5,
+      Outline : 4,
+      // Graphics
+      SPRITE_ANCHOR : 0.5,
+      SPRITE_SCALE : 0.1
     }
 
 
