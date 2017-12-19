@@ -22,7 +22,7 @@ export default class Stats {
   }
 
   counterUp() {
-    console.log(this.time);
+    //console.log(this.time);
     this.time += 1;
     var newdate = new Date(null);
     newdate.setSeconds(this.time);
@@ -57,7 +57,7 @@ export default class Stats {
   }
 
   calculateFuel(logsOnBoard) {
-    this.fuelUsed = ((BASE_MILEAGE + logsOnBoard * LOG_FACTOR) * this.time) / HOUR; 
+    this.fuelUsed = ((BASE_MILEAGE + logsOnBoard * LOG_FACTOR) * this.time) / HOUR;
   }
 
   getFuelUsed() {
@@ -82,5 +82,5 @@ export default class Stats {
   getCost() {
     return(SALARY/HOUR*this.time + this.fuelUsed*DIESEL_PRICE);
   }
-  
+
 }
