@@ -4,6 +4,7 @@ import {lerp, distance} from './helpers';
 import Log from './log';
 import LogDeposit from './logdeposit';
 import LogContainer from './logcontainer';
+import Settings from './settings';
 
 export default class Truck {
 
@@ -13,15 +14,14 @@ export default class Truck {
     this.stage = stage;
     this.forceCameraMovement = true;
 
-    // can be lower with reverse
-    Truck.MIN_VELOCITY = 1.0;
-    Truck.REVERSE_VELOCITY_FACTOR = 0.5;
+    // loading setting variables
+    this.settings = (new Settings()).truck;
+    this.map_settings = (new Settings()).map;
+    this.camera_settings = (new Settings()).camera;
 
     this.sprite = PIXI.Sprite.fromImage('/static/truck.svg');
-    this.sprite.anchor.set(0.5);
-    this.sprite.scale.set(0.1);
-
-    this.velocity = 5.0;
+    this.sprite.anchor.set(this.settings.SPRITE_ANCHOR);
+    this.sprite.scale.set(this.settings.SPRITE_SCALE);
 
     // 0.00 - 1.00, interpolation between route segment start and end
     this.pointDelta = startInterp;
@@ -31,13 +31,13 @@ export default class Truck {
     this.currentSegment = startSegment;
 
     this.clawSprite = PIXI.Sprite.fromImage('/static/claw.svg');
-    this.clawSprite.anchor.set(0.5);
-    this.clawSprite.scale.set(0.1);
+    this.clawSprite.anchor.set(this.settings.CLAW_SPRITE_ANCHOR);
+    this.clawSprite.scale.set(this.settings.CLAW_SPRITE_SCALE);
     this.clawSprite.alpha = 0;
 
     this.arrowSprite = PIXI.Sprite.fromImage('/static/arrow.svg');
-    this.arrowSprite.anchor.set(0, 0.5);
-    this.arrowSprite.scale.set(0.2);
+    this.arrowSprite.anchor.set(0, this.settings.ARROW_SPRITE_ANCHOR);
+    this.arrowSprite.scale.set(this.settings.ARROW_SPRITE_SCALE);
     this.arrowSprite.alpha = 0;
 
     stage.addChild(this.arrowSprite);
@@ -51,7 +51,7 @@ export default class Truck {
     this.previous_direction = -1;
     this.logsOnLevel = logsOnLevel;
     this.depositsOnLevel = depositsOnLevel;
-    this.maxDistanceToDeposit = 150;
+    this.maxDistanceToDeposit = this.settings.MAX_DISTANCE_TO_DEPOSIT;
 
     // experimental logcontainer
     this.logContainer = new LogContainer();
@@ -77,7 +77,7 @@ export default class Truck {
     }
 
     if((this.previousPoint.x !== point.x) || (this.previousPoint.y !== point.y)) {
-      this.distanceMoved += distance(this.previousPoint, {x:this.sprite.x, y:this.sprite.y})/10;
+      this.distanceMoved += distance(this.previousPoint, {x:this.sprite.x, y:this.sprite.y}) / this.map_settings.PIXELS_TO_METERS;
       this.calcFuelBurned();
       this.previousPoint = point;
     }
@@ -87,9 +87,8 @@ export default class Truck {
 
       // If there are logs in the truck increase fuel consumption by a load factor
       var loadFactor = this.logCount();
-
-      var velocity = this.velocity - (this.velocity - Truck.MIN_VELOCITY) * loadFactor / 20;
-      return reverse ?  velocity * Truck.REVERSE_VELOCITY_FACTOR :  velocity;
+      var velocity = this.settings.VELOCITY - (this.settings.VELOCITY - this.settings.MIN_VELOCITY) * loadFactor / (this.settings.MAX_LOAD_FACTOR);
+      return reverse ?  velocity * this.settings.REVERSE_VELOCITY_FACTOR :  velocity;
   }
 
   update(timeDelta, stopAutomaticCamera = false) {
@@ -100,8 +99,8 @@ export default class Truck {
     this.checkLogs();
     this.checkDeposits();
     this.draw();
-    this.stats.calculateDistance(this.currentSegment.getPositionAt(this.pointDelta)); 
-    this.stats.calculateFuel(this.logContainer.getLogCount());       
+    this.stats.calculateDistance(this.currentSegment.getPositionAt(this.pointDelta));
+    this.stats.calculateFuel(this.logContainer.getLogCount());
   }
 
   move(timeDelta) {
@@ -261,7 +260,7 @@ export default class Truck {
 
   updateCamera() {
     if(this.forceCameraMovement) {
-      var upfactor = 1 / 60;
+      var upfactor = this.camera_settings.CONVERGENCE_FACTOR;
       var upvector =  [(this.stage.pivot.x - this.sprite.x)*upfactor, (this.stage.pivot.y - this.sprite.y) * upfactor];
       this.stage.pivot.x -= upvector[0];
       this.stage.pivot.y -= upvector[1];
@@ -274,7 +273,7 @@ export default class Truck {
 
       // check if log is close to truck
       var distanceToLog = distance(this.sprite.position, log.getPosition());
-      if (distanceToLog < 100) {
+      if (distanceToLog < this.settings.MAX_DISTANCE_TO_LOG) {
         log.setCanBePickedUp(true);
 
         if (this.selectableItems.indexOf(log) === -1) {
@@ -340,36 +339,6 @@ export default class Truck {
       }
       this.selectItem(this.selectableItems[index]);
     }
-  }
-
-  getLogAtPriorityIndex(i) {
-    var logContainerX = this.logContainerTraverseOrder[i][0];
-    var logContainerY = this.logContainerTraverseOrder[i][1];
-
-    return this.logsInTruck[logContainerX][logContainerY];
-  }
-
-  setLogAtContainerPos(x, y, log) {
-    this.logsInTruck[x][y] = log;
-
-    if (log != null) {
-
-      // clear state
-      log.setCanBePickedUp(false);
-
-      // setup graphics for truck visuals
-      log.removeFromParent();
-      this.sprite.addChild(log.logSprite);
-      log.logSprite.position = new PIXI.Point((x * 60) - 90, 250);
-      log.logSprite.rotation = Math.PI/2;
-      log.logSprite.scale.set(1.0);
-    }
-  }
-
-  setLogAtPriorityIndex(i, log) {
-    var logContainerX = this.logContainerTraverseOrder[i][0];
-    var logContainerY = this.logContainerTraverseOrder[i][1];
-    this.setLogAtContainerPos(logContainerX, logContainerY, log);
   }
 
   // returns boolean if the log was picked up
@@ -439,14 +408,6 @@ export default class Truck {
     this.sprite.y = point.y;
 
     this.sprite.rotation = this.currentSegment.getRotation();
-
-    // REMOVED in 18_12 bugfixes (doesn't seem to be needed anymore)
-    // var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite) :
-    //   this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
-    //
-    // if(seg['seg'] !== null) {
-    //   this.routeIndex = seg['index'];
-    // }
 
     this.selectGraphic.clear();
     this.clawSprite.alpha = 0;
