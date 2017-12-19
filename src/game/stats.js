@@ -1,10 +1,5 @@
 import {distance} from './helpers';
-
-const BASE_MILEAGE = 5;
-const LOG_FACTOR = 0.5;
-const SALARY = 20;
-const HOUR = 3600;
-const DIESEL_PRICE = 1.2;
+import Settings from './settings';
 
 export default class Stats {
   constructor(updateUI) {
@@ -15,6 +10,9 @@ export default class Stats {
     this.previousPoint = null;
     var self = this;
     this.timer = setInterval(function(){self.counterUp()}, 1000);
+
+    this.settings = (new Settings).stats;
+    this.map_settings = (new Settings).map;
   }
 
   stopCounter() {
@@ -57,11 +55,11 @@ export default class Stats {
   }
 
   calculateFuel(logsOnBoard) {
-    this.fuelUsed = ((BASE_MILEAGE + logsOnBoard * LOG_FACTOR) * this.time) / HOUR;
+    this.fuelUsed = ((this.settings.BASE_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.time) / this.settings.HOUR;
   }
 
   getFuelUsed() {
-    return this.fuelUsed.toFixed(2);
+    return this.fuelUsed.toFixed(this.settings.FUEL_USED_DECIMALS);
   }
 
   calculateDistance(point) {
@@ -70,7 +68,7 @@ export default class Stats {
     }
 
     if((point.x !== this.previousPoint.x) || (point.y !== this.previousPoint.y)) {
-      this.distanceMoved += distance(this.previousPoint, point)/10;
+      this.distanceMoved += distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS;
       this.previousPoint = point;
     }
   }
@@ -80,7 +78,7 @@ export default class Stats {
   }
 
   getCost() {
-    return(SALARY/HOUR*this.time + this.fuelUsed*DIESEL_PRICE);
+    return(this.settings.SALARY/this.settings.HOUR*this.time + this.fuelUsed*this.settings.DIESEL_PRICE);
   }
 
 }

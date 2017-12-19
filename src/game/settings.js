@@ -32,6 +32,24 @@ export default class Settings {
       CONVERGENCE_FACTOR : (1 / 60)
     };
 
+    this.stats = {
+      BASE_MILEAGE : 5,
+      LOG_FACTOR : 0.5,
+      SALARY : 20,
+      HOUR : 3600,
+      DIESEL_PRICE : 1.2,
+      // ui
+      FUEL_USED_DECIMALS : 2
+    };
+
+    this.log_deposit = {
+      Width : 150,
+      Height : 50,
+      Outline : 4,
+      Color : 0xAAAAAA,
+      LOG_SPRITE_SCALE : 0.1
+    }
+
 
   }
 

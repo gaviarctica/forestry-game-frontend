@@ -1,25 +1,29 @@
 import * as PIXI from 'pixi.js';
 import Log from './log';
 import {LogType} from './logtypes'
+import Settings from './settings'
 
-var Width = 150;
-var Height = 50;
-var Outline = 4;
-var Color = 0xAAAAAA;
+// var Width = 150;
+// var Height = 50;
+// var Outline = 4;
+// var Color = 0xAAAAAA;
 
 export function createLogDepositGraphics() {
+  var settings = (new Settings).log_deposit;
   var graphics = new PIXI.Graphics();
-  graphics.beginFill(Color, 1);
+  graphics.beginFill(settings.Color, 1);
   // draw centered
-  graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
+  graphics.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
 
   graphics.interactive = true;
-  graphics.hitArea = new PIXI.Rectangle(-Width/2.0, -Height/2, Width, Height);
+  graphics.hitArea = new PIXI.Rectangle(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
   return graphics;
 }
 
 export default class LogDeposit {
   constructor(position, rotation, types, stage, max_types = 1) {
+    this.settings = (new Settings).log_deposit;
+
     // type is defined when first log is unloaded
     this.types = [];
     this.stage = stage;
@@ -80,9 +84,11 @@ export default class LogDeposit {
       this.types.push(log.type);
 
       this.graphics.beginFill(LogType[log.type].color, 1);
-      this.graphics.drawRoundedRect(-(Width+Outline)/2.0, -(Height+Outline)/2, Width+Outline, Height+Outline, 3);
-      this.graphics.beginFill(Color, 1);
-      this.graphics.drawRect(-Width/2.0, -Height/2, Width, Height);
+      this.graphics.drawRoundedRect(-(this.settings.Width+this.settings.Outline)/2.0,
+        -(this.settings.Height+this.settings.Outline)/2, this.settings.Width+this.settings.Outline,
+        this.settings.Height+this.settings.Outline, 3);
+      this.graphics.beginFill(this.settings.Color, 1);
+      this.graphics.drawRect(-this.settings.Width/2.0, -this.settings.Height/2, this.settings.Width, this.settings.Height);
     }
 
     // checking if wanted type is included
@@ -102,8 +108,8 @@ export default class LogDeposit {
       log.removeFromParent();
       // add it to deposit container
       this.graphics.addChild(log.logSprite);
-      log.logSprite.position = new PIXI.Point(-Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
-      log.logSprite.scale.set(0.1);
+      log.logSprite.position = new PIXI.Point(-this.settings.Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
+      log.logSprite.scale.set(this.settings.LOG_SPRITE_SCALE);
       ++this.numOfLogs;
 
       return true;
