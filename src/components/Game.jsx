@@ -23,6 +23,12 @@ export default class Game extends Component {
         ['', '', '', '', ''],
         ['', '', '', '', ''],
       ],
+      logsRemainingOnGround: {
+        '0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0
+      },
+      hideLogType: {
+        '0': false, '1': false, '2': false, '3': false, '4': false, '5': false
+      },
       gameEnd: false,
       gameEndDate: undefined,
       mapdata: undefined,
@@ -81,6 +87,21 @@ export default class Game extends Component {
     if (clicked === 'button-quit' || clicked === 'game-end-button-quit') {
       this.gameCanvas.destroy();
       this.props.switchView('mainmenu');
+    }
+  }
+
+  handleLogsRemainingClick(type) {
+    let hidden = this.state.hideLogType;
+    hidden[type] = !hidden[type];
+    this.setState({
+      hideLogType: hidden
+    });
+
+    // TODO: Get this info to the game canvas and hide/unhide affected logs
+    if (hidden[type]) {
+      console.log('type ' + type + ' hidden!');
+    } else {
+      console.log('type ' + type + ' unhidden!');
     }
   }
 
@@ -161,12 +182,15 @@ export default class Game extends Component {
             header={LANG[this.props.lang].game.logsRemaining}
             content={
               <div id="logs-remaining">
-                <div className="logs-remaining-count log-type-0">1</div>
-                <div className="logs-remaining-count log-type-1">2</div>
-                <div className="logs-remaining-count log-type-2">3</div>
-                <div className="logs-remaining-count log-type-3">4</div>
-                <div className="logs-remaining-count log-type-4">5</div>
-                <div className="logs-remaining-count log-type-5">6</div>
+                {Object.keys(this.state.logsRemainingOnGround).map(key => {
+                  return (
+                    <div
+                      className={'logs-remaining-count log-type-' + key + (this.state.logsRemainingOnGround[key] === 0 || this.state.hideLogType[key] ? ' disabled' : '')}
+                      onClick={() => this.handleLogsRemainingClick(key)} >
+                      {this.state.logsRemainingOnGround[key]}
+                    </div>
+                  );
+                })}
               </div>
             } />          
         </div>

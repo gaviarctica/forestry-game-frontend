@@ -62,6 +62,14 @@ html {
   margin-bottom: 10px;
 }
 
+.logs-remaining-count:hover {
+  cursor: pointer;
+}
+
+.logs-remaining-count.disabled {
+  opacity: 0.4;
+}
+
 #log-load-container {
   position: fixed;
   bottom: 20px;
