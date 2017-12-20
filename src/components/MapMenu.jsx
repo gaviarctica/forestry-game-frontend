@@ -135,7 +135,7 @@ export default class MapMenu extends Component {
     if (this.state.maps) {
       var selMap = this.state.maps[this.state.selectedMapIndex];
 
-      var pileTypes = selMap.mapinfo.pileTypes.map(pileType => 
+      var pileTypes = selMap.mapinfo.pileTypes.map(pileType =>
         <div className="section-list-item" key={pileType.name}>
           <div className="section-list-item-name">
             {pileType.name}
@@ -159,10 +159,10 @@ export default class MapMenu extends Component {
       );
     } else {
       return (
-        <div className="MapMenu"> 
+        <div className="MapMenu">
           <div id="map-menu">
             <div id="top">
-              
+
               <TranslateRight in={this.state.appearAnimation}>
                 <div id="left">
                 {
@@ -198,7 +198,7 @@ export default class MapMenu extends Component {
                 </div>
               </TranslateRight>
 
-              <TranslateLeft in={this.state.appearAnimation}>            
+              <TranslateLeft in={this.state.appearAnimation}>
                 <div id="right">
 
                 <div id="map-info">
@@ -244,7 +244,7 @@ export default class MapMenu extends Component {
                     text={LANG[this.props.lang].buttons.startGame}
                     buttonType="primary"
                     handleClick={this.handleButtonClick.bind(this)} />
-                </div>            
+                </div>
               </TranslateLeft>
 
             </div>
