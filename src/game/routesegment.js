@@ -1,4 +1,5 @@
 import {lerp, distance} from './helpers';
+import * as PIXI from 'pixi.js';
 
 export default class RouteSegment {
   constructor(startNode, endNode) {
@@ -7,6 +8,18 @@ export default class RouteSegment {
     this.isSelected = false;
     this.length = distance(this.startNode.getPos(), this.endNode.getPos());
 
+    this.dying_road_text = new PIXI.Text( 0 + 'm',{fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'});
+
+    // when this is set to true one shouldn't be able to use road
+    this.road_is_dead = false;
+
+    // some helper variables
+    var spos = this.startNode.getPos();
+    var epos = this.endNode.getPos();
+
+    var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
+    var currentPos = {x: spos.x, y: spos.y};
+
     // parsing thought the anomalies if there are any in the nodes
     if(startNode.anomalies.length > 0 || endNode.anomalies.length > 0) {
       this.anomalies = [];
@@ -14,18 +27,24 @@ export default class RouteSegment {
       for(var i = 0; i < startNode.anomalies.length; ++i) {
         if(startNode.anomalies[i].to === endNode.getId()) {
           this.anomalies.push(startNode.anomalies[i]);
+          this.dying_road_text.text = startNode.anomalies[i].dying_road + 'm';
         }
       }
 
       for(var i = 0; i < endNode.anomalies.length; ++i) {
         if(endNode.anomalies[i].to === startNode.getId()) {
           this.anomalies.push(endNode.anomalies[i]);
+          this.dying_road_text.text = endNode.anomalies[i].dying_road + 'm';
         }
       }
 
     } else {
       this.anomalies = [];
     }
+
+    this.dying_road_text.x = currentPos.x + 25;
+    this.dying_road_text.y = currentPos.y - 12.5;
+    this.dying_road_text.rotation = angle + 3*Math.PI / 2;
 
   }
 
@@ -81,5 +100,23 @@ export default class RouteSegment {
 
   getPreviousNode() {
     return this.startNode;
+  }
+
+  updateAnomalies(distance_moved) {
+    for(var i = 0; i < this.anomalies.length; ++i) {
+      this.anomalies[i].dying_road -= Math.abs(distance_moved);
+      this.dying_road_text.text = Math.round(this.anomalies[i].dying_road) + 'm';
+      if(this.anomalies[i].dying_road < 0) {
+        this.road_is_dead = true;
+      }
+    }
+  }
+
+  getDyingRoadText() {
+    return this.dying_road_text;
+  }
+
+  isRoadDead() {
+    return this.road_is_dead;
   }
 }

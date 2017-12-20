@@ -194,7 +194,13 @@ export default class Truck {
     }
 
     // Advance on route segment based on segment length
-    this.pointDelta += (direction * this.getSpeed( direction !== 1 ) * timeDelta) / this.currentSegment.getLength();
+    var delta_move = (direction * this.getSpeed( direction !== 1 ) * timeDelta) / this.currentSegment.getLength()
+    if(!this.currentSegment.isRoadDead()) {
+      this.pointDelta += delta_move;
+    } else {
+      //this.pointDelta = 0;
+    }
+    this.currentSegment.updateAnomalies(delta_move);
 
     // Switch route segment if needed
     if (this.pointDelta <= 0) {
