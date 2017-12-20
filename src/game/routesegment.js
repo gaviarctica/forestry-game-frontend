@@ -1,14 +1,17 @@
 import {lerp, distance} from './helpers';
 import * as PIXI from 'pixi.js';
+import Settings from './settings';
 
 export default class RouteSegment {
   constructor(startNode, endNode) {
+    this.anomaly_settings = (new Settings).anomalies;
+
     this.startNode = startNode;
     this.endNode = endNode;
     this.isSelected = false;
     this.length = distance(this.startNode.getPos(), this.endNode.getPos());
 
-    this.dying_road_text = new PIXI.Text( 0 + 'm',{fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'});
+    this.dying_road_text = new PIXI.Text( 0 + 'm',this.anomaly_settings.DYING_ROAD_TEXT_FONT);
 
     // when this is set to true one shouldn't be able to use road
     this.road_is_dead = false;
@@ -48,8 +51,8 @@ export default class RouteSegment {
       this.anomalies = [];
     }
 
-    this.dying_road_text.x = currentPos.x + 25;
-    this.dying_road_text.y = currentPos.y - 12.5;
+    this.dying_road_text.x = currentPos.x + this.anomaly_settings.DYING_ROAD_TEXT_ANCHOR[0];
+    this.dying_road_text.y = currentPos.y + this.anomaly_settings.DYING_ROAD_TEXT_ANCHOR[1];
     this.dying_road_text.rotation = angle + 3*Math.PI / 2;
 
   }
@@ -121,8 +124,9 @@ export default class RouteSegment {
           this.road_is_dead = true;
           this.dying_road_text.texture = PIXI.Texture.fromImage('/static/dead_road.png');
 
-          this.dying_road_text.setTransform(this.dying_road_text.x, this.dying_road_text.y, 0.1, 0.1);
-          this.dying_road_text.anchor.set(0, 0);
+          this.dying_road_text.setTransform(this.dying_road_text.x, this.dying_road_text.y,
+            this.anomaly_settings.DEAD_ROAD_TEXT_SCALE[0], this.anomaly_settings.DEAD_ROAD_TEXT_SCALE[1]);
+          this.dying_road_text.anchor.set(this.anomaly_settings.DEAD_ROAD_TEXT_ANCHOR[0], this.anomaly_settings.DEAD_ROAD_TEXT_ANCHOR[1]);
         }
       }
     }

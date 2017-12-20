@@ -67,6 +67,14 @@ export default class Settings {
       SPRITE_SCALE : 0.1
     }
 
+    this.anomalies = {
+      DEAD_ROAD_SPEED_FACTOR : 0.01,
+      DYING_ROAD_TEXT_ANCHOR : [25,-12.5],
+      DYING_ROAD_TEXT_FONT : {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'},
+      DEAD_ROAD_TEXT_ANCHOR : [0,0],
+      DEAD_ROAD_TEXT_SCALE : [0.1,0.1]
+    }
+
 
   }
 

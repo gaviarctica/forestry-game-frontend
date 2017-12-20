@@ -18,6 +18,7 @@ export default class Truck {
     this.settings = (new Settings()).truck;
     this.map_settings = (new Settings()).map;
     this.camera_settings = (new Settings()).camera;
+    this.anomaly_settings = (new Settings()).anomalies;
 
     this.sprite = PIXI.Sprite.fromImage('/static/truck.svg');
     this.sprite.anchor.set(this.settings.SPRITE_ANCHOR);
@@ -198,7 +199,7 @@ export default class Truck {
     if(!this.currentSegment.isRoadDead()) {
       this.pointDelta += delta_move;
     } else {
-      this.pointDelta += delta_move * 0.01;
+      this.pointDelta += delta_move * this.anomaly_settings.DEAD_ROAD_SPEED_FACTOR;
     }
     this.currentSegment.updateAnomalies(delta_move);
 
