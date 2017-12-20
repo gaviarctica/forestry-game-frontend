@@ -4,6 +4,17 @@
   --game-stats-width: 180px;
 }
 
+#button-quit {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  width: 100px;
+  height: 35px;
+  line-height: 35px;
+  box-sizing: border-box;
+}
+
 #canvas-game {
   position: fixed;
   top: 0;
@@ -23,60 +34,51 @@ html {
   z-index: auto;
 }
 
-#game-stats:hover, #logs-remaining:hover {
-  opacity: 1.0;
-}
-
 #game-info {
   position: fixed;
-	padding: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
   z-index: 10;
 }
 
-#game-stats {
-	background-color: rgb(136,136,136);
-  opacity: 0.5;
-  width: var(--game-stats-width);
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-#game-stats-grouped {
-  padding: 10px;
-}
-
-#user, #time, #distance, #unload-count, #fuel {
-  padding-bottom: 10px;
-  color: white;
-  font-size: 24px;
-  text-align: right;
-}
-
 #logs-remaining {
-	background-color: rgb(136,136,136);
-	color: black;
-  width: var(--game-stats-width);
-  margin-bottom: 20px;
-  opacity: 0.5;
-}
-
-#logs-remaining-row {
-	padding: 10px;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 
 .logs-remaining-count {
 	border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  padding: 9px;
-  background-color: yellow;
-  border: 1px solid #666;
-  color: #666;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0.5px 0.5px 5px #111;
   text-align: center;
   font: 16px;
-	display: inline-block;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.logs-remaining-count:hover {
+  cursor: pointer;
+}
+
+.logs-remaining-count.disabled {
+  opacity: 0.4;
+}
+
+#log-load-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  padding-bottom: 15px;
+  border-radius: 5px;
 }
 
 #log-load {
@@ -95,10 +97,7 @@ html {
   height: 18px;
   padding: 9px;
   background: transparent;
-  border: 1px dashed #666;
-  color: rgba(245, 245, 245, 0.8);
-  text-align: center;
-  font: 16px;
+  border: 1px dashed #888;
   display: inline-block;
   margin: 1px;
 }

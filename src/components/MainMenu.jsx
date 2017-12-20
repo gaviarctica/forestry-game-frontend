@@ -109,7 +109,6 @@ export default class MainMenu extends Component {
     API.login(username, password, function(err, message, un, em) {
       if (err) throw err;
       // Login was not successful
-      console.log(message);
       if (message.length > 0) {
         self.setState({
           formMsg: message

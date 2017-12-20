@@ -28,6 +28,11 @@ export default class GameCanvas {
     var logs_amount = this.map.getLogs().length;
     var log_types = [];
 
+    // Logs remaining data for UI
+    this.logsRemaining = {
+      '0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0
+    }
+
     for(var i = 0; i < logs_amount; ++i) {
       var has_type = false;
 
@@ -41,7 +46,13 @@ export default class GameCanvas {
       if(!has_type) {
         log_types.push({"type": this.map.getLogs()[i].type, "amount":1});
       }
+
+      this.logsRemaining[this.map.getLogs()[i].type] += 1;
     }
+
+    this.stats.updateUI({
+      logsRemainingOnGround: this.logsRemaining
+    });
 
     var deposit_amount = this.map.getLogDeposits().length;
     for(var i = 0; i < deposit_amount; ++i) {
@@ -56,7 +67,8 @@ export default class GameCanvas {
                            this.map.getStaringInterpolation(),
                            this.map.getLogs(),
                            this.map.getLogDeposits(),
-                           this.stats);
+                           this.stats,
+                           this.logsRemaining);
 
     this.forest.buildTrees();
 
@@ -108,7 +120,6 @@ export default class GameCanvas {
     var mouseWheelEvent = function(event) {
       var settings = (new Settings).map;
       if ((event.wheelDelta < -1 || event.deltaY > 1) && self.game.stage.scale.x > 0.5) {
-        console.log(this.settings);
         self.game.stage.scale.x -=  settings.MOUSE_WHEEL_SCALE[0];
         self.game.stage.scale.y -=  settings.MOUSE_WHEEL_SCALE[1];
       } else if ((event.wheelDelta > 1 || event.deltaY < -1) && self.game.stage.scale.x < 3.0) {

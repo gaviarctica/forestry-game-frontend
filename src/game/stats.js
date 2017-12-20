@@ -20,7 +20,6 @@ export default class Stats {
   }
 
   counterUp() {
-    //console.log(this.time);
     this.time += 1;
     var newdate = new Date(null);
     newdate.setSeconds(this.time);

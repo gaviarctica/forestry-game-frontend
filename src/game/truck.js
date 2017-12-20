@@ -9,7 +9,7 @@ import Settings from './settings';
 export default class Truck {
 
 
-  constructor(stage, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats) {
+  constructor(stage, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats, logsRemaining) {
     // store the stage so we can control the camera when we need it
     this.stage = stage;
     this.forceCameraMovement = true;
@@ -63,6 +63,7 @@ export default class Truck {
     stage.addChild(this.selectGraphic);
 
     this.stats = stats;
+    this.logsRemaining = logsRemaining;
   }
 
   // TODO: maybe keep up with the log count in pickLog, depositLog functions to avoid unnecessary for looping
@@ -344,7 +345,11 @@ export default class Truck {
   // returns boolean if the log was picked up
   pickLog(log) {
     if(this.logContainer.addLog(log, this.sprite)) {
-      this.stats.updateLogs(this.logContainer);
+      this.stats.updateLogs(this.logContainer);     
+      this.logsRemaining[log.type] -= 1;
+      this.stats.updateUI({
+        logsRemainingOnGround: this.logsRemaining
+      }); 
       return true;
     }
 
