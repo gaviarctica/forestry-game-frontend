@@ -1,13 +1,18 @@
 export default class RouteNode {
-  constructor(id, point, to) {
-    this.reset(id, point, to);
+  constructor(id, point, to, anomalies = null) {
+    this.reset(id, point, to, anomalies);
   }
 
-  reset(id, point, to) {
+  reset(id, point, to, anomalies) {
     this.id = id
     this.point = point;
     this.to = to;
     this.segments = [];
+    if(anomalies !== null) {
+      this.anomalies = anomalies;
+    } else {
+      this.anomalies = [];
+    }
   }
 
   addSegment( segment ) {

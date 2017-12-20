@@ -6,6 +6,27 @@ export default class RouteSegment {
     this.endNode = endNode;
     this.isSelected = false;
     this.length = distance(this.startNode.getPos(), this.endNode.getPos());
+
+    // parsing thought the anomalies if there are any in the nodes
+    if(startNode.anomalies.length > 0 || endNode.anomalies.length > 0) {
+      this.anomalies = [];
+
+      for(var i = 0; i < startNode.anomalies.length; ++i) {
+        if(startNode.anomalies[i].to === endNode.getId()) {
+          this.anomalies.push(startNode.anomalies[i]);
+        }
+      }
+
+      for(var i = 0; i < endNode.anomalies.length; ++i) {
+        if(endNode.anomalies[i].to === startNode.getId()) {
+          this.anomalies.push(endNode.anomalies[i]);
+        }
+      }
+
+    } else {
+      this.anomalies = [];
+    }
+
   }
 
   addNext(segment) {
@@ -42,8 +63,8 @@ export default class RouteSegment {
     return lerp(this.startNode.getPos(), this.endNode.getPos(), interpolationDelta);
   }
 
-  getRotation(callerNode = undefined) {      
-    var pA, pB;   
+  getRotation(callerNode = undefined) {
+    var pA, pB;
     if (callerNode === this.endNode) {
       pA = this.endNode.getPos();
       pB = this.startNode.getPos();

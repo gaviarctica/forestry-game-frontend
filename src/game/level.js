@@ -74,10 +74,20 @@ export default class Level {
       );
       tilingSprite.anchor.set(this.settings.TILING_SPRITE_ANCHOR[0], this.settings.TILING_SPRITE_ANCHOR[1]);
       tilingSprite.tileScale.set(this.settings.TILING_SPRITE_SCALE);
+      if(this.routeSegments[j].anomalies.length > 0) {
+        console.log(this.routeSegments[j].anomalies);
+        var anomaly_text = new PIXI.Text( this.routeSegments[j].anomalies[0].dying_road + 'm',{fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'});
+        anomaly_text.x = currentPos.x;
+        anomaly_text.y = currentPos.y - 75;
+        anomaly_text.rotation = angle + 3*Math.PI / 2;
+
+        this.stage.addChild(anomaly_text);
+      }
       tilingSprite.rotation = angle + Math.PI;
       tilingSprite.x = currentPos.x;
       tilingSprite.y = currentPos.y;
       this.stage.addChild(tilingSprite);
+
     }
 
     for(let [id, routeNode] of this.routeNodes) {
@@ -106,12 +116,17 @@ export default class Level {
       var id = routeNodeData.route_node;
       var pos = {x: routeNodeData.x, y: routeNodeData.y };
       var to = routeNodeData.to;
-      this.addRouteNode(id, pos, to);
+      if(typeof routeNodeData['anomalies'] !== 'undefined') {
+        var anomalies = routeNodeData.anomalies;
+        this.addRouteNode(id, pos, to, anomalies);
+      } else {
+        this.addRouteNode(id, pos, to);
+      }
     }
   }
 
-  addRouteNode(id, pos, to) {
-    this.routeNodes.set(id, new RouteNode(id, pos, to));
+  addRouteNode(id, pos, to, anomalies = null) {
+    this.routeNodes.set(id, new RouteNode(id, pos, to, anomalies));
   }
 
   // used by map editor

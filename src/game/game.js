@@ -108,7 +108,6 @@ export default class GameCanvas {
     var mouseWheelEvent = function(event) {
       var settings = (new Settings).map;
       if ((event.wheelDelta < -1 || event.deltaY > 1) && self.game.stage.scale.x > 0.5) {
-        console.log(this.settings);
         self.game.stage.scale.x -=  settings.MOUSE_WHEEL_SCALE[0];
         self.game.stage.scale.y -=  settings.MOUSE_WHEEL_SCALE[1];
       } else if ((event.wheelDelta > 1 || event.deltaY < -1) && self.game.stage.scale.x < 3.0) {
