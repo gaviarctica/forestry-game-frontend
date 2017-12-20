@@ -198,7 +198,7 @@ export default class Truck {
     if(!this.currentSegment.isRoadDead()) {
       this.pointDelta += delta_move;
     } else {
-      //this.pointDelta = 0;
+      this.pointDelta += delta_move * 0.01;
     }
     this.currentSegment.updateAnomalies(delta_move);
 

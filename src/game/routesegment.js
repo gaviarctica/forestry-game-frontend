@@ -27,14 +27,20 @@ export default class RouteSegment {
       for(var i = 0; i < startNode.anomalies.length; ++i) {
         if(startNode.anomalies[i].to === endNode.getId()) {
           this.anomalies.push(startNode.anomalies[i]);
-          this.dying_road_text.text = startNode.anomalies[i].dying_road + 'm';
+
+          // dying road
+          if(typeof  startNode.anomalies[i]['dying_road'] !== 'undefined')
+            this.dying_road_text.text = startNode.anomalies[i].dying_road + 'm';
         }
       }
 
       for(var i = 0; i < endNode.anomalies.length; ++i) {
         if(endNode.anomalies[i].to === startNode.getId()) {
           this.anomalies.push(endNode.anomalies[i]);
-          this.dying_road_text.text = endNode.anomalies[i].dying_road + 'm';
+
+          // dying road
+          if(typeof  endNode.anomalies[i]['dying_road'] !== 'undefined')
+            this.dying_road_text.text = endNode.anomalies[i].dying_road + 'm';
         }
       }
 
@@ -104,10 +110,20 @@ export default class RouteSegment {
 
   updateAnomalies(distance_moved) {
     for(var i = 0; i < this.anomalies.length; ++i) {
-      this.anomalies[i].dying_road -= Math.abs(distance_moved);
-      this.dying_road_text.text = Math.round(this.anomalies[i].dying_road) + 'm';
-      if(this.anomalies[i].dying_road < 0) {
-        this.road_is_dead = true;
+      // checking dying road
+      if(typeof this.anomalies[i]['dying_road'] !== 'undefined') {
+        if(this.road_is_dead) continue;
+
+        this.anomalies[i].dying_road -= Math.abs(distance_moved);
+        this.dying_road_text.text = Math.round(this.anomalies[i].dying_road) + 'm';
+
+        if(this.anomalies[i].dying_road < 0) {
+          this.road_is_dead = true;
+          this.dying_road_text.texture = PIXI.Texture.fromImage('/static/dead_road.png');
+
+          this.dying_road_text.setTransform(this.dying_road_text.x, this.dying_road_text.y, 0.1, 0.1);
+          this.dying_road_text.anchor.set(0, 0);
+        }
       }
     }
   }

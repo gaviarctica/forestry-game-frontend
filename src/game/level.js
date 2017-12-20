@@ -78,8 +78,14 @@ export default class Level {
       tilingSprite.x = currentPos.x;
       tilingSprite.y = currentPos.y;
       this.stage.addChild(tilingSprite);
+
+      // calculating anomalies
       if(this.routeSegments[j].anomalies.length > 0) {
-        this.stage.addChild(this.routeSegments[j].getDyingRoadText());
+        for(var i = 0; i < this.routeSegments[j].anomalies.length; ++i) {
+          if(typeof this.routeSegments[j].anomalies[i]['dying_road'] !== 'undefined') {
+            this.stage.addChild(this.routeSegments[j].getDyingRoadText());
+          }
+        }
       }
 
     }
