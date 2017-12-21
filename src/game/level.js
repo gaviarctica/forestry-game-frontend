@@ -9,7 +9,7 @@ import Settings from './settings';
 
 export default class Level {
   constructor(map) {
-    this.settings = (new Settings).map;
+    this.settings = (new Settings()).map;
     this.map = map;
     this.stage = new PIXI.Container();
     this.routeContainer = new PIXI.Container();
@@ -59,14 +59,22 @@ export default class Level {
 
   drawRoutes() {
 
+    // drawing nodes first
+    for(let [id, routeNode] of this.routeNodes) {
+      var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
+      intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
+      intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
+      intersectionSprite.x = routeNode.getPos().x;
+      intersectionSprite.y = routeNode.getPos().y;
+      this.stage.addChild(intersectionSprite);
+    }
+
     for(var j = 0; j < this.routeSegments.length; ++j) {
       var spos = this.routeSegments[j].startNode.getPos();
       var epos = this.routeSegments[j].endNode.getPos();
 
       var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
       var currentPos = {x: spos.x, y: spos.y};
-      var roadSprite;
-      var distanceToEnd = 0;
       var tilingSprite = new PIXI.extras.TilingSprite(
         this.routeTexture,
         this.settings.ROAD_SPRITE_LENGTH,
@@ -78,15 +86,21 @@ export default class Level {
       tilingSprite.x = currentPos.x;
       tilingSprite.y = currentPos.y;
       this.stage.addChild(tilingSprite);
-    }
 
-    for(let [id, routeNode] of this.routeNodes) {
-      var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
-      intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
-      intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
-      intersectionSprite.x = routeNode.getPos().x;
-      intersectionSprite.y = routeNode.getPos().y;
-      this.stage.addChild(intersectionSprite);
+      // calculating anomalies
+      if(this.routeSegments[j].anomalies.length > 0) {
+        for(var i = 0; i < this.routeSegments[j].anomalies.length; ++i) {
+          if(typeof this.routeSegments[j].anomalies[i]['dying_road'] !== 'undefined') {
+            this.stage.addChild(this.routeSegments[j].getDyingRoadText());
+          }
+          if(typeof this.routeSegments[j].anomalies[i]['weight_limit'] !== 'undefined') {
+            this.stage.addChild(this.routeSegments[j].getWeightLimitText());
+          }
+          if(typeof this.routeSegments[j].anomalies[i]['one_way_road'] !== 'undefined') {
+            this.stage.addChild(this.routeSegments[j].getOneWayRoadSprite());
+          }
+        }
+      }
     }
   }
 
@@ -106,12 +120,17 @@ export default class Level {
       var id = routeNodeData.route_node;
       var pos = {x: routeNodeData.x, y: routeNodeData.y };
       var to = routeNodeData.to;
-      this.addRouteNode(id, pos, to);
+      if(typeof routeNodeData['anomalies'] !== 'undefined') {
+        var anomalies = routeNodeData.anomalies;
+        this.addRouteNode(id, pos, to, anomalies);
+      } else {
+        this.addRouteNode(id, pos, to);
+      }
     }
   }
 
-  addRouteNode(id, pos, to) {
-    this.routeNodes.set(id, new RouteNode(id, pos, to));
+  addRouteNode(id, pos, to, anomalies = null) {
+    this.routeNodes.set(id, new RouteNode(id, pos, to, anomalies));
   }
 
   // used by map editor
@@ -264,13 +283,13 @@ export default class Level {
 
     var logs = []
     for (var log of this.logs) {
-      var pos = log.getPosition();
+      pos = log.getPosition();
       logs.push({x: pos.x, y: pos.y, rot: log.getRotation(), type: log.type});
     }
 
     var deposits = [];
     for (var deposit of this.logDeposits) {
-      var pos = deposit.getPosition();
+      pos = deposit.getPosition();
       deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.type});
     }
 

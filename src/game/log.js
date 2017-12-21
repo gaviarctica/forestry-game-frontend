@@ -6,7 +6,7 @@ import Settings from './settings';
 export default class Log {
 
 	constructor(position, rotation, type, stage) {
-		this.settings = (new Settings).log;
+		this.settings = (new Settings()).log;
 
     this.type = type;
 		this.stage = stage;

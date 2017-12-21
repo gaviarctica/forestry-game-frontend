@@ -20,7 +20,7 @@ export default class EditorCanvas {
 
     this.ui = new UserInterface(updateUI);
     this.level = new Level();
-    
+
     this.currentTool = null;
     this.tools = [];
 
@@ -29,11 +29,11 @@ export default class EditorCanvas {
     this.setupCameraControl();
     pixiApp.stage.addChild(this.level.getStage());
  }
-  
+
   buildGrid() {
     var graphics = new PIXI.Graphics();
     graphics.lineStyle(1, 0xffd900, 1);
-    
+
     var numLines = 100;
     var gridSpacing = 100;
     // offset for centering
@@ -43,7 +43,7 @@ export default class EditorCanvas {
       graphics.moveTo(offset, (gridSpacing * j) + offset);
       graphics.lineTo((gridSpacing * numLines) + offset, (gridSpacing * j) + offset);
       graphics.endFill();
-      
+
       graphics.beginFill(0xFF3300);
       graphics.moveTo((gridSpacing * j) + offset, offset);
       graphics.lineTo((gridSpacing * j) + offset, (gridSpacing * numLines) + offset);
@@ -110,7 +110,7 @@ export default class EditorCanvas {
       } else {
         mouseInput.absDeltaDuringMouseDown = {x:0, y:0};
       }
-      
+
       if (self.currentTool)
         self.currentTool.mouseMove(mouseInput);
     }
@@ -140,7 +140,7 @@ export default class EditorCanvas {
       );
       this.currentTool.deactivate();
     }
-    
+
     this.currentTool = this.tools[name];
 
     if (this.currentTool !== null && this.currentTool !== undefined) {
@@ -149,7 +149,7 @@ export default class EditorCanvas {
       );
       window.addEventListener(
         "keyup", self.currentTool.keyUp, false
-      ); 
+      );
       this.currentTool.activate();
     }
   }

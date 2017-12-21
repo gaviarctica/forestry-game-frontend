@@ -1,13 +1,18 @@
 export default class RouteNode {
-  constructor(id, point, to) {
-    this.reset(id, point, to);
+  constructor(id, point, to, anomalies = null) {
+    this.reset(id, point, to, anomalies);
   }
 
-  reset(id, point, to) {
+  reset(id, point, to, anomalies) {
     this.id = id
     this.point = point;
     this.to = to;
     this.segments = [];
+    if(anomalies !== null) {
+      this.anomalies = anomalies;
+    } else {
+      this.anomalies = [];
+    }
   }
 
   addSegment( segment ) {
@@ -23,7 +28,7 @@ export default class RouteNode {
   hasSegmentWithNodes(node1, node2) {
     for (var seg of this.segments) {
       if ((seg.startNode === node1 && seg.endNode === node2)
-          || seg.startNode === node2 && seg.endNode === node1) {
+          || (seg.startNode === node2 && seg.endNode === node1)) {
             return true;
       }
     }

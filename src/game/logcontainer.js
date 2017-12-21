@@ -1,6 +1,4 @@
 import * as PIXI from 'pixi.js';
-import Log from './log';
-import {LogType} from './logtypes'
 
 export default class LogContainer {
   constructor() {
@@ -57,9 +55,9 @@ export default class LogContainer {
       }
     }
 
-    for (var i = 0; i < 5; ++i) {
+    for (i = 0; i < 5; ++i) {
       var row = this.log_rows[i].asArray();
-      for (var j = 0; j < 4; ++j) {
+      for (j = 0; j < 4; ++j) {
         logsInTruck[j][i] = row[j];
       }
     }
@@ -95,7 +93,7 @@ class LogRow {
         log.removeFromParent();
         sprite.addChild(log.logSprite);
         // setting index to be correct even in short case
-        var point_index = this.type.log_amount == 4 ? this.type.traverse_order[i] : this.type.traverse_order[i]+1;
+        var point_index = this.type.log_amount === 4 ? this.type.traverse_order[i] : this.type.traverse_order[i]+1;
         log.logSprite.position = new PIXI.Point((point_index * 60) - 90, 250);
         log.logSprite.rotation = Math.PI/2;
         log.logSprite.scale.set(1.0);
@@ -149,7 +147,7 @@ class LogRow {
   }
 
   asArray() {
-    if(this.type.log_amount == 2) {
+    if(this.type.log_amount === 2) {
       return [null,this.logs[0],this.logs[1],null];
     }
 

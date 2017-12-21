@@ -62,9 +62,21 @@ export default class Settings {
       Width : 50,
       Height : 5,
       Outline : 4,
+      Weight : 50,
       // Graphics
       SPRITE_ANCHOR : 0.5,
       SPRITE_SCALE : 0.1
+    }
+
+    this.anomalies = {
+      DEAD_ROAD_SPEED_FACTOR : 0.01,
+      DYING_ROAD_TEXT_FONT : {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'},
+      DEAD_ROAD_TEXT_SCALE : [0.1,0.1],
+      WEIGHT_LIMIT_TEXT_FONT : {fontFamily : 'Arial', fontSize: 24, fill : 0xffffff, align : 'center'},
+      WEIGHT_LIMIT_EXCEED_SPEED_FACTOR : 0.01,
+      ONE_DIR_ARROW_SPRITE_ANCHOR : 0.5,
+      ONE_DIR_ARROW_SPRITE_SCALE: 0.2,
+      ONE_DIR_ROAD_SPEED_FACTOR: 0.01
     }
 
 

@@ -11,8 +11,8 @@ export default class Stats {
     var self = this;
     this.timer = setInterval(function(){self.counterUp()}, 1000);
 
-    this.settings = (new Settings).stats;
-    this.map_settings = (new Settings).map;
+    this.settings = (new Settings()).stats;
+    this.map_settings = (new Settings()).map;
   }
 
   stopCounter() {

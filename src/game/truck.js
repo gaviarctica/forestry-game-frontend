@@ -18,6 +18,8 @@ export default class Truck {
     this.settings = (new Settings()).truck;
     this.map_settings = (new Settings()).map;
     this.camera_settings = (new Settings()).camera;
+    this.anomaly_settings = (new Settings()).anomalies;
+    this.log_settings = (new Settings()).log;
 
     this.sprite = PIXI.Sprite.fromImage('/static/truck.svg');
     this.sprite.anchor.set(this.settings.SPRITE_ANCHOR);
@@ -113,7 +115,7 @@ export default class Truck {
       this.forceCameraMovement = true;
 
       // when direction changes
-      if(this.previous_direction == -1) {
+      if(this.previous_direction === -1) {
         // experimental index suggestion
         this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }
@@ -127,7 +129,7 @@ export default class Truck {
       this.forceCameraMovement = true;
 
       // when direction changes
-      if(this.previous_direction == 1) {
+      if(this.previous_direction === 1) {
         // experimental index suggestion
         this.routeIndex = this.currentSegment.getPreviousNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }
@@ -195,7 +197,19 @@ export default class Truck {
     }
 
     // Advance on route segment based on segment length
-    this.pointDelta += (direction * this.getSpeed( direction !== 1 ) * timeDelta) / this.currentSegment.getLength();
+    var delta_move = (direction * this.getSpeed( direction !== 1 ) * timeDelta) / this.currentSegment.getLength();
+
+    // checking road anomalies and act accordingly
+    if(this.currentSegment.isRoadDead()) {
+      this.pointDelta += delta_move * this.anomaly_settings.DEAD_ROAD_SPEED_FACTOR;
+    } else if(this.currentSegment.getRoadWeightLimit() !== false && this.currentSegment.getRoadWeightLimit() < this.log_settings.Weight * this.logCount()) {
+      this.pointDelta += delta_move * this.anomaly_settings.WEIGHT_LIMIT_EXCEED_SPEED_FACTOR;
+    } else if(!this.currentSegment.canDriveTo(this.sprite.rotation, this.previous_direction)) {
+      this.pointDelta += delta_move * this.anomaly_settings.ONE_DIR_ROAD_SPEED_FACTOR;
+    } else {
+      this.pointDelta += delta_move;
+    }
+    this.currentSegment.updateAnomalies(delta_move);
 
     // Switch route segment if needed
     if (this.pointDelta <= 0) {
