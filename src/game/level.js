@@ -59,6 +59,16 @@ export default class Level {
 
   drawRoutes() {
 
+    // drawing nodes first
+    for(let [id, routeNode] of this.routeNodes) {
+      var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
+      intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
+      intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
+      intersectionSprite.x = routeNode.getPos().x;
+      intersectionSprite.y = routeNode.getPos().y;
+      this.stage.addChild(intersectionSprite);
+    }
+
     for(var j = 0; j < this.routeSegments.length; ++j) {
       var spos = this.routeSegments[j].startNode.getPos();
       var epos = this.routeSegments[j].endNode.getPos();
@@ -85,18 +95,14 @@ export default class Level {
           if(typeof this.routeSegments[j].anomalies[i]['dying_road'] !== 'undefined') {
             this.stage.addChild(this.routeSegments[j].getDyingRoadText());
           }
+          if(typeof this.routeSegments[j].anomalies[i]['weight_limit'] !== 'undefined') {
+            this.stage.addChild(this.routeSegments[j].getWeightLimitText());
+          }
+          if(typeof this.routeSegments[j].anomalies[i]['one_way_road'] !== 'undefined') {
+            this.stage.addChild(this.routeSegments[j].getOneWayRoadSprite());
+          }
         }
       }
-
-    }
-
-    for(let [id, routeNode] of this.routeNodes) {
-      var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
-      intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
-      intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
-      intersectionSprite.x = routeNode.getPos().x;
-      intersectionSprite.y = routeNode.getPos().y;
-      this.stage.addChild(intersectionSprite);
     }
   }
 
