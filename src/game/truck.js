@@ -114,7 +114,7 @@ export default class Truck {
       this.forceCameraMovement = true;
 
       // when direction changes
-      if(this.previous_direction == -1) {
+      if(this.previous_direction === -1) {
         // experimental index suggestion
         this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }
@@ -128,7 +128,7 @@ export default class Truck {
       this.forceCameraMovement = true;
 
       // when direction changes
-      if(this.previous_direction == 1) {
+      if(this.previous_direction === 1) {
         // experimental index suggestion
         this.routeIndex = this.currentSegment.getPreviousNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
       }

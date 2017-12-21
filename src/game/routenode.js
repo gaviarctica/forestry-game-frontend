@@ -28,7 +28,7 @@ export default class RouteNode {
   hasSegmentWithNodes(node1, node2) {
     for (var seg of this.segments) {
       if ((seg.startNode === node1 && seg.endNode === node2)
-          || seg.startNode === node2 && seg.endNode === node1) {
+          || (seg.startNode === node2 && seg.endNode === node1)) {
             return true;
       }
     }

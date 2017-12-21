@@ -4,7 +4,7 @@ import Settings from './settings';
 
 export default class RouteSegment {
   constructor(startNode, endNode) {
-    this.anomaly_settings = (new Settings).anomalies;
+    this.anomaly_settings = (new Settings()).anomalies;
 
     this.startNode = startNode;
     this.endNode = endNode;
@@ -68,7 +68,7 @@ export default class RouteSegment {
         }
       }
 
-      for(var i = 0; i < endNode.anomalies.length; ++i) {
+      for(i = 0; i < endNode.anomalies.length; ++i) {
         if(endNode.anomalies[i].to === startNode.getId()) {
           this.anomalies.push(endNode.anomalies[i]);
 

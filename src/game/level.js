@@ -9,7 +9,7 @@ import Settings from './settings';
 
 export default class Level {
   constructor(map) {
-    this.settings = (new Settings).map;
+    this.settings = (new Settings()).map;
     this.map = map;
     this.stage = new PIXI.Container();
     this.routeContainer = new PIXI.Container();
@@ -75,8 +75,6 @@ export default class Level {
 
       var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
       var currentPos = {x: spos.x, y: spos.y};
-      var roadSprite;
-      var distanceToEnd = 0;
       var tilingSprite = new PIXI.extras.TilingSprite(
         this.routeTexture,
         this.settings.ROAD_SPRITE_LENGTH,
@@ -285,13 +283,13 @@ export default class Level {
 
     var logs = []
     for (var log of this.logs) {
-      var pos = log.getPosition();
+      pos = log.getPosition();
       logs.push({x: pos.x, y: pos.y, rot: log.getRotation(), type: log.type});
     }
 
     var deposits = [];
     for (var deposit of this.logDeposits) {
-      var pos = deposit.getPosition();
+      pos = deposit.getPosition();
       deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.type});
     }
 

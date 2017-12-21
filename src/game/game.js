@@ -24,7 +24,6 @@ export default class GameCanvas {
     this.game.stage.addChild(this.map.getStage());
 
     // counting different log types
-    var logtype_amount = 0;
     var logs_amount = this.map.getLogs().length;
     var log_types = [];
 
@@ -44,7 +43,7 @@ export default class GameCanvas {
     }
 
     var deposit_amount = this.map.getLogDeposits().length;
-    for(var i = 0; i < deposit_amount; ++i) {
+    for(i = 0; i < deposit_amount; ++i) {
       if(log_types.length === deposit_amount)
         this.map.getLogDeposits()[i].setMaxTypes(1);
       else
@@ -106,7 +105,7 @@ export default class GameCanvas {
     }
 
     var mouseWheelEvent = function(event) {
-      var settings = (new Settings).map;
+      var settings = (new Settings()).map;
       if ((event.wheelDelta < -1 || event.deltaY > 1) && self.game.stage.scale.x > 0.5) {
         self.game.stage.scale.x -=  settings.MOUSE_WHEEL_SCALE[0];
         self.game.stage.scale.y -=  settings.MOUSE_WHEEL_SCALE[1];

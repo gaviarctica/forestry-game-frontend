@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import Log from './log';
 import {LogType} from './logtypes'
 import Settings from './settings'
 
@@ -9,7 +8,7 @@ import Settings from './settings'
 // var Color = 0xAAAAAA;
 
 export function createLogDepositGraphics() {
-  var settings = (new Settings).log_deposit;
+  var settings = (new Settings()).log_deposit;
   var graphics = new PIXI.Graphics();
   graphics.beginFill(settings.Color, 1);
   // draw centered
@@ -22,7 +21,7 @@ export function createLogDepositGraphics() {
 
 export default class LogDeposit {
   constructor(position, rotation, types, stage, max_types = 1) {
-    this.settings = (new Settings).log_deposit;
+    this.settings = (new Settings()).log_deposit;
 
     // type is defined when first log is unloaded
     this.types = [];
