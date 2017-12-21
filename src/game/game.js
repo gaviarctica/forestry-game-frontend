@@ -4,6 +4,7 @@ import Level from './level';
 import Stats from './stats';
 import Forest from './forest';
 import Settings from './settings'
+import Weather from './weather';
 
 export default class GameCanvas {
   constructor(mapData, updateUI) {
@@ -13,7 +14,10 @@ export default class GameCanvas {
     this.mapData = mapData;
 
     this.forest = new Forest(this.game.stage, mapData);
+    this.game.stage.addChild(this.forest.getGroundContainer());
+    this.game.stage.addChild(this.forest.getTreeContainer());
     this.forest.buildGround();
+    this.forest.buildTrees();
 
     document.getElementById('canvas-game').appendChild(game.view);
 
@@ -69,7 +73,9 @@ export default class GameCanvas {
                            this.stats,
                            this.logsRemaining);
 
-    this.forest.buildTrees();
+    this.game.stage.addChild(this.truck.getContainer());
+
+    this.weather = new Weather(this.game.stage, this.forest, this.map.getStage(), this.truck, this.mapData.weather);
 
     this.setupCameraControl(this.truck);
     this.update = this.update.bind(this);
@@ -153,6 +159,8 @@ export default class GameCanvas {
       fuel: totalfuelBurned,
       cost: cost.toFixed(2)
     });
+
+    this.weather.update(delta);
   }
 
   isInEndGameState() {
