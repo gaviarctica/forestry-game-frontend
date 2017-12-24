@@ -1,17 +1,18 @@
 import * as PIXI from 'pixi.js';
-import * as Key from './controls';
 import {lerp, distance} from './helpers';
 import Log from './log';
 import LogDeposit from './logdeposit';
 import LogContainer from './logcontainer';
 import Settings from './settings';
+import {Key} from './controls';
+import Controls from './controls';
 
 export default class Truck {
 
-
-  constructor(stage, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats, logsRemaining) {
+  constructor(stage, controls, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats, logsRemaining) {
     // store the stage so we can control the camera when we need it
     this.stage = stage;
+    this.controls = controls;
     this.forceCameraMovement = true;
 
     // loading setting variables
@@ -45,10 +46,6 @@ export default class Truck {
     stage.addChild(this.arrowSprite);
     stage.addChild(this.sprite);
     stage.addChild(this.clawSprite);
-
-    // some key helpers
-    this.leftWasDown = false;
-    this.rightWasDown = false;
 
     this.previous_direction = -1;
     this.logsOnLevel = logsOnLevel;
@@ -110,7 +107,7 @@ export default class Truck {
     var direction = 0;
 
 
-    if(Key.up.isDown) {
+    if(this.controls.isKeyDown(Key.Up)) {
       // when we start moving we force the camera to center again
       this.forceCameraMovement = true;
 
@@ -124,7 +121,7 @@ export default class Truck {
       direction = 1;
     }
 
-    if(Key.down.isDown) {
+    if(this.controls.isKeyDown(Key.Down)) {
       // when we start moving we force the camera to center again
       this.forceCameraMovement = true;
 
@@ -138,58 +135,27 @@ export default class Truck {
       direction = -1;
     }
 
-
-
-    if(Key.left.isDown) {
-      this.leftWasDown = true;
-      this.rightWasDown = false;
-    }
-
-    if(Key.right.isDown) {
-      this.rightWasDown = true
-      this.leftWasDown = false;
-    }
-
-    if(Key.space.isDown) {
-      this.spaceWasDown = true
-    }
-
-    if(Key.q.isDown) {
-      this.qWasDown = true;
-    }
-
-    if (Key.e.isDown) {
-      this.eWasDown = true;
-    }
-
-    if (this.qWasDown && Key.q.isUp) {
+    if (this.controls.wasKeyPressed(Key.Q)) {
       this.selectNearbyItemAtDir(1);
-      this.qWasDown = false;
     }
 
-    if (this.eWasDown && Key.e.isUp) {
+    if (this.controls.wasKeyPressed(Key.E)) {
       this.selectNearbyItemAtDir(-1);
-      this.eWasDown = false;
     }
 
-    if(this.spaceWasDown && Key.space.isUp) {
+    if(this.controls.wasKeyPressed(Key.Space)) {
       this.doLogAction = true;
-      this.spaceWasDown = false;
     } else {
       this.doLogAction = false;
     }
 
     // Selecting route if arrow keys were pressed
-    if(this.leftWasDown && Key.left.isUp) {
-      this.leftWasDown = false;
-      this.rightWasDown = false;
+    if(this.controls.wasKeyPressed(Key.Left)) {
       ++this.routeIndex;
       var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1) :
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
       this.routeIndex = seg['index'];
-    } else if(this.rightWasDown && Key.right.isUp) {
-      this.leftWasDown = false;
-      this.rightWasDown = false;
+    } else if(this.controls.wasKeyPressed(Key.Right)) {
       --this.routeIndex;
       seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1) :
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1);

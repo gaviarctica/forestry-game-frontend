@@ -1,41 +1,65 @@
-function keyboard(keyCode) {
-  var key = {};
-  key.code = keyCode;
-  key.isDown = false;
-  key.isUp = true;
-  key.press = undefined;
-  key.release = undefined;
 
-  key.downHandler = function(event) {
-    if (event.keyCode === key.code) {
-      if (key.isUp && key.press) key.press();
-      key.isDown = true;
-      key.isUp = false;
+export const Key = {
+ Left: 37,
+ Up: 38,
+ Right: 39,
+ Down: 40,
+ Space: 32,
+ Q: 81,
+ E: 69
+} 
+
+export default class Controls {
+  constructor() {
+    this.keys = [];
+    for (var i = 0; i < 255; ++i) {
+      this.keys[i] = {isDown: false, justPressed: false, justReleased: false };
     }
-  };
 
-  key.upHandler = function(event) {
-    if (event.keyCode === key.code) {
-      if (key.isDown && key.release) key.release();
-      key.isDown = false;
-      key.isUp = true;
+    window.addEventListener(
+      "keydown", this.handleKeyDown.bind(this), false
+    );
+    window.addEventListener(
+      "keyup", this.handleKeyUp.bind(this), false
+    );
+  }
+
+  handleKeyUp(event) {
+    var key = this.keys[event.keyCode];
+    key.justPressed = false;
+    key.justReleased = true;
+    key.isDown = false;
+  }
+
+  handleKeyDown(event) {
+    var key = this.keys[event.keyCode];
+    if (!key.isDown)
+      key.justPressed = true;
+    key.justReleased = false;
+    key.isDown = true;
+  }
+
+  isKeyUp(keycode) {
+    return !this.keys[keycode].isDown;
+  }
+
+  isKeyDown(keycode) {
+    return this.keys[keycode].isDown;
+  }
+
+  wasKeyPressed(keycode) {
+    return this.keys[keycode].justPressed;
+  }
+
+  wasKeyReleased(keycode) {
+    return this.keys[keycode].justReleased;
+  }
+
+  update() {
+    for (var i = 0; i < 255; ++i) {
+      var key = this.keys[i];
+      key.justPressed = false;
+      key.justReleased = false;
     }
-  };
-
-  window.addEventListener(
-    "keydown", key.downHandler.bind(key), false
-  );
-  window.addEventListener(
-    "keyup", key.upHandler.bind(key), false
-  );
-  return key;
+  }
 }
-
-export const left = keyboard(37)
-export const up = keyboard(38)
-export const right = keyboard(39)
-export const down = keyboard(40)
-export const space = keyboard(32)
-export const q = keyboard(81)
-export const e = keyboard(69)
-

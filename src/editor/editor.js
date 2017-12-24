@@ -17,6 +17,9 @@ export default class EditorCanvas {
     pixiApp.ticker.add(this.update);
 
     document.getElementById('canvas-editor').appendChild(pixiApp.view);
+    pixiApp.view.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
 
     this.ui = new UserInterface(updateUI);
     this.level = new Level();

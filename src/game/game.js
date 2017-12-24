@@ -3,7 +3,9 @@ import Truck from './truck';
 import Level from './level';
 import Stats from './stats';
 import Forest from './forest';
-import Settings from './settings'
+import Settings from './settings';
+import {Key} from './controls';
+import Controls from './controls';
 
 export default class GameCanvas {
   constructor(mapData, updateUI) {
@@ -16,6 +18,11 @@ export default class GameCanvas {
     this.forest.buildGround();
 
     document.getElementById('canvas-game').appendChild(game.view);
+    game.view.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+
+    this.controls = new Controls();
 
     this.stats = new Stats(updateUI);
     this.gameEnded = false;
@@ -62,6 +69,7 @@ export default class GameCanvas {
     }
 
     this.truck = new Truck(this.game.stage,
+                           this.controls,
                            this.map.getStartingSegment(),
                            this.map.getStaringInterpolation(),
                            this.map.getLogs(),
@@ -153,6 +161,8 @@ export default class GameCanvas {
       fuel: totalfuelBurned,
       cost: cost.toFixed(2)
     });
+
+    this.controls.update();
   }
 
   isInEndGameState() {
