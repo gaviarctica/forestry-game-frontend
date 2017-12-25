@@ -182,6 +182,9 @@ export default class GameCanvas {
 
   destroy()
   {
+    // Stop in game time counter
+    this.stats.stopCounter();
+    
     var self = this;
     setTimeout(function() {
       self.game.destroy(true);

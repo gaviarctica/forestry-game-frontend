@@ -185,6 +185,7 @@ export default class Game extends Component {
                 {Object.keys(this.state.logsRemainingOnGround).map(key => {
                   return (
                     <div
+                      key={key}
                       className={'logs-remaining-count log-type-' + key + (this.state.logsRemainingOnGround[key] === 0 || this.state.hideLogType[key] ? ' disabled' : '')}
                       onClick={() => this.handleLogsRemainingClick(key)} >
                       {this.state.logsRemainingOnGround[key]}
