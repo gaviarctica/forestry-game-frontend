@@ -29,7 +29,7 @@
   width: calc(100% - 250px - 15px);
   box-shadow: var(--menu-shadow);
   position: relative;
-  background-color: #7da66e; /* color of in-game grass */
+  background-color: #438b38; /* color of in-game grass */
 }
 
 #right {
