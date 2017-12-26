@@ -19,7 +19,7 @@ export default class Log {
 		this._canBePickedUp = false;
     this._isHighlighted = false;
 
-    // Log color code outline when log can be picked up
+    // Log black outline when log can be picked up
     var graphics = new PIXI.Graphics();
     graphics.beginFill(0x000000, 1);
     graphics.drawRoundedRect(-(this.settings.Width+this.settings.Outline)/2.0,

@@ -2,21 +2,22 @@ import * as PIXI from 'pixi.js';
 import {LogType} from './logtypes'
 import Settings from './settings'
 
-// var Width = 150;
-// var Height = 50;
-// var Outline = 4;
-// var Color = 0xAAAAAA;
+const depositSpriteByType = {
+  0: '/static/deposit_0.svg',
+  1: '/static/deposit_1.svg',
+  2: '/static/deposit_2.svg',
+  3: '/static/deposit_3.svg',
+  4: '/static/deposit_4.svg',
+  5: '/static/deposit_5.svg'
+}
 
 export function createLogDepositGraphics() {
-  var settings = (new Settings()).log_deposit;
-  var graphics = new PIXI.Graphics();
-  graphics.beginFill(settings.Color, 1);
-  // draw centered
-  graphics.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
+  var depositSprite = PIXI.Sprite.fromImage('/static/deposit_empty.svg');
+  depositSprite.scale.set(0.1);
+  depositSprite.anchor.set(0.5);
+  depositSprite.alpha = 0.75;
 
-  graphics.interactive = true;
-  graphics.hitArea = new PIXI.Rectangle(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
-  return graphics;
+  return depositSprite;
 }
 
 export default class LogDeposit {
@@ -41,14 +42,16 @@ export default class LogDeposit {
     this._canBeUnloadedTo = false;
     this._isHighlighted = false;
 
-    var graphics = createLogDepositGraphics();
-    graphics.position = new PIXI.Point(position.x, position.y);
-    graphics.owner = this;
-    graphics.rotation = rotation;
+    this.container = new PIXI.Container();
+    this.container.x = position.x;
+    this.container.y = position.y;
+    this.container.owner = this;
+    this.container.rotation = rotation;
+    this.container.interactive = true;
 
     this.numOfLogs = 0;
 
-    graphics.pointerdown = function() {
+    this.container.pointerdown = function() {
       // check if truck is in unload range (flag managed by truck)
       if (this.owner.canBeUnloadedTo()) {
         this.owner.setMarkedForUnload(true);
@@ -57,20 +60,35 @@ export default class LogDeposit {
       }
     };
 
-    graphics.pointerup = function() {
+    this.container.pointerup = function() {
       this.owner.setMarkedForUnload(false);
     }
 
-    graphics.pointerover = function() {
+    this.container.pointerover = function() {
       this.owner.setHighlighted(true);
     }
 
-    graphics.pointerout = function() {
+    this.container.pointerout = function() {
       this.owner.setHighlighted(false);
     }
 
-    this.stage.addChild(graphics);
+    var settings = (new Settings()).log_deposit;
+
+    // Transparent black background when deposit is in range
+    var inRangeBackground = new PIXI.Graphics();
+    inRangeBackground.beginFill(0x000000, 1);
+    // draw centered
+    inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
+    inRangeBackground.alpha = 0;
+
+    var graphics = createLogDepositGraphics();
+
+    this.container.addChild(inRangeBackground);
+    this.container.addChild(graphics);
+    this.stage.addChild(this.container);
+
     this.graphics = graphics;
+    this.inRangeBackground = inRangeBackground;
   }
 
   setMaxTypes(max_types) {
@@ -78,16 +96,10 @@ export default class LogDeposit {
   }
 
   addLog(log, levelHasType) {
-    // if we have no type, we assign type and mark it with appropriate color
+    // if we have no type, we assign type and mark it with appropriate texture
     if( !levelHasType && this.types.length < this.max_types) {
       this.types.push(log.type);
-
-      this.graphics.beginFill(LogType[log.type].color, 1);
-      this.graphics.drawRoundedRect(-(this.settings.Width+this.settings.Outline)/2.0,
-        -(this.settings.Height+this.settings.Outline)/2, this.settings.Width+this.settings.Outline,
-        this.settings.Height+this.settings.Outline, 3);
-      this.graphics.beginFill(this.settings.Color, 1);
-      this.graphics.drawRect(-this.settings.Width/2.0, -this.settings.Height/2, this.settings.Width, this.settings.Height);
+      this.graphics.texture = PIXI.Texture.fromImage(depositSpriteByType[log.type]);
     }
 
     // checking if wanted type is included
@@ -106,7 +118,7 @@ export default class LogDeposit {
       // in this case parent is truck
       log.removeFromParent();
       // add it to deposit container
-      this.graphics.addChild(log.logSprite);
+      this.container.addChild(log.logSprite);
       log.logSprite.position = new PIXI.Point(-this.settings.Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
       log.logSprite.scale.set(this.settings.LOG_SPRITE_SCALE);
       ++this.numOfLogs;
@@ -123,11 +135,11 @@ export default class LogDeposit {
 
   setCanBeUnloadedTo(value) {
     this._canBeUnloadedTo = value;
-    // alter color if log can be picked up
+    // alter bg color if log can be picked up
     if (this._canBeUnloadedTo) {
-      this.graphics.tint = 0xCCCCCC;
+      this.inRangeBackground.alpha = 0.25;
     } else {
-      this.graphics.tint = 0xFFFFFF;
+      this.inRangeBackground.alpha = 0;
     }
   }
 
@@ -148,16 +160,19 @@ export default class LogDeposit {
   }
 
   getPosition() {
-    return this.graphics.position;
+    return this.container.position;
   }
 
   getRotation() {
-    return this.graphics.rotation;
+    return this.container.rotation;
   }
 
   removeFromStage() {
     if (this.graphics.parent) {
       this.graphics.parent.removeChild(this.graphics);
+    }
+    if (this.container.parent) {
+      this.container.parent.removeChild(this.container);
     }
   }
 }

@@ -80,7 +80,7 @@ export default class Settings {
     }
 
     this.debug = {
-      FRAMERATE_COUNTER : true
+      FRAMERATE_COUNTER : false
     }
 
   }
