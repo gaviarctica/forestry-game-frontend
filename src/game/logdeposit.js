@@ -11,8 +11,12 @@ const depositSpriteByType = {
   5: '/static/deposit_5.svg'
 }
 
-export function createLogDepositGraphics() {
-  var depositSprite = PIXI.Sprite.fromImage('/static/deposit_empty.svg');
+export function createLogDepositGraphics(types = []) {
+  if (types.length > 0) {
+  var depositSprite = PIXI.Sprite.fromImage(depositSpriteByType[types[0]]);      
+  } else {
+    var depositSprite = PIXI.Sprite.fromImage('/static/deposit_empty.svg');
+  }
   depositSprite.scale.set(0.1);
   depositSprite.anchor.set(0.5);
   depositSprite.alpha = 0.75;
@@ -34,7 +38,7 @@ export default class LogDeposit {
     }
 
     // legacy support for single value
-    if (types) {
+    if (types !== undefined) {
       this.types.push(types); // no type predefined
     }
 
@@ -81,7 +85,7 @@ export default class LogDeposit {
     inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
     inRangeBackground.alpha = 0;
 
-    var graphics = createLogDepositGraphics();
+    var graphics = createLogDepositGraphics(this.types);
 
     this.container.addChild(inRangeBackground);
     this.container.addChild(graphics);
