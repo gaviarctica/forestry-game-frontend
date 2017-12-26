@@ -12,6 +12,8 @@ export default class GameCanvas {
     var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x7da66e, antialias: true});
     this.game = game;
 
+    this.settings = new Settings();
+
     this.mapData = mapData;
 
     this.forest = new Forest(this.game.stage, mapData);
@@ -82,6 +84,16 @@ export default class GameCanvas {
     this.setupCameraControl(this.truck);
     this.update = this.update.bind(this);
     game.ticker.add(this.update);
+
+    // Framerate counter
+    if (this.settings.debug.FRAMERATE_COUNTER) {
+      this.frames = 0;
+      // Report framerate and reset counter each second
+      this.framerateCounter = setInterval(function() {
+        console.log('Framerate: ' + this.frames + ' fps');
+        this.frames = 0;
+      }.bind(this), 1000);
+    }
   }
 
   setupCameraControl(truck) {
@@ -125,7 +137,7 @@ export default class GameCanvas {
     }
 
     var mouseWheelEvent = function(event) {
-      var settings = (new Settings()).map;
+      var settings = this.settings.map;
       if ((event.wheelDelta < -1 || event.deltaY > 1) && self.game.stage.scale.x > 0.5) {
         self.game.stage.scale.x -=  settings.MOUSE_WHEEL_SCALE[0];
         self.game.stage.scale.y -=  settings.MOUSE_WHEEL_SCALE[1];
@@ -143,6 +155,11 @@ export default class GameCanvas {
 
   update(delta)
   {
+    // Add new frame to framerate counter
+    if (this.settings.debug.FRAMERATE_COUNTER) {
+      this.frames += 1;
+    }
+
     if (this.isInEndGameState() && !this.gameEnded) {
       this.stats.updateUI({
         gameEnd: true
@@ -184,6 +201,10 @@ export default class GameCanvas {
   {
     // Stop in game time counter
     this.stats.stopCounter();
+    // Stop framerate counter
+    if (this.settings.debug.FRAMERATE_COUNTER) {
+      clearInterval(this.framerateCounter);
+    }
     
     var self = this;
     setTimeout(function() {

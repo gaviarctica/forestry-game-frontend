@@ -79,6 +79,9 @@ export default class Settings {
       ONE_DIR_ROAD_SPEED_FACTOR: 0.01
     }
 
+    this.debug = {
+      FRAMERATE_COUNTER : true
+    }
 
   }
 
