@@ -41,7 +41,7 @@
   margin-bottom: 20px;
 }
 
-input {
+.LoginForm input {
   width: var(--form-width);
   margin-bottom: 20px;
   padding: 10px;
@@ -54,7 +54,7 @@ input {
   text-align: center;
 }
 
-input:focus {
+.LoginForm input:focus {
   outline: none;
   border-color: var(--jd-yellow);
 }

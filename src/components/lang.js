@@ -62,6 +62,18 @@ export const LANG = {
       logsRemaining: "Logs remaining",
       levelFinished: 'Level finished!'
     },
+    editor: {
+      selectedTool: "Selected tool",
+      tools: "Tools",
+      toolType: "Tool type",
+      free: "Free",
+      normalRoad: "Normal road",
+      dyingRoad: "Dying road",
+      weightLimitedRoad: "Weight limited road",
+      onewayRoad: "One-way road",
+      maxCrossings: "Max crossings",
+      maxLoad: "Max load"
+    },
     buttons: {
       startGame: "Start game",
       logIn: "Log in",
@@ -75,7 +87,10 @@ export const LANG = {
       deposits: "Deposits",
       truck: "Truck",
       remove: "Remove",
-      save: "Save"
+      save: "Save",
+      saveAs: "Save as",
+      loadLevel: "Load level",
+      menu: "Menu"
     },
     logs: {
       type1: "Type 1",
@@ -149,6 +164,18 @@ export const LANG = {
       logsRemaining: "Tukkeja jäljellä",
       levelFinished: 'Taso läpäisty!'
     },
+    editor: {
+      selectedTool: "Valittu työkalu",
+      tools: "Työkalut",
+      toolType: "Työkalun tyyppi",
+      free: "Vapaa",
+      normalRoad: "Normaali tie",
+      dyingRoad: "Kuoleva tie",
+      weightLimitedRoad: "Painorajoitettu tie",
+      onewayRoad: "Yksisuuntainen tie",
+      maxCrossings: "Ylityskerrat",
+      maxLoad: "Maksimikuorma"
+    },
     buttons: {
       startGame: "Aloita peli",
       logIn: "Kirjaudu sisään",
@@ -162,7 +189,10 @@ export const LANG = {
       truck: "Metsäkone",
       deposits: "Säilö",
       remove: "Poista",
-      save: "Tallenna"
+      save: "Tallenna",
+      saveAs: "Tallenna nimellä",
+      loadLevel: "Lataa taso",
+      menu: "Valikko"
     },
     logs: {
       type1: "Tyyppi 1",

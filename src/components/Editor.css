@@ -1,6 +1,10 @@
 :root {
   /* Variables */
 }
+
+html {
+  overflow-y: hidden;
+}
   
 #canvas-editor {
   position: fixed;
@@ -11,6 +15,119 @@
   z-index: 1;
 }
 
-html {
-  overflow-y: hidden;
+#editor-toolbar {
+  position: fixed;
+  z-index: 10;
+  top: 10px;
+  left: 10px;
+  width: 300px;
+  max-height: calc(100% - 20px);
+  padding-bottom: 20px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  color: #eee;
+  font-size: 18px;
+}
+
+.toolbar-header {
+  color: #ccc;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+#toolbar-active-tool {
+  width: 150px;
+  height: 150px;
+  margin: auto;
+  
+}
+
+#toolbar-tools {
+  width: 250px;
+  text-align: center;
+  margin: auto;
+}
+
+#button-road, #button-logs, #button-deposits, #button-truck, #button-remove, #button-editormenu {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+}
+
+#button-road, #button-deposits {
+  margin-right: 10px;
+}
+
+#button-road, #button-logs, #button-deposits, #button-truck {
+  margin-bottom: 10px;
+}
+
+#button-editormenu {
+  float: right;
+  border-bottom-left-radius: 5px;
+}
+
+#editor-menu {
+  z-index: 100;
+  position: fixed;
+  top: 10px;
+  left: 320px;
+}
+
+.tool-type-dropdown {
+  display: block;
+  margin: auto;
+  width: 250px;
+  height: 30px;
+  font-size: 18px;
+  background-color: var(--jd-gray);
+  font-family: Helvetica, Sans-serif;
+}
+
+.tool-type-dropdown:hover {
+  cursor: pointer;
+}
+
+.tool-type-dropdown:focus {
+  outline: none;
+  border-color: var(--jd-yellow);
+}
+
+.details-road {
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top: 10px;
+}
+
+#editor-toolbar input {
+  -webkit-appearance: none;
+  outline: none;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  width: 40px;
+  color: var(--jd-yellow);
+  border-bottom: #ccc solid 2px;
+  text-align: center;
+  font-size: 20px;
+}
+
+#editor-toolbar input[type=number]::-webkit-inner-spin-button, 
+#editor-toolbar input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+#button-quit {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  width: 100px;
+  height: 35px;
+  line-height: 35px;
+  box-sizing: border-box;
 }
