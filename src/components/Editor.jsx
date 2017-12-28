@@ -5,6 +5,7 @@ import EditorCanvas from '../editor/editor';
 import FloatingMenu from './FloatingMenu';
 import { API } from './api';
 import { LANG } from './lang';
+import Settings from '../game/settings';
 
 export default class Editor extends Component {
   constructor(props) {
@@ -38,6 +39,8 @@ export default class Editor extends Component {
       'truck': '/static/truck.svg',
       'remove': '/static/editor_remove.png'
     }
+
+    this.settings = new Settings();
   }
 
   updateUI(update) {
@@ -60,7 +63,7 @@ export default class Editor extends Component {
   handleButtonClick(e) {
     var clicked = e.target.getAttribute('id');
 
-    if (clicked === 'button-quit') {
+    if (clicked === 'button-quit-editor') {
       this.editorCanvas.destroy();
       this.props.switchView('mainmenu');
     }
@@ -151,6 +154,11 @@ export default class Editor extends Component {
       <Button 
         id="button-load"
         text={LANG[this.props.lang].buttons.loadLevel}
+        buttonType='default'
+        handleClick={this.handleButtonClick.bind(this)} />,
+      <Button 
+        id="button-quit-editor"
+        text={LANG[this.props.lang].buttons.quit}
         buttonType='default'
         handleClick={this.handleButtonClick.bind(this)} />
     ];
@@ -264,7 +272,7 @@ export default class Editor extends Component {
               <input
                 type="number"
                 min="0"
-                step="50"
+                step={this.settings.log.Weight}
                 value={this.state.weightlimitedRoadLimit}
                 name="weightlimitedRoadLimit"
                 onChange={this.handleInputChange.bind(this)} />
@@ -278,12 +286,6 @@ export default class Editor extends Component {
             buttons={menuButtons} />
           : ''
         }
-
-        <Button 
-          id="button-quit"
-          text={LANG[this.props.lang].buttons.quit}
-          buttonType='default'
-          handleClick={this.handleButtonClick.bind(this)} />
         
       </div>
     );

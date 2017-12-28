@@ -120,14 +120,3 @@ html {
   -webkit-appearance: none; 
   margin: 0; 
 }
-
-#button-quit {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
-  width: 100px;
-  height: 35px;
-  line-height: 35px;
-  box-sizing: border-box;
-}
