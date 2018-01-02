@@ -72,7 +72,8 @@ export const LANG = {
       weightLimitedRoad: "Weight limited road",
       onewayRoad: "One-way road",
       maxCrossings: "Max crossings",
-      maxLoad: "Max load"
+      maxLoad: "Max load",
+      saveAsNewLevel: "Save as new level"
     },
     buttons: {
       startGame: "Start game",
@@ -91,7 +92,8 @@ export const LANG = {
       saveAs: "Save as",
       loadLevel: "Load level",
       menu: "Menu",
-      back: "Back"
+      back: "Back",
+      cancel: "Cancel"
     },
     logs: {
       type1: "Type 1",
@@ -175,7 +177,8 @@ export const LANG = {
       weightLimitedRoad: "Painorajoitettu tie",
       onewayRoad: "Yksisuuntainen tie",
       maxCrossings: "Ylityskerrat",
-      maxLoad: "Maksimikuorma"
+      maxLoad: "Maksimikuorma",
+      saveAsNewLevel: "Tallenna uutena tasona"
     },
     buttons: {
       startGame: "Aloita peli",
@@ -194,7 +197,8 @@ export const LANG = {
       saveAs: "Tallenna nimellä",
       loadLevel: "Lataa taso",
       menu: "Valikko",
-      back: "Takaisin"
+      back: "Takaisin",
+      cancel: "Peruuta"
     },
     logs: {
       type1: "Tyyppi 1",

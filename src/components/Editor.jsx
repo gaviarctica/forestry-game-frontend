@@ -3,6 +3,7 @@ import './Editor.css';
 import Button from './Button';
 import EditorCanvas from '../editor/editor';
 import FloatingMenu from './FloatingMenu';
+import FloatingDialog from './FloatingDialog';
 import { API } from './api';
 import { LANG } from './lang';
 import Settings from '../game/settings';
@@ -15,12 +16,15 @@ export default class Editor extends Component {
       activeTool: 'road_normal',
       menuOpen: false,
       loadMenuOpen: false,
+      saveAsMenuOpen: false,
       dyingRoadLimit: 1,
       weightlimitedRoadLimit: 0,
       ableToSave: false,
+      ableToSaveAs: false,
       userLevels: undefined,
       selectedUserLevel: undefined,
-      loadedMapData: undefined
+      loadedMapData: undefined,
+      loadedMapID: undefined
     }
 
     this.toolImagePaths = {
@@ -125,14 +129,29 @@ export default class Editor extends Component {
     if (clicked === 'button-editormenu') {
       this.setState(prevState => ({
         menuOpen: !prevState.menuOpen,
-        loadMenuOpen: false
+        loadMenuOpen: false,
+        saveAsMenuOpen: false
       }));
     }
     if (clicked === 'button-save') {
-      var mapData = this.editorCanvas.serializeLevel();
-      var mapInfo = this.editorCanvas.levelInfo();
-      API.addMap("editorMap", JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
-        console.log(err);
+      // If saving a new level, open save as dialog
+      if (!this.state.loadedMapData) {
+        this.setState({
+          saveAsMenuOpen: true
+        });
+      } else {
+        // Otherwise overwrite old level
+        var mapData = this.editorCanvas.serializeLevel();
+        var mapInfo = this.editorCanvas.levelInfo();
+        // TODO: overwrite instead of add new
+        API.addMap("editorMap", JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
+          console.log(err);
+        });
+      }
+    }
+    if (clicked === 'button-save-as') {
+      this.setState({
+        saveAsMenuOpen: true
       });
     }
     if (clicked === 'button-load') {
@@ -161,11 +180,26 @@ export default class Editor extends Component {
         API.getMapData(this.state.selectedUserLevel, function(err, mapdata) {
           if (err) throw err;
           self.setState({
-            loadedMapData: mapdata[0].mapdata
+            loadedMapData: mapdata[0].mapdata,
+            loadedMapID: self.state.selectedUserLevel
           });
         });
       }
     }
+  }
+
+  handleSaveAsPrimaryClick(newMapName) {
+    var mapData = this.editorCanvas.serializeLevel();
+    var mapInfo = this.editorCanvas.levelInfo();
+    API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
+      console.log(err);
+    });
+  }
+
+  handleSaveAsSecondaryClick() {
+    this.setState({
+      saveAsMenuOpen: false
+    });
   }
 
   updateActiveTool(button) {
@@ -196,7 +230,7 @@ export default class Editor extends Component {
         id="button-save-as"
         text={LANG[this.props.lang].buttons.saveAs}
         buttonType='default'
-        inactive={!this.state.ableToSave}
+        inactive={!this.state.ableToSaveAs}
         handleClick={this.handleButtonClick.bind(this)} />,
       <Button 
         id="button-load"
@@ -386,10 +420,20 @@ export default class Editor extends Component {
               type='content'
               content={loadMenuContent} />
             :
-            <FloatingMenu
-              id='editor-menu'
-              type='buttons'
-              buttons={menuButtons} />
+            this.state.saveAsMenuOpen ?
+              <FloatingDialog
+                id='editor-menu'
+                type="textinput"
+                header={LANG[this.props.lang].editor.saveAsNewLevel}
+                primaryText={LANG[this.props.lang].buttons.save}
+                secondaryText={LANG[this.props.lang].buttons.cancel}
+                handlePrimaryClick={this.handleSaveAsPrimaryClick.bind(this)}
+                handleSecondaryClick={this.handleSaveAsSecondaryClick.bind(this)} />
+              :
+              <FloatingMenu
+                id='editor-menu'
+                type='buttons'
+                buttons={menuButtons} />
           : ''
         }
         
