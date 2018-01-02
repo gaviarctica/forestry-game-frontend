@@ -75,7 +75,7 @@ export default class GameCanvas {
 
     this.game.stage.addChild(this.truck.getContainer());
 
-    this.weather = new Weather(this.game.stage, this.forest, this.map.getStage(), this.truck, this.mapData.weather);
+    this.weather = new Weather(this.game.stage, this.forest, this.map.getStage(), this.truck, game, this.mapData.weather);
 
     this.setupCameraControl(this.truck);
     this.update = this.update.bind(this);

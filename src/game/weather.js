@@ -3,46 +3,114 @@ import {distance} from './helpers';
 import Settings from './settings';
 
 export default class Weather {
-  constructor(stage, forest, level, truck, attr) {
+  constructor(stage, forest, level, truck, game, attr) {
+    // game is needed for viewport
+    this.game = game;
+
     this.stage = stage;
-    console.log(attr);
+    this.level = level;
+    this.truck = truck;
+    this.forest = forest;
 
-    this.visible_distance = 200;
+    this.weather_type = false;
 
-    var forest_filtered = new PIXI.Container();
-    var forest_non_filtered = new PIXI.Container();
+    // checking fog weather type
+    if(typeof attr != 'undefined' && attr.type === 'fog') {
+      this.stage.children = [];
 
-    let colorMatrix = new PIXI.filters.ColorMatrixFilter();
-    // new PIXI.filters.BlurFilter(strength, quality, resolution, kernelSize)
-    let blur = new PIXI.filters.BlurFilter();
-    blur.blur = 10;
-    colorMatrix.night(0.1);
+      this.visible_distance = attr.visibility;
+      var fog_texture = PIXI.Texture.fromImage('/static/fog.png');
+      var fog_tiling_sprite = new PIXI.extras.TilingSprite(fog_texture, 10000, 10000);
+      fog_tiling_sprite.x = -5000;
+      fog_tiling_sprite.y = -5000;
+      fog_tiling_sprite.tileScale.set(0.05);
+      fog_tiling_sprite.alpha = attr.density;
+      this.weather_container = new PIXI.Container();
+      this.weather_container.addChild(fog_tiling_sprite);
 
-    var count = 0;
-    // remove children
-    this.stage.removeChildren();
-
-    for(var i = 0; i < forest.getTreeContainer().children.length; ++i) {
-      var temp_distance = distance({x:forest.getTreeContainer().children[i].x,y:forest.getTreeContainer().children[i].y}, truck.sprite.position);
-
-      if(temp_distance > this.visible_distance) forest_filtered.addChild(forest.getTreeContainer().children[i]);
-      else forest_non_filtered.addChild(forest.getTreeContainer().children[i]);
+      this.weather_type = 'fog';
+      this.calculateFilters(truck,forest,true);
     }
-
-    // doing filters
-    forest.getGroundContainer().filters = [blur];
-    forest_filtered.filters = [colorMatrix,blur];
-
-    // regenerate stage
-    this.stage.addChild(forest.getGroundContainer());
-    this.stage.addChild(forest_filtered);
-    this.stage.addChild(forest_non_filtered);
-    this.stage.addChild(level);
-    this.stage.addChild(truck.getContainer());
 
   }
 
   update(delta) {
+    if(this.weather_type) {
+      this.calculateFilters(this.truck,this.forest);
+    }
+  }
+
+  separateTrees(truck, forest) {
+    var forest_filtered = new PIXI.Container();
+    var forest_non_filtered = new PIXI.Container();
+
+    // separate trees into vision and in blurred vision
+    var child_amount = forest.getTreeContainer().children.length;
+    var children = forest.getTreeContainer().children;
+
+    for(var i = 0; i < child_amount; ++i) {
+      if(typeof children[i] == 'undefined') {
+        continue;
+      }
+
+      var temp_distance = distance({x:children[i].x, y:children[i].y}, truck.sprite.position);
+
+      if(temp_distance > this.visible_distance) {
+
+        forest_filtered.addChild(children[i]);
+      } else if (temp_distance <= this.visible_distance) {
+        forest_non_filtered.addChild(children[i]);
+      }
+    }
+
+
+    return { forest_filtered: forest_filtered, forest_non_filtered: forest_non_filtered };
+  }
+
+  calculateFilterArea(truck) {
+    var truck_viewport = {
+      x : this.game.screen.x + this.game.screen.width / 2 - this.visible_distance + (this.truck.sprite.x - this.stage.pivot.x),
+      y : this.game.screen.y + this.game.screen.height / 2 - this.visible_distance + (this.truck.sprite.y - this.stage.pivot.y)
+    };
+
+    var area = new PIXI.Rectangle(truck_viewport.x , truck_viewport.y , 2*this.visible_distance, 2*this.visible_distance);
+
+    return area;
+  }
+
+  calculateFilters(truck,forest, clear = false) {
+
+    if(clear) {
+      let blur = new PIXI.filters.BlurFilter();
+      blur.blur = 10;
+
+      this.weather_container.filters = [blur];
+      this.weather_container.filters.blendMode = PIXI.BLEND_MODES.ADD;
+
+      // level viewport
+      this.level.filters = [new PIXI.filters.VoidFilter()];
+      this.level.filterArea = this.calculateFilterArea(truck);
+
+      // truck viewport
+      truck.getContainer().filters = [new PIXI.filters.VoidFilter()];
+      truck.getContainer().filterArea = this.calculateFilterArea(truck);
+
+      // regenerate stage
+      this.stage.addChild(forest.getGroundContainer());
+      this.stage.addChild(forest.getTreeContainer());
+      this.stage.addChild(this.weather_container);
+      this.stage.addChild(this.level);
+      this.stage.addChild(truck.getContainer());
+    } else {
+      // level viewport
+      this.level.filters = [new PIXI.filters.VoidFilter()];
+      this.level.filterArea = this.calculateFilterArea(truck);
+
+      // truck viewport
+      truck.getContainer().filters = [new PIXI.filters.VoidFilter()];
+      truck.getContainer().filterArea = this.calculateFilterArea(truck);
+
+    }
 
   }
 }
