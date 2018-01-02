@@ -17,6 +17,14 @@ export default function Button(props) {
         buttonClass = buttonClass + ' navbar-tab-active';
       }
       break;
+
+    case 'editor-maplist-button':
+    case 'editor-maplist-button-selected':
+      buttonClass = buttonClass + ' editor-maplist-button';
+      if (props.buttonType === 'editor-maplist-button-selected') {
+        buttonClass = buttonClass + ' primary';
+      }
+      break;
     
     default:
       break;

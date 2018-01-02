@@ -14,8 +14,13 @@ export default class Editor extends Component {
       activeToolButton: 'road',
       activeTool: 'road_normal',
       menuOpen: false,
+      loadMenuOpen: false,
       dyingRoadLimit: 1,
-      weightlimitedRoadLimit: 0
+      weightlimitedRoadLimit: 0,
+      ableToSave: false,
+      userLevels: undefined,
+      selectedUserLevel: undefined,
+      loadedMapData: undefined
     }
 
     this.toolImagePaths = {
@@ -50,6 +55,19 @@ export default class Editor extends Component {
   componentDidMount() {
     var self = this;
     self.editorCanvas = new EditorCanvas(self.updateUI.bind(self));
+    this.loadUserLevels();
+  }
+
+  loadUserLevels() {
+    var self = this;
+    // TODO: get only user's levels
+    API.getAllMapsInfo(function(err, maps) {
+      if (err) throw err;
+      self.setState({
+        userLevels: maps
+      });
+      console.log('TODO: get only user levels!');
+    });
   }
 
   handleInputChange(e) {
@@ -62,6 +80,8 @@ export default class Editor extends Component {
 
   handleButtonClick(e) {
     var clicked = e.target.getAttribute('id');
+    var clickedClass = e.target.getAttribute('class');
+    var self = this;
 
     if (clicked === 'button-quit-editor') {
       this.editorCanvas.destroy();
@@ -104,7 +124,8 @@ export default class Editor extends Component {
     }
     if (clicked === 'button-editormenu') {
       this.setState(prevState => ({
-        menuOpen: !prevState.menuOpen
+        menuOpen: !prevState.menuOpen,
+        loadMenuOpen: false
       }));
     }
     if (clicked === 'button-save') {
@@ -113,6 +134,37 @@ export default class Editor extends Component {
       API.addMap("editorMap", JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
         console.log(err);
       });
+    }
+    if (clicked === 'button-load') {
+      // Open load menu only if levels already loaded
+      if (this.state.userLevels) {
+        this.setState({
+          loadMenuOpen: true
+        });
+      }
+    }
+    if (clicked === 'button-editor-mapmenu-back') {
+      this.setState({
+        loadMenuOpen: false,
+        selectedUserLevel: undefined
+      });
+    }
+    if (clickedClass === 'Button editor-maplist-button') {
+      let clickedParts = clicked.split('-');
+      let clickedID = clickedParts[clickedParts.length - 1];
+      this.setState({
+        selectedUserLevel: clickedID
+      });
+    }
+    if (clicked === 'button-editor-mapmenu-load') {
+      if (this.state.selectedUserLevel) {
+        API.getMapData(this.state.selectedUserLevel, function(err, mapdata) {
+          if (err) throw err;
+          self.setState({
+            loadedMapData: mapdata[0].mapdata
+          });
+        });
+      }
     }
   }
 
@@ -132,6 +184,73 @@ export default class Editor extends Component {
     });
   }
 
+  getMenuButtons() {
+    return[
+      <Button 
+        id="button-save"
+        text={LANG[this.props.lang].buttons.save}
+        buttonType='default'
+        inactive={!this.state.ableToSave}
+        handleClick={this.handleButtonClick.bind(this)} />,
+      <Button 
+        id="button-save-as"
+        text={LANG[this.props.lang].buttons.saveAs}
+        buttonType='default'
+        inactive={!this.state.ableToSave}
+        handleClick={this.handleButtonClick.bind(this)} />,
+      <Button 
+        id="button-load"
+        text={LANG[this.props.lang].buttons.loadLevel}
+        buttonType='default'
+        inactive={!this.state.userLevels}
+        handleClick={this.handleButtonClick.bind(this)} />,
+      <Button 
+        id="button-quit-editor"
+        text={LANG[this.props.lang].buttons.quit}
+        buttonType='default'
+        handleClick={this.handleButtonClick.bind(this)} />
+    ];
+  }
+
+  getLoadMenuContent() {
+    let mapImage = this.state.selectedUserLevel ? {
+      backgroundImage: 'url(/levelimage/' + this.state.selectedUserLevel + '.svg)'
+    } : {};
+
+    return (
+      <div id="editor-mapmenu">
+        <div id="editor-mapmenu-buttonrow">
+          <Button
+            id="button-editor-mapmenu-back"
+            text={LANG[this.props.lang].buttons.back}
+            buttonType='default'
+            handleClick={this.handleButtonClick.bind(this)} />
+          <Button
+            id="button-editor-mapmenu-load"
+            text={LANG[this.props.lang].buttons.loadLevel}
+            buttonType='primary'
+            inactive={this.state.selectedUserLevel ? false : true}
+            handleClick={this.handleButtonClick.bind(this)} />
+        </div>
+        <div id="editor-mapmenu-bottomrow">
+          <div id="editor-mapmenu-list">
+            {this.state.userLevels ? this.state.userLevels.map(level => {
+              return (
+                <Button
+                  key={level.id}
+                  buttonType={this.state.selectedUserLevel === level.id.toString() ? 'editor-maplist-button-selected' : 'editor-maplist-button'}
+                  id={'editor-mapmenu-level-' + level.id}
+                  text={level.name}
+                  handleClick={this.handleButtonClick.bind(this)} />
+              )
+            }) : ''}
+          </div>
+          <div id="editor-mapmenu-image" style={mapImage}></div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     var activeToolStyle = {
       backgroundImage: 'url("' + this.toolImagePaths[this.state.activeTool] + '")',
@@ -140,28 +259,8 @@ export default class Editor extends Component {
       backgroundPosition: 'center'
     }
 
-    var menuButtons = [
-      <Button 
-        id="button-save"
-        text={LANG[this.props.lang].buttons.save}
-        buttonType='default'
-        handleClick={this.handleButtonClick.bind(this)} />,
-      <Button 
-        id="button-save-as"
-        text={LANG[this.props.lang].buttons.saveAs}
-        buttonType='default'
-        handleClick={this.handleButtonClick.bind(this)} />,
-      <Button 
-        id="button-load"
-        text={LANG[this.props.lang].buttons.loadLevel}
-        buttonType='default'
-        handleClick={this.handleButtonClick.bind(this)} />,
-      <Button 
-        id="button-quit-editor"
-        text={LANG[this.props.lang].buttons.quit}
-        buttonType='default'
-        handleClick={this.handleButtonClick.bind(this)} />
-    ];
+    var menuButtons = this.getMenuButtons();    
+    var loadMenuContent = this.getLoadMenuContent();
 
     return (
       <div className="Editor">
@@ -281,9 +380,16 @@ export default class Editor extends Component {
         </div>
 
         {this.state.menuOpen ?
-          <FloatingMenu
-            id='editor-menu'
-            buttons={menuButtons} />
+          this.state.loadMenuOpen ?
+            <FloatingMenu
+              id='editor-menu'
+              type='content'
+              content={loadMenuContent} />
+            :
+            <FloatingMenu
+              id='editor-menu'
+              type='buttons'
+              buttons={menuButtons} />
           : ''
         }
         

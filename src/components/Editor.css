@@ -120,3 +120,61 @@ html {
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+#editor-mapmenu {
+  width: 500px;
+}
+
+#editor-mapmenu-buttonrow {
+  text-align: left;  
+}
+
+#button-editor-mapmenu-load {
+  float: right;
+}
+
+#editor-mapmenu-bottomrow {
+  text-align: left;
+}
+
+#editor-mapmenu-list {
+  width: 240px;
+  height: 250px;
+  margin-top: 20px;
+  padding-right: 5px;
+  text-align: left;
+  overflow-y: auto;
+  display: inline-block;
+}
+
+.editor-maplist-button {
+  height: 30px !important;
+  line-height: 30px !important;
+  width: 225px !important;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: left;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 3px;
+}
+
+.editor-maplist-button:last-child {
+  margin-bottom: 0;
+}
+
+#editor-mapmenu-image {
+  width: 250px;
+  height: 250px;
+  float: right;
+  background-color: #438b38;
+  display: inline-block;
+  margin-top: 20px;
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}

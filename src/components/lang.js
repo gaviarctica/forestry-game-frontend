@@ -90,7 +90,8 @@ export const LANG = {
       save: "Save",
       saveAs: "Save as",
       loadLevel: "Load level",
-      menu: "Menu"
+      menu: "Menu",
+      back: "Back"
     },
     logs: {
       type1: "Type 1",
@@ -192,7 +193,8 @@ export const LANG = {
       save: "Tallenna",
       saveAs: "Tallenna nimellä",
       loadLevel: "Lataa taso",
-      menu: "Valikko"
+      menu: "Valikko",
+      back: "Takaisin"
     },
     logs: {
       type1: "Tyyppi 1",
