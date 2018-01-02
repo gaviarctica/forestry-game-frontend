@@ -10,6 +10,8 @@ import Controls from './controls';
 export default class Truck {
 
   constructor(stage, controls, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats, logsRemaining) {
+    
+    this.drawable_container = new PIXI.Container();
     // store the stage so we can control the camera when we need it
     this.stage = stage;
     this.controls = controls;
@@ -43,9 +45,9 @@ export default class Truck {
     this.arrowSprite.scale.set(this.settings.ARROW_SPRITE_SCALE);
     this.arrowSprite.alpha = 0;
 
-    stage.addChild(this.arrowSprite);
-    stage.addChild(this.sprite);
-    stage.addChild(this.clawSprite);
+    this.drawable_container.addChild(this.arrowSprite);
+    this.drawable_container.addChild(this.sprite);
+    this.drawable_container.addChild(this.clawSprite);
 
     this.previous_direction = -1;
     this.logsOnLevel = logsOnLevel;
@@ -59,10 +61,14 @@ export default class Truck {
     this.selectedItem = null;
     this.selectableItems = [];
     this.selectGraphic = new PIXI.Graphics();
-    stage.addChild(this.selectGraphic);
+    this.drawable_container.addChild(this.selectGraphic);
 
     this.stats = stats;
     this.logsRemaining = logsRemaining;
+  }
+
+  getContainer() {
+    return this.drawable_container;
   }
 
   // TODO: maybe keep up with the log count in pickLog, depositLog functions to avoid unnecessary for looping
@@ -325,11 +331,11 @@ export default class Truck {
   // returns boolean if the log was picked up
   pickLog(log) {
     if(this.logContainer.addLog(log, this.sprite)) {
-      this.stats.updateLogs(this.logContainer);     
+      this.stats.updateLogs(this.logContainer);
       this.logsRemaining[log.type] -= 1;
       this.stats.updateUI({
         logsRemainingOnGround: this.logsRemaining
-      }); 
+      });
       return true;
     }
 
@@ -410,8 +416,8 @@ export default class Truck {
         this.selectedItem.getPosition().y - this.sprite.y,
         this.selectedItem.getPosition().x - this.sprite.x);
       // Make claw be on top of line
-      this.stage.removeChild(this.clawSprite);
-      this.stage.addChild(this.clawSprite);
+      this.drawable_container.removeChild(this.clawSprite);
+      this.drawable_container.addChild(this.clawSprite);
       this.clawSprite.alpha = 1;
     }
   }

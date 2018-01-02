@@ -6,6 +6,7 @@ import Forest from './forest';
 import Settings from './settings';
 import {Key} from './controls';
 import Controls from './controls';
+import Weather from './weather';
 
 export default class GameCanvas {
   constructor(mapData, updateUI) {
@@ -17,7 +18,10 @@ export default class GameCanvas {
     this.mapData = mapData;
 
     this.forest = new Forest(this.game.stage, mapData);
+    this.game.stage.addChild(this.forest.getGroundContainer());
+    this.game.stage.addChild(this.forest.getTreeContainer());
     this.forest.buildGround();
+    this.forest.buildTrees();
 
     document.getElementById('canvas-game').appendChild(game.view);
     game.view.addEventListener('contextmenu', (e) => {
@@ -79,7 +83,9 @@ export default class GameCanvas {
                            this.stats,
                            this.logsRemaining);
 
-    this.forest.buildTrees();
+    this.game.stage.addChild(this.truck.getContainer());
+
+    this.weather = new Weather(this.game.stage, this.forest, this.map.getStage(), this.truck, game, this.mapData.weather);
 
     this.setupCameraControl(this.truck);
     this.update = this.update.bind(this);
@@ -180,6 +186,7 @@ export default class GameCanvas {
     });
 
     this.controls.update();
+    this.weather.update(delta);
   }
 
   isInEndGameState() {
@@ -205,9 +212,10 @@ export default class GameCanvas {
     if (this.settings.debug.FRAMERATE_COUNTER) {
       clearInterval(this.framerateCounter);
     }
-    
+
     var self = this;
     setTimeout(function() {
+
       self.game.destroy(true);
     }, 350); // Wait for game view exit animation to finish
   }

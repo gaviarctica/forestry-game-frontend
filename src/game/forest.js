@@ -6,6 +6,9 @@ export default class Forest {
 	constructor(stage, mapdata) {
 
 		this.stage = stage;
+		this.ground_container = new PIXI.Container();
+		this.tree_container = new PIXI.Container();
+
 		this.mapdata = mapdata;
 		this.randomTrees = [
 			'/static/tree1.svg',
@@ -23,7 +26,7 @@ export default class Forest {
 		this.rockFrequency = 0.5;
 
 		this.xMin = this.yMin = this.xMax = this.yMax = 0;
-		
+
 		for (var i = 0; i < this.mapdata.logdeposits.length; i++) {
 			this.obstacles.push({type:'logdeposit', x:this.mapdata.logdeposits[i].x, y:this.mapdata.logdeposits[i].y});
 			this.updateMinMax(this.mapdata.logdeposits[i]);
@@ -46,14 +49,21 @@ export default class Forest {
 	buildGround() {
 		var texure = PIXI.Texture.fromImage('/static/ground.svg');
 		var tilingSprite = new PIXI.extras.TilingSprite(
-			texure, 
+			texure,
 			10000,
 			10000
 		  );
 		tilingSprite.x = -5000;
 		tilingSprite.y = -5000;
 		tilingSprite.tileScale.set(0.05);
-		this.stage.addChild(tilingSprite);
+		// clearing ground container
+		this.ground_container.removeChildren();
+		this.ground_container.addChild(tilingSprite);
+		//this.stage.addChild(this.ground_container);
+	}
+
+	getGroundContainer() {
+		return this.ground_container;
 	}
 
 	buildTrees() {
@@ -73,22 +83,26 @@ export default class Forest {
 				var y_offset = y + (Math.floor(Math.random() * (70 - 30 + 1)) + 30);
 				var x_offset_rock = x + (Math.floor(Math.random() * (90 - 10 + 1)) + 10);
 				var y_offset_rock = y + (Math.floor(Math.random() * (90 - 10 + 1)) + 10);
-				
+
 				inrange = this.checkRange(this.obstacles, x_offset, y_offset);
 				inrange_rock = this.checkRange(this.obstacles, x_offset_rock, y_offset_rock);
 
 				if (!inrange_rock && Math.random() < this.rockFrequency) {
-					this.drawSprite('/static/rock.svg', x_offset_rock, y_offset_rock);					
+					this.drawSprite('/static/rock.svg', x_offset_rock, y_offset_rock);
 				}
 
 				if (!inrange) {
 					this.drawSprite(this.randomTrees[Math.floor(Math.random()*this.randomTrees.length)], x_offset, y_offset);
 				}
-				
+
 				x = x + 100;
 			}
 			y = y + 100;
 		}
+	}
+
+	getTreeContainer() {
+		return this.tree_container;
 	}
 
 	updateMinMax(point) {
@@ -123,6 +137,6 @@ export default class Forest {
 
 		this.sprite.position.x = x;
 		this.sprite.position.y = y;
-		this.stage.addChild(this.sprite);
+		this.tree_container.addChild(this.sprite);
 	}
 }
