@@ -36,9 +36,9 @@ export default class Editor extends Component {
 
     this.toolImagePaths = {
       'road_normal': '/static/road.png',
-      'road_dying': '/static/road.png',
-      'road_weightlimit': '/static/road.png',
-      'road_oneway': '/static/road.png',
+      'road_dying': '/static/road_water.png',
+      'road_weightlimit': '/static/road_mud.png',
+      'road_oneway': '/static/road_oneway2.png',
       'logs_0': '/static/log0.png',
       'logs_1': '/static/log1.png',
       'logs_2': '/static/log2.png',
