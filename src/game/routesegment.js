@@ -206,7 +206,18 @@ export default class RouteSegment {
     // if not one way road we continue
     if(!this.one_way_road.one_way_road) return true;
 
-    if (Math.round(dir * angle * 1000) === Math.round((this.road_dir_angle - Math.PI)*1000)) {
+    console.log("Angle: " + angle);
+    console.log("Dir: " + dir);
+    var road_fix = dir > 0 ? 0 : Math.PI;
+    console.log("1st Par: " + Math.round(angle * 1000) );
+    console.log("Road angle: " + this.road_dir_angle);
+    console.log("2nd Par: " + Math.round((this.road_dir_angle + road_fix - Math.PI) * 1000));
+
+    // these are actually normalized angles with sin function
+    var car_angle = Math.round(((angle + 2*Math.PI) % (2*Math.PI)) * 1000);
+    var road_angle = Math.round(((this.road_dir_angle + road_fix - Math.PI + 2*Math.PI) % (2*Math.PI)) * 1000);
+
+    if (car_angle === road_angle) {
       return true;
     }
 
