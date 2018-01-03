@@ -12,7 +12,7 @@ export default class DepositTool extends PlaceTool {
     this.minDistanceFromRoad = 70;
     this.maxDistanceFromRoad = 50;
 
-    this.type = -1;
+    this.type = undefined;
   }
 
   activate() {
