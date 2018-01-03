@@ -20,8 +20,8 @@ export default class Level {
     this.logDeposits = [];
 
     this.routeTexture = PIXI.Texture.fromImage('/static/road.png');
-    this.dyingRouteTexture = PIXI.Texture.fromImage('/static/road_mud.png');
-    this.weightlimitedRouteTexture = PIXI.Texture.fromImage('/static/road_water.png');
+    this.dyingRouteTexture = PIXI.Texture.fromImage('/static/road_water.png');
+    this.weightlimitedRouteTexture = PIXI.Texture.fromImage('/static/road_mud.png');
     this.onewayRouteTexture = PIXI.Texture.fromImage('/static/road_oneway.png');
     this.onewayRouteTextureReverse = PIXI.Texture.fromImage('/static/road_oneway2.png');
     this.routeTransitionTexture = PIXI.Texture.fromImage('/static/road_transition.png');
@@ -68,10 +68,12 @@ export default class Level {
     let segmentTexture;
     let anomalyText;
     let transitionTexture;
+    let oneway;
 
     for(var j = 0; j < this.routeSegments.length; ++j) {
       var spos = this.routeSegments[j].startNode.getPos();
       var epos = this.routeSegments[j].endNode.getPos();
+      oneway = false;
 
       // calculating anomalies
       if(this.routeSegments[j].anomalies.length > 0) {
@@ -85,6 +87,7 @@ export default class Level {
             anomalyText = this.routeSegments[j].getWeightLimitText();
           }
           if(typeof this.routeSegments[j].anomalies[i]['one_way_road'] !== 'undefined') {
+            oneway = true;
             segmentTexture = this.onewayRouteTexture;
             // Use reversed texture if neccessary
             if (this.routeSegments[j].anomalies[i].to === this.routeSegments[j].getPreviousNode().id) {
@@ -113,7 +116,6 @@ export default class Level {
 
       // If anomalies, add text and transition textures
       if(this.routeSegments[j].anomalies.length > 0) {
-        this.stage.addChild(anomalyText);
 
         transitionTexture = new PIXI.Sprite.from(this.routeTransitionTexture);
         transitionTexture.anchor.set(0.5, 0);
@@ -130,6 +132,10 @@ export default class Level {
         transitionTexture.y = epos.y;
         transitionTexture.rotation = angle;
         this.stage.addChild(transitionTexture);
+
+        if (!oneway) {
+          this.stage.addChild(anomalyText);
+        }
       }
     }
 
