@@ -233,9 +233,9 @@ export default class Editor extends Component {
         var mapInfo = this.editorCanvas.levelInfo();
         // TODO: overwrite instead of add new
         API.addMap("editorMap", JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
-          console.log(err);
+          if (err) throw err;
 
-          self.updatePreviousSavedStatus();
+          self.postSaveOperations(mapData);
         });
       }
     }
@@ -308,16 +308,23 @@ export default class Editor extends Component {
     var mapInfo = this.editorCanvas.levelInfo();
     var self = this;
     API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
-      console.log(err);
+      if (err) throw err;
 
-      self.updatePreviousSavedStatus();
-      // Make loaded data defined so further edits can be overwritten (default save)
-      self.setState({
-        loadedMapData: mapData
-      });
-      // Update list of user's maps
-      this.loadUserLevels();
+      self.postSaveOperations(mapData);
     });
+  }
+
+  postSaveOperations(mapData) {
+    this.updatePreviousSavedStatus();
+    // Make loaded data defined so further edits can be overwritten (default save)
+    // Close menu
+    this.setState({
+      loadedMapData: mapData,
+      menuOpen: false,
+      saveAsMenuOpen: false
+    });
+    // Update list of user's maps
+    this.loadUserLevels();
   }
 
   handleSaveAsSecondaryClick() {

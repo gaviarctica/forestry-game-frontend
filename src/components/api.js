@@ -189,6 +189,7 @@ export const API = {
 
     fetch(url, init).then(function (response) {
       if (response.status === 200) {
+        callback(err);
         return;
       } else {
         err = 'Error adding map data.';
