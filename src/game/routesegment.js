@@ -14,6 +14,11 @@ export default class RouteSegment {
     this.dying_road_text = new PIXI.Text( 0 + 'm',this.anomaly_settings.DYING_ROAD_TEXT_FONT);
     this.weight_limit_text = new PIXI.Text( 0 + 'kg',this.anomaly_settings.WEIGHT_LIMIT_TEXT_FONT);
 
+    this.dying_road_text.anchor.set(0.5);
+    this.dying_road_text.scale.set(this.anomaly_settings.DYING_ROAD_TEXT_SCALE);
+    this.weight_limit_text.anchor.set(0.5);
+    this.weight_limit_text.scale.set(this.anomaly_settings.WEIGHT_LIMIT_TEXT_SCALE);
+
     this.one_way_road_mark = new PIXI.Sprite.fromImage('/static/one_dir_arrow.png');
     this.one_way_road_mark.anchor.set(0.5, 0.5);
     this.one_way_road_mark.scale.set(this.anomaly_settings.ONE_DIR_ARROW_SPRITE_SCALE);
@@ -95,11 +100,11 @@ export default class RouteSegment {
       this.anomalies = [];
     }
 
-    this.dying_road_text.x = currentPosCalc.x - this.dying_road_text.width / 2;
-    this.dying_road_text.y = currentPosCalc.y - this.dying_road_text.height / 2;
+    this.dying_road_text.x = currentPosCalc.x;
+    this.dying_road_text.y = currentPosCalc.y;
 
-    this.weight_limit_text.x = currentPosCalc.x - this.weight_limit_text.width / 2;
-    this.weight_limit_text.y = currentPosCalc.y - this.weight_limit_text.height / 2;
+    this.weight_limit_text.x = currentPosCalc.x;
+    this.weight_limit_text.y = currentPosCalc.y;
 
     this.one_way_road_mark.rotation = this.road_dir_angle + Math.PI / 2;
     this.one_way_road_mark.x = currentPosCalc.x;

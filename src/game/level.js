@@ -18,7 +18,13 @@ export default class Level {
     this.routeSegments = [];
     this.logs = [];
     this.logDeposits = [];
+
     this.routeTexture = PIXI.Texture.fromImage('/static/road.png');
+    this.dyingRouteTexture = PIXI.Texture.fromImage('/static/road_water.png');
+    this.weightlimitedRouteTexture = PIXI.Texture.fromImage('/static/road_mud.png');
+    this.onewayRouteTexture = PIXI.Texture.fromImage('/static/road_oneway.png');
+    this.onewayRouteTextureReverse = PIXI.Texture.fromImage('/static/road_oneway2.png');
+    this.routeTransitionTexture = PIXI.Texture.fromImage('/static/road_transition.png');
 
     if (map) {
       this.parseRouteNodes();
@@ -59,24 +65,45 @@ export default class Level {
 
   drawRoutes() {
 
-    // drawing nodes first
-    for(let [id, routeNode] of this.routeNodes) {
-      var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
-      intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
-      intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
-      intersectionSprite.x = routeNode.getPos().x;
-      intersectionSprite.y = routeNode.getPos().y;
-      this.stage.addChild(intersectionSprite);
-    }
+    let segmentTexture;
+    let anomalyText;
+    let transitionTexture;
+    let oneway;
 
     for(var j = 0; j < this.routeSegments.length; ++j) {
       var spos = this.routeSegments[j].startNode.getPos();
       var epos = this.routeSegments[j].endNode.getPos();
+      oneway = false;
+
+      // calculating anomalies
+      if(this.routeSegments[j].anomalies.length > 0) {
+        for(var i = 0; i < this.routeSegments[j].anomalies.length; ++i) {
+          if(typeof this.routeSegments[j].anomalies[i]['dying_road'] !== 'undefined') {
+            segmentTexture = this.dyingRouteTexture;
+            anomalyText = this.routeSegments[j].getDyingRoadText();
+          }
+          if(typeof this.routeSegments[j].anomalies[i]['weight_limit'] !== 'undefined') {
+            segmentTexture = this.weightlimitedRouteTexture;
+            anomalyText = this.routeSegments[j].getWeightLimitText();
+          }
+          if(typeof this.routeSegments[j].anomalies[i]['one_way_road'] !== 'undefined') {
+            oneway = true;
+            segmentTexture = this.onewayRouteTexture;
+            // Use reversed texture if neccessary
+            if (this.routeSegments[j].anomalies[i].to === this.routeSegments[j].getPreviousNode().id) {
+              segmentTexture = this.onewayRouteTextureReverse;
+            }
+            anomalyText = this.routeSegments[j].getOneWayRoadSprite();
+          }
+        }
+      } else {
+        segmentTexture = this.routeTexture;
+      }
 
       var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
       var currentPos = {x: spos.x, y: spos.y};
       var tilingSprite = new PIXI.extras.TilingSprite(
-        this.routeTexture,
+        segmentTexture,
         this.settings.ROAD_SPRITE_LENGTH,
         distance(spos, epos)
       );
@@ -87,20 +114,39 @@ export default class Level {
       tilingSprite.y = currentPos.y;
       this.stage.addChild(tilingSprite);
 
-      // calculating anomalies
+      // If anomalies, add text and transition textures
       if(this.routeSegments[j].anomalies.length > 0) {
-        for(var i = 0; i < this.routeSegments[j].anomalies.length; ++i) {
-          if(typeof this.routeSegments[j].anomalies[i]['dying_road'] !== 'undefined') {
-            this.stage.addChild(this.routeSegments[j].getDyingRoadText());
-          }
-          if(typeof this.routeSegments[j].anomalies[i]['weight_limit'] !== 'undefined') {
-            this.stage.addChild(this.routeSegments[j].getWeightLimitText());
-          }
-          if(typeof this.routeSegments[j].anomalies[i]['one_way_road'] !== 'undefined') {
-            this.stage.addChild(this.routeSegments[j].getOneWayRoadSprite());
-          }
+
+        transitionTexture = new PIXI.Sprite.from(this.routeTransitionTexture);
+        transitionTexture.anchor.set(0.5, 0);
+        transitionTexture.scale.set(0.1);
+        transitionTexture.x = spos.x;
+        transitionTexture.y = spos.y;
+        transitionTexture.rotation = angle + Math.PI;
+        this.stage.addChild(transitionTexture);
+
+        transitionTexture = new PIXI.Sprite.from(this.routeTransitionTexture);
+        transitionTexture.anchor.set(0.5, 0);
+        transitionTexture.scale.set(0.1);
+        transitionTexture.x = epos.x;
+        transitionTexture.y = epos.y;
+        transitionTexture.rotation = angle;
+        this.stage.addChild(transitionTexture);
+
+        if (!oneway) {
+          this.stage.addChild(anomalyText);
         }
       }
+    }
+
+    // Draw nodes
+    for(let [id, routeNode] of this.routeNodes) {
+      var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
+      intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
+      intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
+      intersectionSprite.x = routeNode.getPos().x;
+      intersectionSprite.y = routeNode.getPos().y;
+      this.stage.addChild(intersectionSprite);
     }
   }
 
