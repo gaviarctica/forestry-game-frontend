@@ -73,7 +73,11 @@ export const LANG = {
       onewayRoad: "One-way road",
       maxCrossings: "Max crossings",
       maxLoad: "Max load",
-      saveAsNewLevel: "Save as new level"
+      saveAsNewLevel: "Save as new level",
+      weather: "Weather",
+      enableFog: "Enable fog",
+      fogDensity: "Density",
+      fogVisibility: "Visibility"
     },
     buttons: {
       startGame: "Start game",
@@ -178,7 +182,11 @@ export const LANG = {
       onewayRoad: "Yksisuuntainen tie",
       maxCrossings: "Ylityskerrat",
       maxLoad: "Maksimikuorma",
-      saveAsNewLevel: "Tallenna uutena tasona"
+      saveAsNewLevel: "Tallenna uutena tasona",
+      weather: "Säätila",
+      enableFog: "Sumu",
+      fogDensity: "Tiheys",
+      fogVisibility: "Näkyvyys"
     },
     buttons: {
       startGame: "Aloita peli",

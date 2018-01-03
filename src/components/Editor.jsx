@@ -18,13 +18,20 @@ export default class Editor extends Component {
       loadMenuOpen: false,
       saveAsMenuOpen: false,
       dyingRoadLimit: 1,
+      dyingRoadLimitIllegal: false,
       weightlimitedRoadLimit: 0,
+      weightlimitedRoadLimitIllegal: false,
+      fogEnabled: false,
+      fogDensity: 0.75,
+      fogDensityIllegal: false,
+      fogVisibility: 200,
+      fogVisibilityIllegal: false,
       ableToSave: false,
-      ableToSaveAs: false,
       userLevels: undefined,
       selectedUserLevel: undefined,
       loadedMapData: undefined,
-      loadedMapID: undefined
+      loadedMapID: undefined,
+      previousSavedStatus: undefined
     }
 
     this.toolImagePaths = {
@@ -59,7 +66,61 @@ export default class Editor extends Component {
   componentDidMount() {
     var self = this;
     self.editorCanvas = new EditorCanvas(self.updateUI.bind(self));
+    this.updatePreviousSavedStatus();
     this.loadUserLevels();
+  }
+
+  updatePreviousSavedStatus() {
+    this.setState({
+      previousSavedStatus: {
+        fogEnabled: this.state.fogEnabled,
+        fogDensity: this.state.fogDensity,
+        fogVisibility: this.state.fogVisibility
+      }
+    });
+  }
+
+  statusChanged() {
+    // TODO: also ask canvas if mapdata has been edited
+    var currentStatus = {
+      fogEnabled: this.state.fogEnabled,
+      fogDensity: this.state.fogDensity,
+      fogVisibility: this.state.fogVisibility
+    }
+    let feSame = currentStatus.fogEnabled === this.state.previousSavedStatus.fogEnabled;
+    let fdSame = currentStatus.fogDensity.toString() === this.state.previousSavedStatus.fogDensity.toString();
+    let fvSame = currentStatus.fogVisibility.toString() === this.state.previousSavedStatus.fogVisibility.toString();
+    let feSameFdChanged = feSame && !fdSame;
+    let feSameFvChanged = feSame && !fvSame;
+    if (feSame && !currentStatus.fogEnabled) {
+      return false;
+    }
+    if (!feSame || feSameFdChanged || feSameFvChanged) {
+      return true;
+    }
+    return false;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Check if able to save
+    if (this.statusChanged()) {
+      if (!this.state.ableToSave && this.inputsLegalToSave()) {
+        this.setState({
+          ableToSave: true
+        });
+        return;
+      }
+    } else if (this.state.ableToSave) {
+      this.setState({
+        ableToSave: false
+      });
+      return;
+    }
+    if (this.state.ableToSave && !this.inputsLegalToSave()) {
+      this.setState({
+        ableToSave: false
+      });
+    }
   }
 
   loadUserLevels() {
@@ -77,8 +138,35 @@ export default class Editor extends Component {
   handleInputChange(e) {
     const name = e.target.name;
     const value = e.target.value;
+    let hasMax = e.target.max !== "";
+    let hasMin = e.target.min !== "";
+    let hasBoth = hasMax && hasMin;
+    if (hasBoth && Number(value) >= Number(e.target.min) && Number(value) <= Number(e.target.max) ||
+        !hasBoth && hasMin && Number(value) >= Number(e.target.min) ||
+        !hasBoth && hasMax && Number(value) <= Number(e.target.max) ||
+        !hasMin && !hasMax) {
+      var illegal = false;
+    } else {
+      var illegal = true;
+    }
     this.setState({
-      [name]: value
+      [name]: value,
+      [[name] + 'Illegal']: illegal
+    });
+  }
+
+  inputsLegalToSave() {
+    if (!this.state.fogDensityIllegal && !this.state.fogVisibilityIllegal) {
+      return true;
+    }
+    return false;
+  }
+
+  handleCheckboxChange(e) {
+    const name = e.target.name;
+    const checked = e.target.checked;
+    this.setState({
+      [name]: checked
     });
   }
 
@@ -146,6 +234,8 @@ export default class Editor extends Component {
         // TODO: overwrite instead of add new
         API.addMap("editorMap", JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
           console.log(err);
+
+          self.updatePreviousSavedStatus();
         });
       }
     }
@@ -177,22 +267,56 @@ export default class Editor extends Component {
     }
     if (clicked === 'button-editor-mapmenu-load') {
       if (this.state.selectedUserLevel) {
-        API.getMapData(this.state.selectedUserLevel, function(err, mapdata) {
-          if (err) throw err;
-          self.setState({
-            loadedMapData: mapdata[0].mapdata,
-            loadedMapID: self.state.selectedUserLevel
-          });
+        this.loadSelectedMapData();
+        this.setState({
+          menuOpen: false,
+          loadMenuOpen: false
         });
       }
     }
   }
 
+  loadSelectedMapData() {
+    var self = this;
+    API.getMapData(this.state.selectedUserLevel, function(err, mapdata) {
+      if (err) throw err;
+
+      let loadedMapData = mapdata[0].mapdata;
+      if (loadedMapData.hasOwnProperty('weather') &&
+          loadedMapData.weather.hasOwnProperty('type') &&
+          loadedMapData.weather.type === 'fog') {
+        self.setState({
+          fogEnabled: true,
+          fogDensity: loadedMapData.weather.density,
+          fogVisibility: loadedMapData.weather.visibility,
+          loadedMapData: loadedMapData,
+          loadedMapID: self.state.selectedUserLevel
+        });
+      } else {
+        self.setState({
+          fogEnabled: false,
+          loadedMapData: mapdata[0].mapdata,
+          loadedMapID: self.state.selectedUserLevel
+        });
+      }
+      self.updatePreviousSavedStatus();
+    });
+  }
+
   handleSaveAsPrimaryClick(newMapName) {
     var mapData = this.editorCanvas.serializeLevel();
     var mapInfo = this.editorCanvas.levelInfo();
+    var self = this;
     API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
       console.log(err);
+
+      self.updatePreviousSavedStatus();
+      // Make loaded data defined so further edits can be overwritten (default save)
+      self.setState({
+        loadedMapData: mapData
+      });
+      // Update list of user's maps
+      this.loadUserLevels();
     });
   }
 
@@ -230,7 +354,7 @@ export default class Editor extends Component {
         id="button-save-as"
         text={LANG[this.props.lang].buttons.saveAs}
         buttonType='default'
-        inactive={!this.state.ableToSaveAs}
+        inactive={!this.state.ableToSave}
         handleClick={this.handleButtonClick.bind(this)} />,
       <Button 
         id="button-load"
@@ -391,10 +515,11 @@ export default class Editor extends Component {
             style={this.state.activeTool !== 'road_dying' ? {display: 'none'} : {}} >
               {LANG[this.props.lang].editor.maxCrossings + ': '}
               <input
+                className={this.state.dyingRoadLimitIllegal ? 'input-illegal': ''}
                 type="number"
                 min="1"
                 value={this.state.dyingRoadLimit}
-                name="dyingRoadLimit" 
+                name="dyingRoadLimit"
                 onChange={this.handleInputChange.bind(this)} />
           </div>
           <div
@@ -403,6 +528,7 @@ export default class Editor extends Component {
             style={this.state.activeTool !== 'road_weightlimit' ? {display: 'none'} : {}} >
               {LANG[this.props.lang].editor.maxLoad + ': '}
               <input
+                className={this.state.weightlimitedRoadLimitIllegal ? 'input-illegal': ''}
                 type="number"
                 min="0"
                 step={this.settings.log.Weight}
@@ -410,6 +536,49 @@ export default class Editor extends Component {
                 name="weightlimitedRoadLimit"
                 onChange={this.handleInputChange.bind(this)} />
               {' kg'}
+          </div>
+
+          <div className="toolbar-header">{LANG[this.props.lang].editor.weather}</div>
+          <div
+            className="details-weather-checkbox"
+            id="details-weather-fog-enabled" >
+            <input
+              type="checkbox"
+              name="fogEnabled"
+              id="fogEnabled"
+              checked={this.state.fogEnabled}
+              onChange={this.handleCheckboxChange.bind(this)} />
+            <label htmlFor="fogEnabled">{LANG[this.props.lang].editor.enableFog}</label>
+          </div>
+          <div
+            className="details-weather-setting"
+            id="details-weather-fog-density"
+            style={!this.state.fogEnabled ? {display: 'none'} : {}} >
+              {LANG[this.props.lang].editor.fogDensity + ': '}
+              <input
+                className={this.state.fogDensityIllegal ? 'input-illegal': ''}
+                type="number"
+                min="0"
+                max="1"
+                step="0.05"
+                value={this.state.fogDensity}
+                name="fogDensity" 
+                onChange={this.handleInputChange.bind(this)} />
+          </div>
+          <div
+            className="details-weather-setting"
+            id="details-weather-fog-visibility"
+            style={!this.state.fogEnabled ? {display: 'none'} : {}} >
+              {LANG[this.props.lang].editor.fogVisibility + ': '}
+              <input
+                className={this.state.fogVisibilityIllegal ? 'input-illegal': ''}
+                type="number"
+                min="50"
+                max="1000"
+                step="10"
+                value={this.state.fogVisibility}
+                name="fogVisibility" 
+                onChange={this.handleInputChange.bind(this)} />
           </div>
         </div>
 
