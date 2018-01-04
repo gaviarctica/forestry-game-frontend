@@ -15,6 +15,14 @@ export function length(v) {
   return Math.sqrt(v.x*v.x + v.y*v.y);
 }
 
+export function hasMoved(point1, point2) {
+  if((point1.x !== point2.x) || (point1.y !== point2.y)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export function endpointByStartPointDistanceAndAngle(startpoint, distance, angle) {
   var endpoint = {
     x: startpoint.x + Math.cos(angle) * distance,

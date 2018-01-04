@@ -1,4 +1,4 @@
-import {distance} from './helpers';
+import {distance, hasMoved} from './helpers';
 import Settings from './settings';
 
 export default class Stats {
@@ -59,7 +59,7 @@ export default class Stats {
   }
 
   calculateFuel(logsOnBoard) {
-    this.fuelUsed = this.fuelUsed + ((this.settings.BASE_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.timeDelta(this.time)) / this.settings.HOUR ;
+    this.fuelUsed = this.fuelUsed + (((this.settings.BASE_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.timeDelta(this.time)) / this.settings.HOUR);
   }
 
   getFuelUsed() {
@@ -69,7 +69,6 @@ export default class Stats {
   timeDelta(time) {
     let timePassed = this.time - this.previousTime;
     this.previousTime = time;
-    console.log(timePassed)
     return timePassed;
   }
 
@@ -78,7 +77,9 @@ export default class Stats {
       this.previousPoint = point;
     }
 
-    if((point.x !== this.previousPoint.x) || (point.y !== this.previousPoint.y)) {
+    if( hasMoved(point, this.previousPoint) ) {
+      // s = vt => t = s/v
+      this.time = this.time + (distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS)/this.settings.AVG_VELOCITY;
       this.distanceMoved += distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS;
       this.previousPoint = point;
     }
@@ -91,5 +92,4 @@ export default class Stats {
   getCost() {
     return(this.settings.SALARY/this.settings.HOUR*this.time + this.fuelUsed*this.settings.DIESEL_PRICE);
   }
-
 }
