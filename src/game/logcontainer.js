@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
 
 export default class LogContainer {
-  constructor() {
-    this.log_rows = [ new LogRow(ROWTYPE.SHORT),
-      new LogRow(ROWTYPE.SHORT),
-      new LogRow(ROWTYPE.NORMAL),
-      new LogRow(ROWTYPE.NORMAL),
-      new LogRow(ROWTYPE.NORMAL)];
+  constructor(stats) {
+    this.log_rows = [ new LogRow(ROWTYPE.SHORT, stats),
+      new LogRow(ROWTYPE.SHORT, stats),
+      new LogRow(ROWTYPE.NORMAL, stats),
+      new LogRow(ROWTYPE.NORMAL, stats),
+      new LogRow(ROWTYPE.NORMAL, stats)];
   }
 
   getLogCount() {
@@ -18,9 +18,9 @@ export default class LogContainer {
   // tries to add log to container: false if cannot
   addLog(log, sprite) {
     for (var i = 0; i < this.log_rows.length; ++i) {
-      if(this.log_rows[i].addLog(log,sprite)) {
-        return true;
-      }
+        if(this.log_rows[i].addLog(log,sprite)) {
+          return true;
+        }
     }
 
     return false;
@@ -28,9 +28,10 @@ export default class LogContainer {
 
   unloadLogTo(deposit, deposits) {
     for( var i = this.log_rows.length-1; i >= 0; --i) {
-      if(this.log_rows[i].unloadLogsTo(deposit, deposits)) return true;
+      if(this.log_rows[i].unloadLogsTo(deposit, deposits)) {
+        return true;
+      }
     }
-
     return false;
   }
 
@@ -73,7 +74,8 @@ var ROWTYPE = {
 }
 
 class LogRow {
-  constructor(type) {
+  constructor(type, stats) {
+    this.stats = stats;
     this.type = type;
     this.logs = Array(type.log_amount);
     for (var i = 0; i < this.logs.length; ++i) {
@@ -100,7 +102,6 @@ class LogRow {
         return true;
       }
     }
-
     return false;
   }
 
@@ -124,6 +125,7 @@ class LogRow {
 
       if (deposit.addLog(log, levelHasType)) {
         this.logs[this.type.traverse_order[this.type.log_amount-x-1]] = null;
+        this.stats.addLogDelay();
         return true;
       }
     }
@@ -140,9 +142,7 @@ class LogRow {
       for(var j = 0; j < deposit.types.length; ++j) {
         if(type === deposit.types[j]) return true;
       }
-
     }
-
     return false;
   }
 
