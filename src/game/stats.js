@@ -5,6 +5,7 @@ export default class Stats {
   constructor(updateUI) {
     this.updateUI = updateUI;
     this.time = 0;
+    this.previousTime = 0;
     this.distanceMoved = 0;
     this.fuelUsed = 0;
     this.previousPoint = null;
@@ -30,6 +31,11 @@ export default class Stats {
     });
   }
 
+  // Each time log is picked up increase time by 15 seconds
+  addLogDelay() {
+    this.time += this.settings.LOG_DELAY
+  }
+
   updateLogs(logUpdate) {
     var formattedLogUpdate = {
       logs: [
@@ -41,11 +47,10 @@ export default class Stats {
     };
 
     var logUpdateX = logUpdate.getFormattedLogUpdate();
-
     logUpdateX.forEach((column, i) => {
       column.forEach((slot, j) => {
         if (slot !== null) {
-          formattedLogUpdate.logs[i][4-j] = slot.type;
+          formattedLogUpdate.logs[i][4-j] = slot.type;          
         }
       });
     });
@@ -54,11 +59,18 @@ export default class Stats {
   }
 
   calculateFuel(logsOnBoard) {
-    this.fuelUsed = ((this.settings.BASE_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.time) / this.settings.HOUR;
+    this.fuelUsed = this.fuelUsed + ((this.settings.BASE_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.timeDelta(this.time)) / this.settings.HOUR ;
   }
 
   getFuelUsed() {
     return this.fuelUsed.toFixed(this.settings.FUEL_USED_DECIMALS);
+  }
+
+  timeDelta(time) {
+    let timePassed = this.time - this.previousTime;
+    this.previousTime = time;
+    console.log(timePassed)
+    return timePassed;
   }
 
   calculateDistance(point) {

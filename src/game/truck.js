@@ -55,7 +55,7 @@ export default class Truck {
     this.maxDistanceToDeposit = this.settings.MAX_DISTANCE_TO_DEPOSIT;
 
     // experimental logcontainer
-    this.logContainer = new LogContainer();
+    this.logContainer = new LogContainer(stats);
 
     // currently selected item (either automaticly, by mouse or q/e keys)
     this.selectedItem = null;
@@ -74,19 +74,6 @@ export default class Truck {
   // TODO: maybe keep up with the log count in pickLog, depositLog functions to avoid unnecessary for looping
   logCount() {
     return this.logContainer.getLogCount();
-  }
-
-  // Calculates the distance truck has moved during an instance of gameplay
-  calcDistance(point) {
-    if(this.previousPoint === null) {
-      this.previousPoint = this.currentSegment.getPositionAt(this.pointDelta);
-    }
-
-    if((this.previousPoint.x !== point.x) || (this.previousPoint.y !== point.y)) {
-      this.distanceMoved += distance(this.previousPoint, {x:this.sprite.x, y:this.sprite.y}) / this.map_settings.PIXELS_TO_METERS;
-      this.calcFuelBurned();
-      this.previousPoint = point;
-    }
   }
 
   getSpeed(reverse = false) {
@@ -336,6 +323,7 @@ export default class Truck {
       this.stats.updateUI({
         logsRemainingOnGround: this.logsRemaining
       });
+      this.stats.addLogDelay();      
       return true;
     }
 
@@ -344,10 +332,9 @@ export default class Truck {
 
   unloadLogTo(deposit) {
     if(this.logContainer.unloadLogTo(deposit, this.depositsOnLevel)) {
-      this.stats.updateLogs(this.logContainer);
+      this.stats.updateLogs(this.logContainer);   
       return true;
     }
-
     return false;
   }
 
