@@ -41,6 +41,8 @@ export default class Settings {
     };
 
     this.stats = {
+      // average velocity in m/s
+      AVG_VELOCITY : 3,
       LOG_DELAY : 15,
       BASE_MILEAGE : 5,
       LOG_FACTOR : 0.5,
