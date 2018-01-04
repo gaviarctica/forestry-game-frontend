@@ -5,8 +5,11 @@ export default class Stats {
   constructor(updateUI) {
     this.updateUI = updateUI;
     this.time = 0;
+    this.startTime = 0;
+    this.stopTime = 0;
     this.previousTime = 0;
     this.distanceMoved = 0;
+    this.moved = false;
     this.fuelUsed = 0;
     this.previousPoint = null;
     var self = this;
@@ -72,16 +75,43 @@ export default class Stats {
     return timePassed;
   }
 
-  calculateDistance(point) {
+  calculateMovement(point) {
     if(this.previousPoint === null) {
       this.previousPoint = point;
     }
 
     if( hasMoved(point, this.previousPoint) ) {
-      // s = vt => t = s/v
+
+      // Add 3 seconds to time if truck starts moving
+      let movedOld = this.moved;
+      this.moved = true;
+      if(this.moved != movedOld) {
+        this.startTime = this.time;
+        if( this.stopTime === 0 || Math.abs(this.startTime - this.stopTime) >= 5 ) {
+          this.time += this.settings.FULL_START_STOP_TIME; 
+        } else {
+          this.time += this.settings.SHORT_START_STOP_TIME;
+        }
+      }
+
+      // Calculate time according to truck speed and distance moved
       this.time = this.time + (distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS)/this.settings.AVG_VELOCITY;
+      
+      // Update the distance moved
       this.distanceMoved += distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS;
       this.previousPoint = point;
+    } else {
+      // Add 3 seconds to time if truck stops moving
+      let movedOld = this.moved;
+      this.moved = false;
+      if(this.moved != movedOld) {
+        this.stopTime = this.time;
+        if( Math.abs(this.startTime - this.stopTime) >= 5 ) {
+          this.time += this.settings.FULL_START_STOP_TIME;
+        } else {
+          this.time += this.settings.SHORT_START_STOP_TIME;          
+        }
+      }
     }
   }
 
