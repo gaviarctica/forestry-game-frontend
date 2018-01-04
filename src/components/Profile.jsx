@@ -10,7 +10,6 @@ import { mail } from 'react-icons-kit/icomoon/mail';
 
 const Rows = (props) => {
 	var rows = [];
-
 	var tableButtonStyle = {
 		height: '30px',
 		lineHeight: '30px',
@@ -54,7 +53,8 @@ export default class Profile extends Component {
 	    super(props);
 	    this.state = {
 	    	scores: undefined,
-			report: undefined
+			report: undefined,
+			openedReport: undefined
 	    }
     }
 
@@ -75,7 +75,16 @@ export default class Profile extends Component {
 	}
 
 	handleButtonClick(e) {
+
+		if (this.state.openedReport) {
+			this.state.openedReport.style['background-color'] = 'var(--jd-yellow)';
+			this.setState({
+				openedReport: undefined
+			})
+		}
+
 		var id = e.target.getAttribute('id');
+		e.target.style['background-color'] = 'var(--jd-green)';
 		var content;
 		for (let i = 0; i < this.state.scores.length; i++) {
 			if (Number(this.state.scores[i].id) === Number(id)) {
@@ -85,7 +94,17 @@ export default class Profile extends Component {
 		}
 	    this.setState({
 			report: true,
-			content: content
+			content: content,
+			openedReport: e.target
+	    });
+
+	}
+
+	handleReportCloseClick() {
+		this.state.openedReport.style['background-color'] = 'var(--jd-yellow)';
+		this.setState({
+			report: false,
+			openedReport: undefined
 	    });
 	}
 
@@ -118,6 +137,7 @@ export default class Profile extends Component {
 			rightContent = (
 				<div id="right-content">
 					<Report type="profile_report"
+							close={this.handleReportCloseClick.bind(this)}
 							lang={this.props.lang}
 			                enddate={date}
 			                mapname={this.state.content.level}

@@ -1,14 +1,33 @@
 import React from 'react';
 import './Report.css';
+import Button from './Button';
 import { LANG } from './lang';
 
 export default function Report(props) {
 
   var date = new Date(props.enddate);
 
+  if (props.close) {
+    var tableButtonStyle = {
+      height: '30px',
+      lineHeight: '30px',
+      fontSize: '1em',
+      width: '100px',
+      boxShadow: 'var(--menu-shadow-2)',
+      borderRadius: '5px',
+      backgroundColor: 'red'
+    }
+    var dismiss = (<Button
+                      id={'closeButton'}
+                      text={"Close"}
+                      style={tableButtonStyle}
+                      handleClick={props.close} />);
+  }
+
   return (
     <div id={props.type == "endgame_report" ? "endgame-report" : "report"}>
-      <h1>{LANG[props.lang].report.report}</h1>
+      {dismiss}
+      <h1>{LANG[props.lang].report.report}</h1> 
       <div id="report-header">
         <div>
           <p>{date.getDate()}.{date.getMonth()}.{date.getFullYear()}, {date.getHours()}:{date.getMinutes()<10?'0':''}{date.getMinutes()}</p>
