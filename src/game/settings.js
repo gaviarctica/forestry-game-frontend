@@ -41,6 +41,7 @@ export default class Settings {
     };
 
     this.stats = {
+      LOG_DELAY : 15,
       BASE_MILEAGE : 5,
       LOG_FACTOR : 0.5,
       SALARY : 20,
