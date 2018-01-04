@@ -69,11 +69,12 @@ export default class Weather {
 
   calculateFilterArea(truck) {
     var truck_viewport = {
-      x : this.game.screen.x + this.game.screen.width / 2 - this.visible_distance + (this.truck.sprite.x - this.stage.pivot.x),
-      y : this.game.screen.y + this.game.screen.height / 2 - this.visible_distance + (this.truck.sprite.y - this.stage.pivot.y)
+      x : this.game.screen.x + this.game.screen.width / 2 - this.visible_distance * this.stage.scale.x + (this.truck.sprite.x - this.stage.pivot.x) * this.stage.scale.x,
+      y : this.game.screen.y + this.game.screen.height / 2 - this.visible_distance * this.stage.scale.y + (this.truck.sprite.y - this.stage.pivot.y) * this.stage.scale.x
     };
 
-    var area = new PIXI.Rectangle(truck_viewport.x , truck_viewport.y , 2*this.visible_distance, 2*this.visible_distance);
+    var area = new PIXI.Rectangle(truck_viewport.x , truck_viewport.y,
+      2*this.visible_distance * this.stage.scale.x, 2*this.visible_distance * this.stage.scale.y);
 
     return area;
   }

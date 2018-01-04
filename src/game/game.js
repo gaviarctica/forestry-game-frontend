@@ -174,8 +174,8 @@ export default class GameCanvas {
       this.gameEnded = true;
     }
 
-    var totalDistance = this.stats.getDistanceMoved()
-    var totalfuelBurned = this.stats.getFuelUsed()
+    var totalDistance = this.stats.getDistanceMoved();
+    var totalfuelBurned = this.stats.getFuelUsed();
     var cost = this.stats.getCost();
 
     this.truck.update(delta);
