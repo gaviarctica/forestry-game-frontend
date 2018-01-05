@@ -5,6 +5,7 @@ import './api';
 import DjangoCSRFToken from 'django-react-csrftoken'
 import { LANG } from './lang';
 import Loader from './Loader';
+import NotificationBox from './NotificationBox'
 
 
 export default class LoginSignupForm extends Component {
@@ -32,11 +33,18 @@ export default class LoginSignupForm extends Component {
       this.setState({
         message: nextProps.message
       });
+
       if (this.state.loading) {
         this.setState({
           loading: false
         })
       }
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.message != undefined && this.state.message != prevState.message) {
+      this.state.message.map( msg => this.props.notify(LANG[this.props.lang].mainMenu.loginSignupForm.messages[msg]))
     }
   }
 
@@ -59,6 +67,7 @@ export default class LoginSignupForm extends Component {
   }
 
   render() {
+
     var buttonStyle = {
       margin: 'auto',
       width: 'var(--form-width)',
@@ -125,19 +134,20 @@ export default class LoginSignupForm extends Component {
 
           <div id="component-form">
 
-            {
+
+            {/* {
               this.state.message ? 
                 <div id="message">
                   {this.state.message.map(msg => {
                     return (
                       <p>
-                        {LANG[this.props.lang].mainMenu.loginSignupForm.messages[msg]}
+                        {this.props.notify(LANG[this.props.lang].mainMenu.loginSignupForm.messages[msg])}
                       </p>
                     );
                   })}
                 </div>
               : ''
-            }
+            } */}
 
             <form id={this.props.view + '-form'} onSubmit={this.handleSubmit.bind(this)}>
               <DjangoCSRFToken />
