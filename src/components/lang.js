@@ -71,6 +71,7 @@ export const LANG = {
       quit: "Quit",
       report: "Report",
       road: "Road",
+      anomalies: "Anomalies",
       logs: "Logs",
       deposits: "Deposits",
       truck: "Truck",

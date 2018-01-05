@@ -64,7 +64,6 @@ export default class Level {
   }
 
   drawRoutes() {
-
     let segmentTexture;
     let anomalyText;
     let transitionTexture;
@@ -112,7 +111,7 @@ export default class Level {
       tilingSprite.rotation = angle + Math.PI;
       tilingSprite.x = currentPos.x;
       tilingSprite.y = currentPos.y;
-      this.stage.addChild(tilingSprite);
+      this.routeContainer.addChild(tilingSprite);
 
       // If anomalies, add text and transition textures
       if(this.routeSegments[j].anomalies.length > 0) {
@@ -123,7 +122,7 @@ export default class Level {
         transitionTexture.x = spos.x;
         transitionTexture.y = spos.y;
         transitionTexture.rotation = angle + Math.PI;
-        this.stage.addChild(transitionTexture);
+        this.routeContainer.addChild(transitionTexture);
 
         transitionTexture = new PIXI.Sprite.from(this.routeTransitionTexture);
         transitionTexture.anchor.set(0.5, 0);
@@ -131,10 +130,10 @@ export default class Level {
         transitionTexture.x = epos.x;
         transitionTexture.y = epos.y;
         transitionTexture.rotation = angle;
-        this.stage.addChild(transitionTexture);
+        this.routeContainer.addChild(transitionTexture);
 
         if (!oneway) {
-          this.stage.addChild(anomalyText);
+          this.routeContainer.addChild(anomalyText);
         }
       }
     }
@@ -146,7 +145,7 @@ export default class Level {
       intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
       intersectionSprite.x = routeNode.getPos().x;
       intersectionSprite.y = routeNode.getPos().y;
-      this.stage.addChild(intersectionSprite);
+      this.routeContainer.addChild(intersectionSprite);
     }
   }
 

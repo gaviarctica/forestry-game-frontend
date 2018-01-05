@@ -42,6 +42,9 @@ export default class Editor extends Component {
     if (clicked === 'button-road') {
       this.editorCanvas.selectTool('road');
     }
+    if (clicked === 'button-anomalies') {
+      this.editorCanvas.selectTool('anomalies');
+    }
     if (clicked === 'button-logs') {
       this.editorCanvas.selectTool('log');
     }
@@ -76,50 +79,56 @@ export default class Editor extends Component {
       <div className="Editor">
         <div id="canvas-editor"></div>
         <div id="game-info">
-        <Button 
+        <Button
           id="button-quit"
           text={LANG[this.props.lang].buttons.quit}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />
-        <Button 
+        <Button
           id="button-road"
           text={LANG[this.props.lang].buttons.road}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />
-        <Button 
+        <Button
+          id="button-anomalies"
+          text={LANG[this.props.lang].buttons.anomalies}
+          buttonType='default'
+          style={quitButtonStyle}
+          handleClick={this.handleButtonClick.bind(this)} />
+        <Button
           id="button-logs"
           text={LANG[this.props.lang].buttons.logs}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />
-        <Button 
+        <Button
           id="button-deposits"
           text={LANG[this.props.lang].buttons.deposits}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />
-        <Button 
+        <Button
           id="button-truck"
           text={LANG[this.props.lang].buttons.truck}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />
-        <Button 
+        <Button
           id="button-remove"
           text={LANG[this.props.lang].buttons.remove}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />
-        <Button 
+        <Button
           id="button-save"
           text={LANG[this.props.lang].buttons.save}
           buttonType='default'
           style={quitButtonStyle}
           handleClick={this.handleButtonClick.bind(this)} />
         </div>
-        
+
       </div>
     );
   }

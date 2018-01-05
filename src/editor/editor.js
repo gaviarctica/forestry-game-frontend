@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import UserInterface from './ui';
 import RoadTool from './roadtool';
+import AnomalyTool from './anomalytool';
 import Level from '../game/level';
 import LogTool from './logtool';
 import DepositTool from './deposittool';
@@ -27,8 +28,10 @@ export default class EditorCanvas {
     this.currentTool = null;
     this.tools = [];
 
-    this.buildGrid();
     this.createTools();
+
+    this.organizeDraws();
+
     this.setupCameraControl();
     pixiApp.stage.addChild(this.level.getStage());
  }
@@ -53,15 +56,30 @@ export default class EditorCanvas {
       graphics.endFill();
     }
 
-    this.pixiApp.stage.addChild(graphics);
+    return graphics;
+
   }
 
   createTools() {
     this.tools['road'] = new RoadTool(this.pixiApp.stage, this.level);
+    this.tools['anomalies'] = new AnomalyTool(this.pixiApp.stage, this.level);
     this.tools['log'] = new LogTool(this.pixiApp.stage, this.level);
     this.tools['deposit'] = new DepositTool(this.pixiApp.stage, this.level);
     this.tools['truck'] = new TruckTool(this.pixiApp.stage, this.level);
     this.tools['remove'] = new RemoveTool(this.pixiApp.stage, this.level);
+  }
+
+  organizeDraws() {
+    // cleaning
+    this.pixiApp.stage.removeChildren();
+
+    // building grid
+    this.pixiApp.stage.addChild(this.buildGrid());
+
+    // adding containers
+    this.pixiApp.stage.addChild(this.tools['road'].getRoadContainer());
+    this.pixiApp.stage.addChild(this.tools['anomalies'].getAnomalyContainer());
+    this.pixiApp.stage.addChild(this.tools['road'].getDrawContainer());
   }
 
   setupCameraControl() {
