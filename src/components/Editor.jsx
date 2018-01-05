@@ -125,13 +125,13 @@ export default class Editor extends Component {
 
   loadUserLevels() {
     var self = this;
-    // TODO: get only user's levels
-    API.getAllMapsInfo(function(err, maps) {
+    API.getMyMapsInfo(function(err, maps) {
       if (err) throw err;
-      self.setState({
-        userLevels: maps
-      });
-      console.log('TODO: get only user levels!');
+      if (maps && maps.length > 0) {
+        self.setState({
+          userLevels: maps
+        });
+      }
     });
   }
 

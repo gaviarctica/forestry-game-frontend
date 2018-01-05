@@ -148,6 +148,31 @@ export const API = {
     });
   },
 
+  getMyMapsInfo: function (callback) {
+    var err = undefined;
+    var url = '/api/v1/level?user=1';
+    var init = {
+      method: 'GET',
+      credentials: 'same-origin',
+    };
+
+    fetch(url, init).then(function (response) {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        err = 'Error fetching user map info.';
+        callback(err);
+      }
+    }).then(function (responseJson) {
+      if (responseJson) {
+        callback(err, responseJson);
+      } else {
+        err = 'Error fetching user map info.';
+        callback(err);
+      }
+    });
+  },
+
   getMapData: function (id, callback) {
     var err = undefined;
     var url = '/api/v1/level?id=' + id;
