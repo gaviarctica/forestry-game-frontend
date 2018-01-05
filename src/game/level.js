@@ -323,7 +323,13 @@ export default class Level {
     var routes = [];
     for (let [id, node] of this.routeNodes) {
       var pos = node.getPos();
-      routes.push({route_node: id, x: pos.x, y: pos.y, to: node.to});
+
+      if(node.anomalies && node.anomalies.length === 1) {
+        routes.push({route_node: id, x: pos.x, y: pos.y, to: node.to, anomalies: node.anomalies});
+
+      } else {
+        routes.push({route_node: id, x: pos.x, y: pos.y, to: node.to});
+      }
     }
 
     var logs = []
