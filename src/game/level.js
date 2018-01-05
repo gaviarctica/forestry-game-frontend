@@ -185,7 +185,7 @@ export default class Level {
 
     // reset, mainly to remove segments from them
     for (let [id, node] of this.routeNodes) {
-      node.reset(id, node.point, node.to);
+      node.reset(id, node.point, node.to, node.anomalies);
     }
 
     this.generateRouteSegments();

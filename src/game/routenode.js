@@ -8,7 +8,6 @@ export default class RouteNode {
     this.point = point;
     this.to = to;
     this.segments = [];
-
     if(anomalies !== null && typeof anomalies != 'undefined') {
       this.anomalies = anomalies;
     } else {

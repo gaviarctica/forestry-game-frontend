@@ -33,6 +33,15 @@ export default class AnomalyTool extends ITool {
     return this.weight_limit_pointer_sprite;
   }
 
+  // created function for this to have it manually get when necessary
+  getSnappedSegment(force_calc = false) {
+    if(!force_calc && typeof this.snappedToSegment != 'undefined' && this.snappedToSegment !== null)
+        return this.snappedToSegment;
+
+    this.snappedToSegment = null;
+
+  }
+
   mouseMove(mouseInput) {
     var epos = mouseInput.worldPosition;
     this.pointerContainer.position = epos;
@@ -41,10 +50,11 @@ export default class AnomalyTool extends ITool {
     this.snappedToSegment = null;
     this.level.refreshRoutes();
 
-    var segment_amount = this.level.getRouteSegments().length;
+    var segments = this.level.getRouteSegments();
+    var segment_amount =  segments.length;
 
     for (var i = 0; i < segment_amount; ++i) {
-      var segment = this.level.getRouteSegments()[i];
+      var segment = segments[i];
       var segment_pos = {
         x: (segment.endNode.getPos().x + segment.startNode.getPos().x) / 2,
         y: (segment.endNode.getPos().y + segment.startNode.getPos().y) / 2
@@ -57,6 +67,15 @@ export default class AnomalyTool extends ITool {
         break;
       }
     }
+
+    //toggling visibility of pointer if we have snapped and there is anomaly
+    if(this.snappedToSegment !== null && this.snappedToSegment.startNode.anomalies.length !== 0) {
+      this.snappedToSegment.weight_limit_text.style.fill = 0x00FF00;
+      this.pointerContainer.visible = false;
+    } else {
+      this.pointerContainer.visible = true;
+    }
+
   }
 
   mouseUp(mouseInput) {
@@ -65,15 +84,46 @@ export default class AnomalyTool extends ITool {
       return;
 
     if(this.snappedToSegment !== null) {
-      this.snappedToSegment.weight_limit = 2;
-      this.snappedToSegment.weight_limit_text.text = this.snappedToSegment.weight_limit + 'kg';
-      //this.anomaly_container.removeChildren();
-      this.anomaly_container.addChild(this.snappedToSegment.weight_limit_text);
-      console.log("Segment: " + this.snappedToSegment.weight_limit);
-      console.log("Pos: " + this.snappedToSegment.weight_limit_text.position.x + ", " + this.snappedToSegment.weight_limit_text.position.y);
-      console.log(this.stage.children);
-    }
+      if (this.snappedToSegment.startNode.anomalies.length === 0 && this.snappedToSegment.endNode.anomalies.length === 0) {
+        this.snappedToSegment.startNode.anomalies = [{to:this.snappedToSegment.endNode.getId(), weight_limit:1}];
+        this.snappedToSegment.weight_limit = 1;
+      } else {
+        this.snappedToSegment.startNode.anomalies[0].weight_limit++;
+      }
 
+      this.snappedToSegment.weight_limit_text.text = this.snappedToSegment.startNode.anomalies[0].weight_limit + 'kg';
+
+    }
+  }
+
+  keyDown(event) {}
+
+  keyUp(event) {
+    var self = this;
+    if(self.snappedToSegment) {
+      // with other anomalies it'll probably be necessary to check both directions
+      // weight limit is updated with number keys
+      if(self.snappedToSegment.startNode.anomalies.length !== 0)
+        var number = parseInt(event.key);
+        // console.log(event.key);
+        if(number || number === 0) {
+          if (self.snappedToSegment.startNode.anomalies.length === 0 && self.snappedToSegment.endNode.anomalies.length === 0) {
+            self.snappedToSegment.startNode.anomalies = [{to:self.snappedToSegment.endNode.getId(), weight_limit:1}];
+            self.snappedToSegment.weight_limit = number;
+          } else {
+            self.snappedToSegment.startNode.anomalies[0].weight_limit =
+            self.snappedToSegment.startNode.anomalies[0].weight_limit * 10 + number;
+          }
+        } else if(event.key === 'Backspace') {
+          if(!(self.snappedToSegment.startNode.anomalies.length === 0 && self.snappedToSegment.endNode.anomalies.length === 0)) {
+            self.snappedToSegment.startNode.anomalies[0].weight_limit =
+            Math.floor(self.snappedToSegment.startNode.anomalies[0].weight_limit / 10);
+          }
+        }
+
+        // refreshing routes to keep ui look responsive
+        self.level.refreshRoutes();
+    }
   }
 
   // for drawing purposes

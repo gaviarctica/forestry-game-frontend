@@ -77,7 +77,7 @@ export default class EditorCanvas {
     this.pixiApp.stage.addChild(this.buildGrid());
 
     // adding containers
-    this.pixiApp.stage.addChild(this.tools['road'].getRoadContainer());
+    // this.pixiApp.stage.addChild(this.tools['road'].getRoadContainer());
     this.pixiApp.stage.addChild(this.tools['anomalies'].getAnomalyContainer());
     this.pixiApp.stage.addChild(this.tools['road'].getDrawContainer());
   }
@@ -154,10 +154,10 @@ export default class EditorCanvas {
     var self = this;
     if (this.currentTool) {
       window.removeEventListener(
-        "keydown", self.currentTool.keyDown, false
+        "keydown", self.currentTool.keyDown.bind(self.currentTool), false
       );
       window.removeEventListener(
-        "keyup", self.currentTool.keyUp, false
+        "keyup", self.currentTool.keyUp.bind(self.currentTool), false
       );
       this.currentTool.deactivate();
     }
@@ -166,10 +166,10 @@ export default class EditorCanvas {
 
     if (this.currentTool !== null && this.currentTool !== undefined) {
       window.addEventListener(
-        "keydown", self.currentTool.keyDown, false
+        "keydown", self.currentTool.keyDown.bind(self.currentTool), false
       );
       window.addEventListener(
-        "keyup", self.currentTool.keyUp, false
+        "keyup", self.currentTool.keyUp.bind(self.currentTool), false
       );
       this.currentTool.activate();
     }
