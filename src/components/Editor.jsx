@@ -231,12 +231,15 @@ export default class Editor extends Component {
         // Otherwise overwrite old level
         var mapData = this.editorCanvas.serializeLevel();
         var mapInfo = this.editorCanvas.levelInfo();
-        // TODO: overwrite instead of add new
-        API.addMap("editorMap", JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
-          if (err) throw err;
+        if (this.state.loadedMapID) {
+          API.updateMap(this.state.loadedMapID, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
+            if (err) throw err;
 
-          self.postSaveOperations(mapData);
-        });
+            self.postSaveOperations(mapData);
+          });
+        } else {
+          throw 'No loaded map ID known';
+        }
       }
     }
     if (clicked === 'button-save-as') {
@@ -278,10 +281,10 @@ export default class Editor extends Component {
 
   loadSelectedMapData() {
     var self = this;
-    API.getMapData(this.state.selectedUserLevel, function(err, mapdata) {
+    API.getMapData(this.state.selectedUserLevel, function(err, response) {
       if (err) throw err;
 
-      let loadedMapData = mapdata[0].mapdata;
+      let loadedMapData = response[0].mapdata;
       if (loadedMapData.hasOwnProperty('weather') &&
           loadedMapData.weather.hasOwnProperty('type') &&
           loadedMapData.weather.type === 'fog') {
@@ -290,13 +293,15 @@ export default class Editor extends Component {
           fogDensity: loadedMapData.weather.density,
           fogVisibility: loadedMapData.weather.visibility,
           loadedMapData: loadedMapData,
-          loadedMapID: self.state.selectedUserLevel
+          loadedMapID: self.state.selectedUserLevel,
+          selectedUserLevel: undefined
         });
       } else {
         self.setState({
           fogEnabled: false,
-          loadedMapData: mapdata[0].mapdata,
-          loadedMapID: self.state.selectedUserLevel
+          loadedMapData: loadedMapData,
+          loadedMapID: self.state.selectedUserLevel,
+          selectedUserLevel: undefined
         });
       }
       self.updatePreviousSavedStatus();
@@ -307,9 +312,12 @@ export default class Editor extends Component {
     var mapData = this.editorCanvas.serializeLevel();
     var mapInfo = this.editorCanvas.levelInfo();
     var self = this;
-    API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
+    API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err, response) {
       if (err) throw err;
 
+      self.setState({
+        loadedMapID: response.id
+      });
       self.postSaveOperations(mapData);
     });
   }
