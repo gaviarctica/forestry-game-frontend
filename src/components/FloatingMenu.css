@@ -1,0 +1,22 @@
+.FloatingMenu {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.FloatingMenu .button-wrapper {
+    margin-bottom: 15px;
+}
+
+.FloatingMenu .Button {
+    width: 150px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;    
+}
+
+.FloatingMenu .button-wrapper:last-child {
+    margin-bottom: 0;
+}

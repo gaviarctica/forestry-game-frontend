@@ -148,6 +148,31 @@ export const API = {
     });
   },
 
+  getMyMapsInfo: function (callback) {
+    var err = undefined;
+    var url = '/api/v1/level?user=1';
+    var init = {
+      method: 'GET',
+      credentials: 'same-origin',
+    };
+
+    fetch(url, init).then(function (response) {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        err = 'Error fetching user map info.';
+        callback(err);
+      }
+    }).then(function (responseJson) {
+      if (responseJson) {
+        callback(err, responseJson);
+      } else {
+        err = 'Error fetching user map info.';
+        callback(err);
+      }
+    });
+  },
+
   getMapData: function (id, callback) {
     var err = undefined;
     var url = '/api/v1/level?id=' + id;
@@ -189,9 +214,41 @@ export const API = {
 
     fetch(url, init).then(function (response) {
       if (response.status === 200) {
-        return;
+        return response.json();
       } else {
         err = 'Error adding map data.';
+        callback(err);
+      }
+    }).then( function (responseJson) {
+      if (responseJson) {
+        callback(err, responseJson);
+      } else {
+        err = 'Error adding map data.';
+        callback(err);
+      }
+    });
+  },
+
+  updateMap: function (levelID, mapData, mapInfo, callback) {
+    var err = undefined;
+    var url = '/api/v1/level/update';
+    var form = new FormData();
+    form.append('id', levelID);
+    form.append('mapData', mapData);
+    form.append('mapInfo', mapInfo);
+    var init = {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+      body: form
+    };
+
+    fetch(url, init).then(function (response) {
+      if (response.status === 200) {
+        callback(err);
+        return;
+      } else {
+        err = 'Error updating map data.';
         callback(err);
       }
     });

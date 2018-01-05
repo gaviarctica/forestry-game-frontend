@@ -1,0 +1,37 @@
+.FloatingDialog {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 400px;
+}
+
+.FloatingDialog .header {
+  color: #ccc;
+  font-size: 16px;
+}
+
+.FloatingDialog input {
+  -webkit-appearance: none;
+  outline: none;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  width: 100%;
+  color: var(--jd-yellow);
+  border-bottom: #ccc solid 2px;
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.FloatingDialog .Button {
+    width: 125px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 18px;    
+}
+
+.FloatingDialog #floating-dialog-button-primary {
+  float: right;
+}
