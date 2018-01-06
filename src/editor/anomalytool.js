@@ -4,8 +4,8 @@ import {length, distance} from '../game/helpers';
 import Settings from '../game/settings';
 
 export const AnomalyType = [
-  { type : 'weightlimit' },
-  { type : 'dying' }
+  { type : 'weightlimit', name : 'weight_limit' },
+  { type : 'dying', name : 'dying_road' }
 ];
 
 export default class AnomalyTool extends ITool {
@@ -85,7 +85,10 @@ export default class AnomalyTool extends ITool {
     }
 
     //toggling visibility of pointer if we have snapped and there is anomaly
-    if(this.snappedToSegment !== null && this.snappedToSegment.startNode.anomalies.length !== 0) {
+
+    if(this.snappedToSegment !== null
+      && (this.nodeHasAnomalyTo(this.snappedToSegment.startNode,this.snappedToSegment.endNode).node
+      || this.nodeHasAnomalyTo(this.snappedToSegment.endNode,this.snappedToSegment.startNode).node)) {
       this.snappedToSegment.weight_limit_text.style.fill = 0x00FF00;
       this.snappedToSegment.dying_road_text.style.fill = 0x00FF00;
       this.pointerContainer.visible = false;
@@ -95,13 +98,16 @@ export default class AnomalyTool extends ITool {
 
   }
 
-  nodeHasAnomalyTo(node,to_node,anomaly_type) {
+  nodeHasAnomalyTo(node,to_node) {
     var rnode = null;
     var anomaly_index = -1;
 
+    if(!node || !to_node)
+      return {node:rnode, anomaly_index:anomaly_index};
+
     for(var i = 0; i < node.anomalies.length; ++i) {
-      if(node.anomalies[i].hasOwnProperty('weight_limit') &&
-        node.anomalies[i].to === to_node.getId()) {
+
+      if(node.anomalies[i].to === to_node.getId()) {
         rnode = node;
         anomaly_index = i;
         break;
@@ -109,6 +115,39 @@ export default class AnomalyTool extends ITool {
     }
 
     return {node:rnode, anomaly_index:anomaly_index};
+  }
+
+  updateAnomalyInfo(segment, anomaly_name) {
+    var node = null;
+    var anomaly_index = -1;
+
+    if (segment.startNode.anomalies.length === 0 && segment.endNode.anomalies.length === 0) {
+      segment.startNode.anomalies.push({to:segment.endNode.getId(), [anomaly_name]:1});
+      segment.weight_limit = 1;
+      node = segment.startNode;
+      anomaly_index = node.anomalies.length - 1;
+    } else {
+      // grinding through startnode anomalies
+      var node_data = this.nodeHasAnomalyTo(segment.startNode,segment.endNode);
+
+      // if node is not still defined trying endnode
+      if(!node_data.node) {
+        node_data = this.nodeHasAnomalyTo(segment.endNode,segment.startNode);
+      }
+
+      // if we have not found connections we just create it
+      if(!node_data.node) {
+        segment.startNode.anomalies.push({to:segment.endNode.getId(),[anomaly_name]:1});
+        segment.weight_limit = 1;
+        node = segment.startNode;
+        anomaly_index = node.anomalies.length - 1;
+      } else {
+        node = node_data.node;
+        anomaly_index = node_data.anomaly_index;
+      }
+    }
+
+    return {node:node, anomaly_index:anomaly_index};
   }
 
 
@@ -121,74 +160,24 @@ export default class AnomalyTool extends ITool {
     if(this.snappedToSegment !== null) {
       // weight limit
       if(this.type === AnomalyType[0].type) {
-        var node = null;
-        var anomaly_index = -1;
-        if (this.snappedToSegment.startNode.anomalies.length === 0 && this.snappedToSegment.endNode.anomalies.length === 0) {
-          this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), weight_limit:1});
-          this.snappedToSegment.weight_limit = 1;
-          node = this.snappedToSegment.startNode;
-          anomaly_index = node.anomalies.length - 1;
-        } else {
-          // grinding through startnode anomalies
-          var node_data = this.nodeHasAnomalyTo(this.snappedToSegment.startNode,this.snappedToSegment.endNode,'weight_limit');
+        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[0].name);
 
-          // if node is not still defined trying endnode
-          if(!node_data.node) {
-            node_data = this.nodeHasAnomalyTo(this.snappedToSegment.endNode,this.snappedToSegment.startNode,'weight_limit');
-          }
+        console.log(node_data);
 
-          // if we have not found connections we just create it
-          if(!node_data.node) {
-            this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), weight_limit:1});
-            this.snappedToSegment.weight_limit = 1;
-            node = this.snappedToSegment.startNode;
-            anomaly_index = node.anomalies.length - 1;
-          } else {
-            node = node_data.node;
-            anomaly_index = node_data.anomaly_index;
-          }
-        }
-
-        this.snappedToSegment.weight_limit = node.anomalies[anomaly_index].weight_limit;
+        this.snappedToSegment.weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit;
 
       } else if(this.type === AnomalyType[1].type) {
-        var node = null;
-        var anomaly_index = -1;
-        if (this.snappedToSegment.startNode.anomalies.length === 0 && this.snappedToSegment.endNode.anomalies.length === 0) {
-          this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), dying_road:1});
-          this.snappedToSegment.anomalies = this.snappedToSegment.startNode.anomalies;
-          node = this.snappedToSegment.startNode;
-          anomaly_index = node.anomalies.length - 1;
-        } else {
-          // grinding through startnode anomalies
-          var node_data = this.nodeHasAnomalyTo(this.snappedToSegment.startNode,this.snappedToSegment.endNode,'dying_road');
+        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[1].name);
 
-          // if node is not still defined trying endnode
-          if(!node_data.node) {
-            node_data = this.nodeHasAnomalyTo(this.snappedToSegment.endNode,this.snappedToSegment.startNode,'dying_road');
-          }
-
-          // if we have not found connections we just create it
-          if(!node_data.node) {
-            this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), dying_road:1});
-            this.snappedToSegment.anomalies = this.snappedToSegment.startNode.anomalies;
-            node = this.snappedToSegment.startNode;
-            anomaly_index = node.anomalies.length - 1;
-          } else {
-            node = node_data.node;
-            anomaly_index = node_data.anomaly_index;
-          }
-        }
-
-        this.snappedToSegment.dying_road = node.anomalies[anomaly_index].dying_road;
+        this.snappedToSegment.dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road;
       }
 
-      console.log(node.anomalies);
+      console.log(node_data.node.anomalies);
 
       if(this.type === AnomalyType[0].type)
-        this.snappedToSegment.weight_limit_text.text = node.anomalies[anomaly_index].weight_limit + 'kg';
+        this.snappedToSegment.weight_limit_text.text = node_data.node.anomalies[node_data.anomaly_index].weight_limit + 'kg';
       else if(this.type === AnomalyType[1].type)
-        this.snappedToSegment.dying_road_text.text = node.anomalies[anomaly_index].dying_road + 'm';
+        this.snappedToSegment.dying_road_text.text = node_data.node.anomalies[node_data.anomaly_index].dying_road + 'm';
 
 
     }
