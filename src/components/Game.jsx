@@ -53,7 +53,20 @@ export default class Game extends Component {
         fuel: this.state.fuel,
         logs: JSON.stringify(this.parseLogs(this.state.mapdata.logs)),
         enddate: this.state.gameEndDate,
-        id: this.state.mapID
+        id: this.state.mapID,
+        driving_unloaded_time: 0,
+        loading: 0,
+        driving_loaded_time: 0,
+        unloading: 0,
+        idling: 0,
+        driving_forward: 0,
+        reverse: 0,
+        driving_unloaded_distance: 0,
+        driving_loaded_distance: 0,
+        fuel_cost: 0,
+        worker_salary: 0,
+        loads_transported: 0,
+        productivity: 0
       }, function(err) {
         if (err) throw err;
       })
@@ -154,7 +167,20 @@ export default class Game extends Component {
                 distance={this.state.distance}
                 fuel={this.state.fuel}
                 cost={this.state.cost}
-                logs={this.parseLogs(this.state.mapdata.logs)} />
+                logs={this.parseLogs(this.state.mapdata.logs)}
+                driving_unloaded_time={0}
+                loading={0}
+                driving_loaded_time={0}
+                unloading={0}
+                idling={0}
+                driving_forward={0}
+                reverse={0}
+                driving_unloaded_distance={0}
+                driving_loaded_distance={0}
+                fuel_cost={0}
+                worker_salary={0}
+                loads_transported={0}
+                productivity={0} />
             </div>
           </div>
         </div>

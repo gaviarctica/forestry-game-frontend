@@ -54,8 +54,8 @@ export const LANG = {
       logsCollected: "Logs collected",
       finalCost: "Total cost",
       close: "Close",
-      details: "Show detailed stats",
-      dismissDetails: "Dismiss"
+      details: "Show details",
+      dismissDetails: "Dismiss details"
     },
     detailedReport: {
       time: "Time",
@@ -194,8 +194,8 @@ export const LANG = {
       logsCollected: "Puita kerätty",
       finalCost: "Työn kulut",
       close: "Sulje",
-      details: "Näytä tarkemmat tilastot",
-      dismissDetails: "Sulje"
+      details: "Näytä tilastot",
+      dismissDetails: "Sulje tilastot"
     },
     detailedReport: {
       time: "Aika",

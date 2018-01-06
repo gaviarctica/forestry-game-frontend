@@ -22,17 +22,7 @@ ul {
 	list-style-type: none;
 }
 
-#right-content {
-	display:inline-block;
-	background-color: var(--jd-gray);
-	width: 300px;
-	margin: 20px;
-	vertical-align: top;
-	padding-left: 20px;
-	padding-right: 20px;
-	max-height: 60vh;
-	overflow-y: auto;
-}
+
 
 #right-content > h1 {
 	text-align: center;
