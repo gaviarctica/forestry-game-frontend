@@ -50,11 +50,38 @@ const Rows = (props) => {
 
 export default class Profile extends Component {
 	constructor(props) {
+		var detailedStats = (
+			<div>
+	          <h3>{LANG[props.lang].detailedReport.time}</h3>
+	          <p>{LANG[props.lang].detailedReport.workingTime}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.drivingUnloadedTime}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.loadingTime}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.drivingLoadedTime}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.unloadingTime}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.idling}: <span>...</span></p>
+
+	          <h3>{LANG[props.lang].detailedReport.distance}</h3>
+	          <p>{LANG[props.lang].detailedReport.distanceTravelled}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.drivingForwardTime}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.drivingBackwardTime}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.drivingUnloadedDistance}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.drivingLoadedDistance}: <span>...</span></p>
+
+	          <h3>{LANG[props.lang].detailedReport.costAndProductivity}</h3>
+	          <p>{LANG[props.lang].detailedReport.fuelConsumed}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.fuelCost}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.workerSalary}: <span>...</span></p>
+	          <br/>
+	          <p>{LANG[props.lang].detailedReport.loadsTransported}: <span>...</span></p>
+	          <p>{LANG[props.lang].detailedReport.productivity}: <span>...</span></p>
+	        </div>
+        );
 	    super(props);
 	    this.state = {
 	    	scores: undefined,
 			report: undefined,
-			openedReport: undefined
+			openedReport: undefined,
+			detailedStats: detailedStats
 	    }
     }
 
@@ -145,7 +172,8 @@ export default class Profile extends Component {
 			                distance={this.state.content.distance}
 			                fuel={this.state.content.gas_consumption}
 			                logs={this.state.content.logs}
-			                cost={this.state.content.m_score}/>
+			                cost={this.state.content.m_score}
+			                detailedStats={this.state.detailedStats}/>
 				</div>
         	);
 		}

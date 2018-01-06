@@ -5,6 +5,16 @@ import { LANG } from './lang';
 
 export default function Report(props) {
 
+  function showHideDetailedStats(e) {
+    e.preventDefault();
+    var stats = document.getElementById("detailed-stats");
+    if (stats.style.display === "none") {
+      stats.style.display = "block";
+    } else {
+      stats.style.display = "none";
+    }
+  }
+
   var date = new Date(props.enddate);
 
   if (props.close) {
@@ -19,7 +29,7 @@ export default function Report(props) {
     }
     var dismiss = (<Button
                       id={'closeButton'}
-                      text={"Close"}
+                      text={LANG[props.lang].report.close}
                       style={tableButtonStyle}
                       handleClick={props.close} />);
   }
@@ -38,6 +48,12 @@ export default function Report(props) {
           <p>{LANG[props.lang].report.workingTime}:<span>{props.time}</span></p>
           <p>{LANG[props.lang].report.distanceTravelled}:<span>{props.distance} m</span></p>
           <p>{LANG[props.lang].report.fuelConsumed}:<span>{props.fuel} l</span></p>
+          <a id="show-report-details" href="#" onClick={showHideDetailedStats}>
+            {LANG[props.lang].report.details}
+          </a>
+          <div id="detailed-stats" style={{display: 'none'}}>
+            {props.detailedStats}
+          </div>
           <h3>{LANG[props.lang].report.logsCollected}:</h3>
           <ul>
             {Object.keys(props.logs).map(function(key) {

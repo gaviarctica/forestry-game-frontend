@@ -52,7 +52,34 @@ export const LANG = {
       distanceTravelled: "Distance travelled",
       fuelConsumed: "Fuel consumed",
       logsCollected: "Logs collected",
-      finalCost: "Total cost"
+      finalCost: "Total cost",
+      close: "Close",
+      details: "Show detailed stats",
+      dismissDetails: "Dismiss"
+    },
+    detailedReport: {
+      time: "Time",
+      workingTime: "Working time",
+      drivingUnloadedTime: "Driving unloaded",
+      loadingTime: "Loading",
+      drivingLoadedTime: "Driving loaded",
+      unloadingTime: "Unloading",
+      idling: "Idling",
+
+      distance: "Distance (m)",
+      distanceTravelled: "Distance travelled",
+      drivingForwardTime: "Driving forward",
+      drivingBackwardTime: "Reverse",
+      drivingUnloadedDistance: "Driving unloaded",
+      drivingLoadedDistance: "Driving loaded",
+
+      costAndProductivity: "Cost & Productivity",
+      fuelConsumed: "Fuel consumed",
+      fuelCost: "Fuel cost",
+      workerSalary: "Worker salary",
+
+      loadsTransported: "Loads transported",
+      productivity: "Productivity (m3/h)",
     },
     game: {
       time: "Time",
@@ -165,7 +192,34 @@ export const LANG = {
       distanceTravelled: "Matkustettu etäisyys",
       fuelConsumed: "Polttoaineen kulutus",
       logsCollected: "Puita kerätty",
-      finalCost: "Työn kulut"
+      finalCost: "Työn kulut",
+      close: "Sulje",
+      details: "Näytä tarkemmat tilastot",
+      dismissDetails: "Sulje"
+    },
+    detailedReport: {
+      time: "Aika",
+      workingTime: "Työskentelyaika",
+      drivingUnloadedTime: "Tyhjällä kuormalla ajo",
+      loadingTime: "Lastaus",
+      drivingLoadedTime: "Lastin kanssa ajo",
+      unloadingTime: "Tyhjennys",
+      idling: "Toimeton",
+
+      distance: "Matka (m)",
+      distanceTravelled: "Matkustettu etäisyys",
+      drivingForwardTime: "Eteenpäin ajo",
+      drivingBackwardTime: "Peruuttaminen",
+      drivingUnloadedDistance: "Tyhjällä kuormalla ajo",
+      drivingLoadedDistance: "Lastin kanssa ajo",
+
+      costAndProductivity: "Kulut & Tuottavuus",
+      fuelConsumed: "Polttoaineen kulutus",
+      fuelCost: "Polttoaineen kokonaishinta",
+      workerSalary: "Työntekijän palkka",
+
+      loadsTransported: "Lasteja kuljetettu",
+      productivity: "Tuottavuus (m3/t)",
     },
     game: {
       time: "Aika",
