@@ -41,6 +41,11 @@ export default class Settings {
     };
 
     this.stats = {
+      FULL_START_STOP_TIME : 3,
+      SHORT_START_STOP_TIME : 1, 
+      // average velocity in m/s
+      AVG_VELOCITY : 3,
+      LOG_DELAY : 15,
       BASE_MILEAGE : 5,
       LOG_FACTOR : 0.5,
       SALARY : 20,

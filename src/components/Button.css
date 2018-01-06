@@ -76,6 +76,10 @@
   background-color: var(--jd-gray) !important;
 }
 
+.primary.inactive:hover {
+  background-color: var(--jd-yellow) !important;
+}
+
 .inactive:active {
   filter: none;
 }

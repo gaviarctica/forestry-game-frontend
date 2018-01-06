@@ -1,6 +1,10 @@
 :root {
   /* Variables */
 }
+
+html {
+  overflow-y: hidden;
+}
   
 #canvas-editor {
   position: fixed;
@@ -11,6 +15,176 @@
   z-index: 1;
 }
 
-html {
-  overflow-y: hidden;
+#editor-toolbar {
+  position: fixed;
+  z-index: 10;
+  top: 10px;
+  left: 10px;
+  width: 300px;
+  max-height: calc(100% - 20px);
+  padding-bottom: 20px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  color: #eee;
+  font-size: 18px;
+}
+
+.toolbar-header {
+  color: #ccc;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+#toolbar-active-tool {
+  width: 150px;
+  height: 150px;
+  margin: auto;
+  
+}
+
+#toolbar-tools {
+  width: 250px;
+  text-align: center;
+  margin: auto;
+}
+
+#button-road, #button-logs, #button-deposits, #button-truck, #button-remove, #button-editormenu {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+}
+
+#button-road, #button-deposits {
+  margin-right: 10px;
+}
+
+#button-road, #button-logs, #button-deposits, #button-truck {
+  margin-bottom: 10px;
+}
+
+#button-editormenu {
+  float: right;
+  border-bottom-left-radius: 5px;
+}
+
+#editor-menu {
+  z-index: 100;
+  position: fixed;
+  top: 10px;
+  left: 320px;
+}
+
+.tool-type-dropdown {
+  display: block;
+  margin: auto;
+  width: 250px;
+  height: 30px;
+  font-size: 18px;
+  background-color: var(--jd-gray);
+  font-family: Helvetica, Sans-serif;
+}
+
+.tool-type-dropdown:hover {
+  cursor: pointer;
+}
+
+.tool-type-dropdown:focus {
+  outline: none;
+  border-color: var(--jd-yellow);
+}
+
+.details-road {
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top: 10px;
+}
+
+.details-weather-checkbox {
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top: 10px;
+}
+
+.details-weather-setting {
+  margin-left: 45px;
+  margin-right: 45px;
+  margin-top: 5px;
+}
+
+#editor-toolbar input[type="number"] {
+  -webkit-appearance: none;
+  outline: none;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  width: 80px;
+  color: var(--jd-yellow);
+  border-bottom: #ccc solid 2px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.input-illegal {
+  color: #D63232 !important;
+}
+
+#editor-mapmenu {
+  width: 500px;
+}
+
+#editor-mapmenu-buttonrow {
+  text-align: left;  
+}
+
+#button-editor-mapmenu-load {
+  float: right;
+}
+
+#editor-mapmenu-bottomrow {
+  text-align: left;
+}
+
+#editor-mapmenu-list {
+  width: 240px;
+  height: 250px;
+  margin-top: 20px;
+  padding-right: 5px;
+  text-align: left;
+  overflow-y: auto;
+  display: inline-block;
+}
+
+.editor-maplist-button {
+  height: 30px !important;
+  line-height: 30px !important;
+  width: 225px !important;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: left;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 3px;
+}
+
+.editor-maplist-button:last-child {
+  margin-bottom: 0;
+}
+
+#editor-mapmenu-image {
+  width: 250px;
+  height: 250px;
+  float: right;
+  background-color: #438b38;
+  display: inline-block;
+  margin-top: 20px;
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }

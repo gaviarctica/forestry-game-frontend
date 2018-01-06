@@ -185,8 +185,9 @@ export default class EditorCanvas {
 
   update(delta)
   {
-    this.ui.updateUI({
-    });
+    // Commented this out because it sends empty updates constantly regards gaviarctica
+    // this.ui.updateUI({
+    // });
   }
 
   destroy()
