@@ -3,23 +3,34 @@ import * as PIXI from 'pixi.js';
 import {length, distance} from '../game/helpers';
 import Settings from '../game/settings';
 
+export const AnomalyType = [
+  { type : 'weightlimit' }
+];
+
 export default class AnomalyTool extends ITool {
-  constructor(stage, level) {
+  constructor(stage, level, type) {
     super(stage);
 
     this.level = level;
 
     this.settings = new Settings().anomalies;
 
+    // type of the anomaly tool
+    this.type = type;
+
     this.weight_limit_pointer_sprite = null;
 
-    this.current_pointer_sprite = this.getWeightLimitPointerSprite();
+    if(this.type == AnomalyType[0].type) {
+      this.current_pointer_sprite = this.getWeightLimitPointerSprite();
+    }
+
     this.pointerContainer.addChild(this.current_pointer_sprite);
 
     this.anomaly_container = new PIXI.Container();
 
     this.snappedToSegment = null;
     this.snappingDistance = 35;
+
   }
 
   getWeightLimitPointerSprite() {
@@ -96,16 +107,18 @@ export default class AnomalyTool extends ITool {
     }
   }
 
-  keyDown(event) {}
+  keyDown(event) {
+    super.keyDown(event);
+  }
 
   keyUp(event) {
     var self = this;
     if(self.snappedToSegment) {
       // with other anomalies it'll probably be necessary to check both directions
       // weight limit is updated with number keys
-      if(self.snappedToSegment.startNode.anomalies.length !== 0)
+      if(this.keyWasDown && self.snappedToSegment.startNode.anomalies.length !== 0) {
         var number = parseInt(event.key);
-        // console.log(event.key);
+        console.log(event.key);
         if(number || number === 0) {
           if (self.snappedToSegment.startNode.anomalies.length === 0 && self.snappedToSegment.endNode.anomalies.length === 0) {
             self.snappedToSegment.startNode.anomalies = [{to:self.snappedToSegment.endNode.getId(), weight_limit:1}];
@@ -123,12 +136,10 @@ export default class AnomalyTool extends ITool {
 
         // refreshing routes to keep ui look responsive
         self.level.refreshRoutes();
+      }
     }
-  }
 
-  // for drawing purposes
-  getAnomalyContainer() {
-    return this.anomaly_container;
+    super.keyUp(event);
   }
 
   activate() {

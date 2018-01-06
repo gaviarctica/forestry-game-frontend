@@ -7,6 +7,7 @@ import FloatingDialog from './FloatingDialog';
 import { API } from './api';
 import { LANG } from './lang';
 import Settings from '../game/settings';
+import {AnomalyType} from '../editor/anomalytool';
 
 export default class Editor extends Component {
   constructor(props) {
@@ -354,6 +355,11 @@ export default class Editor extends Component {
     }
     if (button === 'road') {
       newTool = 'road_' + document.getElementById('road-tool-type').value;
+      if(document.getElementById('road-tool-type').value === 'weightlimit') {
+        this.editorCanvas.selectTool('anomalies', AnomalyType[0].type);
+      } else {
+        this.editorCanvas.selectTool('road');
+      }
     }
     this.setState({
       activeTool: newTool
@@ -460,11 +466,6 @@ export default class Editor extends Component {
               id="button-road"
               text={LANG[this.props.lang].buttons.road}
               buttonType={this.state.activeToolButton === 'road' ? 'primary' : 'default'}
-              handleClick={this.handleButtonClick.bind(this)} />
-            <Button
-              id="button-anomalies"
-              text={LANG[this.props.lang].buttons.anomalies}
-              buttonType={this.state.activeToolButton === 'anomalies' ? 'primary' : 'default'}
               handleClick={this.handleButtonClick.bind(this)} />
             <Button
               id="button-logs"

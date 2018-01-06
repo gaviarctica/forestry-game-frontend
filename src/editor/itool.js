@@ -5,7 +5,8 @@ export default class ITool {
   constructor(stage){
     this.stage = stage;
     this.pointerContainer = new PIXI.Container();
-    
+
+    this.keyWasDown = false;
   }
 
   activate() {
@@ -14,8 +15,12 @@ export default class ITool {
   mouseMove(mouseInput) {}
   mouseDown(mouseInput) {}
   mouseUp(mouseInput) {}
-  keyDown(event) {}
-  keyUp(event) {}
+  keyDown(event) {
+    this.keyWasDown = true;
+  }
+  keyUp(event) {
+    this.keyWasDown = false;
+  }
   deactivate() {
     this.stage.removeChild(this.pointerContainer);
   }

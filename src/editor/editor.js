@@ -7,6 +7,7 @@ import LogTool from './logtool';
 import DepositTool from './deposittool';
 import TruckTool from './trucktool';
 import RemoveTool from './removetool';
+import {AnomalyType} from './anomalytool';
 
 export default class EditorCanvas {
   constructor(updateUI) {
@@ -62,7 +63,9 @@ export default class EditorCanvas {
 
   createTools() {
     this.tools['road'] = new RoadTool(this.pixiApp.stage, this.level);
-    this.tools['anomalies'] = new AnomalyTool(this.pixiApp.stage, this.level);
+    this.tools['anomalies'] = {
+      weightlimit : new AnomalyTool(this.pixiApp.stage, this.level, AnomalyType[0].type)
+    };
     this.tools['log'] = new LogTool(this.pixiApp.stage, this.level);
     this.tools['deposit'] = new DepositTool(this.pixiApp.stage, this.level);
     this.tools['truck'] = new TruckTool(this.pixiApp.stage, this.level);
@@ -78,7 +81,7 @@ export default class EditorCanvas {
 
     // adding containers
     // this.pixiApp.stage.addChild(this.tools['road'].getRoadContainer());
-    this.pixiApp.stage.addChild(this.tools['anomalies'].getAnomalyContainer());
+    // this.pixiApp.stage.addChild(this.tools['anomalies'].weightlimit.getAnomalyContainer());
     this.pixiApp.stage.addChild(this.tools['road'].getDrawContainer());
   }
 
@@ -159,10 +162,15 @@ export default class EditorCanvas {
       window.removeEventListener(
         "keyup", self.currentTool.keyUp.bind(self.currentTool), false
       );
+
       this.currentTool.deactivate();
     }
 
-    this.currentTool = this.tools[name];
+    if(name === 'anomalies') {
+      this.currentTool = this.tools[name][placeType];
+    } else {
+      this.currentTool = this.tools[name];
+    }
 
     if (this.currentTool !== null && this.currentTool !== undefined) {
       window.addEventListener(
