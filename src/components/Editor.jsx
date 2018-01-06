@@ -357,6 +357,8 @@ export default class Editor extends Component {
       newTool = 'road_' + document.getElementById('road-tool-type').value;
       if(document.getElementById('road-tool-type').value === 'weightlimit') {
         this.editorCanvas.selectTool('anomalies', AnomalyType[0].type);
+      } else if(document.getElementById('road-tool-type').value === 'dying') {
+        this.editorCanvas.selectTool('anomalies', AnomalyType[1].type);
       } else {
         this.editorCanvas.selectTool('road');
       }

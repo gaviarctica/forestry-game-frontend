@@ -4,7 +4,8 @@ import {length, distance} from '../game/helpers';
 import Settings from '../game/settings';
 
 export const AnomalyType = [
-  { type : 'weightlimit' }
+  { type : 'weightlimit' },
+  { type : 'dying' }
 ];
 
 export default class AnomalyTool extends ITool {
@@ -19,9 +20,12 @@ export default class AnomalyTool extends ITool {
     this.type = type;
 
     this.weight_limit_pointer_sprite = null;
+    this.dying_road_pointer_sprite = null;
 
     if(this.type == AnomalyType[0].type) {
       this.current_pointer_sprite = this.getWeightLimitPointerSprite();
+    } else if( this.type == AnomalyType[1].type ) {
+      this.current_pointer_sprite = this.getDyingRoadPointerSprite();
     }
 
     this.pointerContainer.addChild(this.current_pointer_sprite);
@@ -30,7 +34,6 @@ export default class AnomalyTool extends ITool {
 
     this.snappedToSegment = null;
     this.snappingDistance = 35;
-
   }
 
   getWeightLimitPointerSprite() {
@@ -44,13 +47,15 @@ export default class AnomalyTool extends ITool {
     return this.weight_limit_pointer_sprite;
   }
 
-  // created function for this to have it manually get when necessary
-  getSnappedSegment(force_calc = false) {
-    if(!force_calc && typeof this.snappedToSegment != 'undefined' && this.snappedToSegment !== null)
-        return this.snappedToSegment;
+  getDyingRoadPointerSprite() {
+    if(this.dying_road_pointer_sprite === null) {
+      this.dying_road_pointer_sprite = new PIXI.Text( 0 + 'm',this.settings.DYING_ROAD_TEXT_FONT);
 
-    this.snappedToSegment = null;
+      this.dying_road_pointer_sprite.anchor.set(0.5);
+      this.dying_road_pointer_sprite.scale.set(this.settings.DYING_ROAD_TEXT_SCALE);
+    }
 
+    return this.dying_road_pointer_sprite;
   }
 
   mouseMove(mouseInput) {
@@ -82,6 +87,7 @@ export default class AnomalyTool extends ITool {
     //toggling visibility of pointer if we have snapped and there is anomaly
     if(this.snappedToSegment !== null && this.snappedToSegment.startNode.anomalies.length !== 0) {
       this.snappedToSegment.weight_limit_text.style.fill = 0x00FF00;
+      this.snappedToSegment.dying_road_text.style.fill = 0x00FF00;
       this.pointerContainer.visible = false;
     } else {
       this.pointerContainer.visible = true;
@@ -89,20 +95,101 @@ export default class AnomalyTool extends ITool {
 
   }
 
+  nodeHasAnomalyTo(node,to_node,anomaly_type) {
+    var rnode = null;
+    var anomaly_index = -1;
+
+    for(var i = 0; i < node.anomalies.length; ++i) {
+      if(node.anomalies[i].hasOwnProperty('weight_limit') &&
+        node.anomalies[i].to === to_node.getId()) {
+        rnode = node;
+        anomaly_index = i;
+        break;
+      }
+    }
+
+    return {node:rnode, anomaly_index:anomaly_index};
+  }
+
+
+
   mouseUp(mouseInput) {
     // mouse moved aka moved the viewport so don't do the action
     if (length(mouseInput.absDeltaDuringMouseDown) > 20)
       return;
 
     if(this.snappedToSegment !== null) {
-      if (this.snappedToSegment.startNode.anomalies.length === 0 && this.snappedToSegment.endNode.anomalies.length === 0) {
-        this.snappedToSegment.startNode.anomalies = [{to:this.snappedToSegment.endNode.getId(), weight_limit:1}];
-        this.snappedToSegment.weight_limit = 1;
-      } else {
-        this.snappedToSegment.startNode.anomalies[0].weight_limit++;
+      // weight limit
+      if(this.type === AnomalyType[0].type) {
+        var node = null;
+        var anomaly_index = -1;
+        if (this.snappedToSegment.startNode.anomalies.length === 0 && this.snappedToSegment.endNode.anomalies.length === 0) {
+          this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), weight_limit:1});
+          this.snappedToSegment.weight_limit = 1;
+          node = this.snappedToSegment.startNode;
+          anomaly_index = node.anomalies.length - 1;
+        } else {
+          // grinding through startnode anomalies
+          var node_data = this.nodeHasAnomalyTo(this.snappedToSegment.startNode,this.snappedToSegment.endNode,'weight_limit');
+
+          // if node is not still defined trying endnode
+          if(!node_data.node) {
+            node_data = this.nodeHasAnomalyTo(this.snappedToSegment.endNode,this.snappedToSegment.startNode,'weight_limit');
+          }
+
+          // if we have not found connections we just create it
+          if(!node_data.node) {
+            this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), weight_limit:1});
+            this.snappedToSegment.weight_limit = 1;
+            node = this.snappedToSegment.startNode;
+            anomaly_index = node.anomalies.length - 1;
+          } else {
+            node = node_data.node;
+            anomaly_index = node_data.anomaly_index;
+          }
+        }
+
+        this.snappedToSegment.weight_limit = node.anomalies[anomaly_index].weight_limit;
+
+      } else if(this.type === AnomalyType[1].type) {
+        var node = null;
+        var anomaly_index = -1;
+        if (this.snappedToSegment.startNode.anomalies.length === 0 && this.snappedToSegment.endNode.anomalies.length === 0) {
+          this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), dying_road:1});
+          this.snappedToSegment.anomalies = this.snappedToSegment.startNode.anomalies;
+          node = this.snappedToSegment.startNode;
+          anomaly_index = node.anomalies.length - 1;
+        } else {
+          // grinding through startnode anomalies
+          var node_data = this.nodeHasAnomalyTo(this.snappedToSegment.startNode,this.snappedToSegment.endNode,'dying_road');
+
+          // if node is not still defined trying endnode
+          if(!node_data.node) {
+            node_data = this.nodeHasAnomalyTo(this.snappedToSegment.endNode,this.snappedToSegment.startNode,'dying_road');
+          }
+
+          // if we have not found connections we just create it
+          if(!node_data.node) {
+            this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), dying_road:1});
+            this.snappedToSegment.anomalies = this.snappedToSegment.startNode.anomalies;
+            node = this.snappedToSegment.startNode;
+            anomaly_index = node.anomalies.length - 1;
+          } else {
+            node = node_data.node;
+            anomaly_index = node_data.anomaly_index;
+          }
+        }
+
+        this.snappedToSegment.dying_road = node.anomalies[anomaly_index].dying_road;
       }
 
-      this.snappedToSegment.weight_limit_text.text = this.snappedToSegment.startNode.anomalies[0].weight_limit + 'kg';
+      console.log(node.anomalies);
+
+      if(this.type === AnomalyType[0].type)
+        this.snappedToSegment.weight_limit_text.text = node.anomalies[anomaly_index].weight_limit + 'kg';
+      else if(this.type === AnomalyType[1].type)
+        this.snappedToSegment.dying_road_text.text = node.anomalies[anomaly_index].dying_road + 'm';
+
 
     }
   }
@@ -118,19 +205,35 @@ export default class AnomalyTool extends ITool {
       // weight limit is updated with number keys
       if(this.keyWasDown && self.snappedToSegment.startNode.anomalies.length !== 0) {
         var number = parseInt(event.key);
-        console.log(event.key);
         if(number || number === 0) {
-          if (self.snappedToSegment.startNode.anomalies.length === 0 && self.snappedToSegment.endNode.anomalies.length === 0) {
-            self.snappedToSegment.startNode.anomalies = [{to:self.snappedToSegment.endNode.getId(), weight_limit:1}];
-            self.snappedToSegment.weight_limit = number;
+          if (this.snappedToSegment.startNode.anomalies.length === 0 && this.snappedToSegment.endNode.anomalies.length === 0) {
+            if(this.type === AnomalyType[0].type) {
+              this.snappedToSegment.startNode.anomalies = [{to:this.snappedToSegment.endNode.getId(), weight_limit:1}];
+              this.snappedToSegment.weight_limit = 1;
+            } else if(this.type === AnomalyType[1].type) {
+              this.snappedToSegment.startNode.anomalies = [{to:this.snappedToSegment.endNode.getId(), dying_road:1}];
+              this.snappedToSegment.anomalies = this.snappedToSegment.startNode.anomalies;
+            }
           } else {
-            self.snappedToSegment.startNode.anomalies[0].weight_limit =
-            self.snappedToSegment.startNode.anomalies[0].weight_limit * 10 + number;
+            if(this.type === AnomalyType[0].type) {
+              self.snappedToSegment.startNode.anomalies[0].weight_limit =
+              self.snappedToSegment.startNode.anomalies[0].weight_limit * 10 + number;
+            } else if(this.type === AnomalyType[1].type) {
+              this.snappedToSegment.startNode.anomalies[0].dying_road =
+              this.snappedToSegment.startNode.anomalies[0].dying_road * 10 + number;
+            }
+
           }
         } else if(event.key === 'Backspace') {
           if(!(self.snappedToSegment.startNode.anomalies.length === 0 && self.snappedToSegment.endNode.anomalies.length === 0)) {
-            self.snappedToSegment.startNode.anomalies[0].weight_limit =
-            Math.floor(self.snappedToSegment.startNode.anomalies[0].weight_limit / 10);
+            if(this.type === AnomalyType[0].type) {
+              self.snappedToSegment.startNode.anomalies[0].weight_limit =
+              Math.floor(self.snappedToSegment.startNode.anomalies[0].weight_limit / 10);
+            } else if(this.type === AnomalyType[1].type) {
+              this.snappedToSegment.startNode.anomalies[0].dying_road =
+              Math.floor(this.snappedToSegment.startNode.anomalies[0].dying_road / 10);
+            }
+
           }
         }
 

@@ -64,7 +64,8 @@ export default class EditorCanvas {
   createTools() {
     this.tools['road'] = new RoadTool(this.pixiApp.stage, this.level);
     this.tools['anomalies'] = {
-      weightlimit : new AnomalyTool(this.pixiApp.stage, this.level, AnomalyType[0].type)
+      weightlimit : new AnomalyTool(this.pixiApp.stage, this.level, AnomalyType[0].type),
+      dying : new AnomalyTool(this.pixiApp.stage, this.level, AnomalyType[1].type)
     };
     this.tools['log'] = new LogTool(this.pixiApp.stage, this.level);
     this.tools['deposit'] = new DepositTool(this.pixiApp.stage, this.level);
