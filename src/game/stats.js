@@ -20,23 +20,26 @@ export default class Stats {
       //detailed report
       'driving_unloaded_time': 0,
       'driving_loaded_time': 0,
-      'loading_and_unloading': 0, //check
-      'idling': 0, //check
-      'driving_forward': 0, //check
-      'reverse': 0, //check
+      'loading_and_unloading': 0,
+      'idling': 0,
+      'driving_forward': 0,
+      'reverse': 0,
       'driving_unloaded_distance': 0,
       'driving_loaded_distance': 0,
-      'fuel_cost': 0, //check
-      'worker_salary': 0, //check
+      'fuel_cost': 0,
+      'worker_salary': 0,
       'loads_transported': 0,
+      'logs_deposited': 0,
+      'total_volume': 0,
       'productivity': 0,
 
-      'total_cost': 0 //check
+      'total_cost': 0
     };
     var self = this;
     this.timer = setInterval(function(){self.counterUp()}, 1000);
     this.settings = (new Settings()).stats;
     this.map_settings = (new Settings()).map;
+    this.prod_settings = (new Settings()).productivity;
     this.controls = controls;
   }
 
@@ -45,10 +48,6 @@ export default class Stats {
   }
 
   counterUp() {
-
-    if (!this.actionDone) {
-      this.report.idling += 1;
-    }
 
     this.actionDone = false;
 
@@ -65,7 +64,7 @@ export default class Stats {
     this.report.loading_and_unloading += this.settings.LOG_DELAY;
   }
 
-  updateLogs(logUpdate) {
+  updateLogs(logUpdate, logCount, action) {
     var formattedLogUpdate = {
       logs: [
         ['', '', '', '', ''],
@@ -79,10 +78,17 @@ export default class Stats {
     logUpdateX.forEach((column, i) => {
       column.forEach((slot, j) => {
         if (slot !== null) {
-          formattedLogUpdate.logs[i][4-j] = slot.type;          
+          formattedLogUpdate.logs[i][4-j] = slot.type;
         }
       });
     });
+
+    if (action === "unload") {
+      this.report.logs_deposited += 1;
+      if (logCount === 0) {
+        this.report.loads_transported += 1;
+      }
+    }
 
     this.updateUI(formattedLogUpdate);
   }
@@ -98,7 +104,7 @@ export default class Stats {
     return timePassed;
   }
 
-  calculateMovement(point) {
+  calculateMovement(point, logCount) {
     if(this.previousPoint === null) {
       this.previousPoint = point;
     }
@@ -122,7 +128,6 @@ export default class Stats {
       
       // Update the distance moved
       var dist = distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS;
-
       this.report.distanceMoved += dist;
 
       // Update the distance moved forward or backward
@@ -130,6 +135,15 @@ export default class Stats {
         this.report.driving_forward += dist;
       } else if (this.controls.isKeyDown(Key.Down)) {
         this.report.reverse += dist;
+      }
+
+      // Update distance moved with empty or loaded truck
+      if ((this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.Down)) && logCount > 0) {
+        this.report.driving_loaded_distance += dist;
+        this.report.driving_loaded_time += this.timeDelta(this.report.time);
+      } else if ((this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.Down)) && logCount === 0) {
+        this.report.driving_unloaded_distance += dist;
+        this.report.driving_unloaded_time += this.timeDelta(this.report.time);
       }
 
       this.previousPoint = point;
@@ -149,6 +163,8 @@ export default class Stats {
   }
 
   getReport() {
+    this.report.total_volume = this.report.logs_deposited*this.prod_settings.Volume;
+    this.report.productivity = this.report.total_volume/(this.report.time/this.settings.HOUR);
     this.report.worker_salary = this.settings.SALARY/this.settings.HOUR*this.report.time;
     this.report.total_cost = this.report.worker_salary + this.report.fuel_cost;
     return this.report;

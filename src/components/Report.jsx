@@ -84,12 +84,15 @@ export default function Report(props) {
               <p>{LANG[props.lang].detailedReport.drivingUnloadedDistance}: <span>{props.driving_unloaded_distance}</span></p>
               <p>{LANG[props.lang].detailedReport.drivingLoadedDistance}: <span>{props.driving_loaded_distance}</span></p>
 
-              <h3>{LANG[props.lang].detailedReport.costAndProductivity}</h3>
+              <h3>{LANG[props.lang].detailedReport.costTitle}</h3>
               <p>{LANG[props.lang].detailedReport.fuelConsumed}: <span>{props.fuel}</span></p>
               <p>{LANG[props.lang].detailedReport.fuelCost}: <span>{props.fuel_cost}</span></p>
               <p>{LANG[props.lang].detailedReport.workerSalary}: <span>{props.worker_salary}</span></p>
-              <br/>
+              
+              <h3>{LANG[props.lang].detailedReport.productivityTitle}</h3>
               <p>{LANG[props.lang].detailedReport.loadsTransported}: <span>{props.loads_transported}</span></p>
+              <p>{LANG[props.lang].detailedReport.logsDeposited}: <span>{props.logs_deposited}</span></p>
+              <p>{LANG[props.lang].detailedReport.totalVolume}: <span>{props.total_volume}</span></p>
               <p>{LANG[props.lang].detailedReport.productivity}: <span>{props.productivity}</span></p>
             </div>
           </div>

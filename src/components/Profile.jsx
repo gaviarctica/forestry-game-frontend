@@ -7,6 +7,7 @@ import { LANG } from './lang';
 import Icon from 'react-icons-kit';
 import { user } from 'react-icons-kit/icomoon/user';
 import { mail } from 'react-icons-kit/icomoon/mail';
+import { secondsToDateFormat } from '../game/helpers';
 
 const Rows = (props) => {
 	var rows = [];
@@ -129,11 +130,6 @@ export default class Profile extends Component {
 			//Date when game finished
 			var date = new Date(this.state.content.timestamp);
 
-			//Working time
-			var newdate = new Date(null);
-			newdate.setSeconds(this.state.content.duration);
-			var workingtime = newdate.toISOString().substr(11,8);
-
 			rightContent = (
 				<div id="right-content">
 					<Report type="profile_report"
@@ -141,15 +137,15 @@ export default class Profile extends Component {
 							lang={this.props.lang}
 			                enddate={date}
 			                mapname={this.state.content.level}
-			                time={workingtime}
+			                time={secondsToDateFormat(this.state.content.duration)}
 			                distance={this.state.content.distance}
 			                fuel={this.state.content.gas_consumption}
 			                logs={this.state.content.logs}
 			                cost={this.state.content.m_score}
-			                driving_unloaded_time={this.state.content.driving_unloaded_time}
-			                driving_loaded_time={this.state.content.driving_loaded_time}
-			                loading_and_unloading={this.state.content.loading_and_unloading}
-			                idling={this.state.content.idling}
+			                driving_unloaded_time={secondsToDateFormat(this.state.content.driving_unloaded_time)}
+			                driving_loaded_time={secondsToDateFormat(this.state.content.driving_loaded_time)}
+			                loading_and_unloading={secondsToDateFormat(this.state.content.loading_and_unloading)}
+			                idling={secondsToDateFormat(this.state.content.idling)}
 			                driving_forward={this.state.content.driving_forward}
 			                reverse={this.state.content.reverse}
 			                driving_unloaded_distance={this.state.content.driving_unloaded_distance}
@@ -157,6 +153,8 @@ export default class Profile extends Component {
 			                fuel_cost={this.state.content.fuel_cost}
 			                worker_salary={this.state.content.worker_salary}
 			                loads_transported={this.state.content.loads_transported}
+			                logs_deposited={this.state.content.logs_deposited}
+			                total_volume={this.state.content.total_volume}
 			                productivity={this.state.content.productivity}/>
 				</div>
         	);

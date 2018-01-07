@@ -80,3 +80,8 @@ export function secondsToDateFormat(secs) {
   var dateformat = date.toISOString().substr(11,8);
   return dateformat;
 }
+
+export function DateFormatToSeconds(date) {
+  var s = date.split(':');
+  return (+s[0]) * 60 * 60 + (+s[1]) * 60 + (+s[2]);
+}

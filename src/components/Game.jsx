@@ -7,6 +7,7 @@ import GameCanvas from '../game/game';
 import Loader from './Loader';
 import { API } from './api';
 import { LANG } from './lang';
+import { DateFormatToSeconds } from '../game/helpers';
 
 export default class Game extends Component {
   constructor(props) {
@@ -54,10 +55,10 @@ export default class Game extends Component {
         logs: JSON.stringify(this.parseLogs(this.state.mapdata.logs)),
         enddate: this.state.gameEndDate,
         id: this.state.mapID,
-        driving_unloaded_time: this.state.driving_unloaded_time,
-        driving_loaded_time: this.state.driving_loaded_time,
-        loading_and_unloading: this.state.loading_and_unloading,
-        idling: this.state.idling,
+        driving_unloaded_time: DateFormatToSeconds(this.state.driving_unloaded_time),
+        driving_loaded_time: DateFormatToSeconds(this.state.driving_loaded_time),
+        loading_and_unloading: DateFormatToSeconds(this.state.loading_and_unloading),
+        idling: DateFormatToSeconds(this.state.idling),
         driving_forward: this.state.driving_forward,
         reverse: this.state.reverse,
         driving_unloaded_distance: this.state.driving_unloaded_distance,
@@ -65,6 +66,8 @@ export default class Game extends Component {
         fuel_cost: this.state.fuel_cost,
         worker_salary: this.state.worker_salary,
         loads_transported: this.state.loads_transported,
+        logs_deposited: this.state.logs_deposited,
+        total_volume: this.state.total_volume,
         productivity: this.state.productivity
       }, function(err) {
         if (err) throw err;
@@ -177,6 +180,8 @@ export default class Game extends Component {
                 fuel_cost={this.state.fuel_cost}
                 worker_salary={this.state.worker_salary}
                 loads_transported={this.state.loads_transported}
+                logs_deposited={this.state.logs_deposited}
+                total_volume={this.state.total_volume}
                 productivity={this.state.productivity} />
             </div>
           </div>

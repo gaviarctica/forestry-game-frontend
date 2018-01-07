@@ -58,7 +58,7 @@ export const LANG = {
       dismissDetails: "Dismiss details"
     },
     detailedReport: {
-      time: "Time",
+      time: "Time (hh:mm:ss)",
       workingTime: "Working time",
       drivingUnloadedTime: "Driving unloaded",
       drivingLoadedTime: "Driving loaded",
@@ -72,13 +72,16 @@ export const LANG = {
       drivingUnloadedDistance: "Driving unloaded",
       drivingLoadedDistance: "Driving loaded",
 
-      costAndProductivity: "Cost & Productivity",
+      costTitle: "Cost (€)",
       fuelConsumed: "Fuel consumed",
       fuelCost: "Fuel cost",
       workerSalary: "Worker salary",
 
-      loadsTransported: "Loads transported",
-      productivity: "Productivity (m3/h)",
+      productivityTitle: "Productivity",
+      loadsTransported: "Loads transported (pc.)",
+      logsDeposited: "Logs deposited (pc.)",
+      totalVolume: "Total volume (m3)",
+      productivity: "Productivity (m3/h)"
     },
     game: {
       time: "Time",
@@ -197,7 +200,7 @@ export const LANG = {
       dismissDetails: "Sulje tilastot"
     },
     detailedReport: {
-      time: "Aika",
+      time: "Aika (tt:mm:ss)",
       workingTime: "Työskentelyaika",
       drivingUnloadedTime: "Tyhjällä kuormalla ajo",
       drivingLoadedTime: "Lastin kanssa ajo",
@@ -211,13 +214,16 @@ export const LANG = {
       drivingUnloadedDistance: "Tyhjällä kuormalla ajo",
       drivingLoadedDistance: "Lastin kanssa ajo",
 
-      costAndProductivity: "Kulut & Tuottavuus",
+      costTitle: "Kulut (€)",
       fuelConsumed: "Polttoaineen kulutus",
       fuelCost: "Polttoaineen kokonaishinta",
       workerSalary: "Työntekijän palkka",
 
-      loadsTransported: "Lasteja kuljetettu",
-      productivity: "Tuottavuus (m3/t)",
+      productivityTitle: "Productivity",
+      loadsTransported: "Lasteja kuljetettu (kpl)",
+      logsDeposited: "Puita kuljetettu (kpl)",
+      totalVolume: "Kokonaistilavuus (m3)",
+      productivity: "Tuottavuus (m3/t)"
     },
     game: {
       time: "Aika",

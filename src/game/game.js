@@ -187,18 +187,20 @@ export default class GameCanvas {
       distance: report.distanceMoved.toFixed(this.stats.settings.DISTANCE_MOVED_DECIMALS),
       fuel: report.fuelUsed.toFixed(this.stats.settings.FUEL_USED_DECIMALS),
       cost: report.total_cost.toFixed(this.stats.settings.TOTAL_COST_DECIMALS),
-      driving_unloaded_time: report.driving_unloaded_time,
-      driving_loaded_time: report.driving_loaded_time,
-      loading_and_unloading: report.loading_and_unloading,
-      idling: report.idling,
+      driving_unloaded_time: secondsToDateFormat(Math.round(report.driving_unloaded_time)),
+      driving_loaded_time: secondsToDateFormat(Math.round(report.driving_loaded_time)),
+      loading_and_unloading: secondsToDateFormat(report.loading_and_unloading),
+      idling: secondsToDateFormat(report.idling),
       driving_forward: report.driving_forward.toFixed(this.stats.settings.DISTANCE_MOVED_DECIMALS),
       reverse: report.reverse.toFixed(this.stats.settings.DISTANCE_MOVED_DECIMALS),
-      driving_unloaded_distance: report.driving_unloaded_distance,
-      driving_loaded_distance: report.driving_loaded_distance,
+      driving_unloaded_distance: report.driving_unloaded_distance.toFixed(this.stats.settings.DISTANCE_MOVED_DECIMALS),
+      driving_loaded_distance: report.driving_loaded_distance.toFixed(this.stats.settings.DISTANCE_MOVED_DECIMALS),
       fuel_cost: report.fuel_cost.toFixed(this.stats.settings.FUEL_COST_DECIMALS),
       worker_salary: report.worker_salary.toFixed(this.stats.settings.WORKER_SALARY_DECIMALS),
       loads_transported: report.loads_transported,
-      productivity: report.productivity
+      logs_deposited: report.logs_deposited,
+      total_volume: report.total_volume.toFixed(this.stats.settings.VOLUME_DECIMALS),
+      productivity: report.productivity.toFixed(this.stats.settings.VOLUME_DECIMALS)
     });
   }
 
