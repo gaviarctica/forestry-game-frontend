@@ -158,7 +158,8 @@ export default class MainMenu extends Component {
             message={this.state.formMsg}
             handleSubmit={this.handleFormSubmit.bind(this)}
             view='login'
-            lang={this.props.lang} />
+            lang={this.props.lang} 
+            notify={this.props.notify} />
         );
         break;
 
