@@ -2,7 +2,11 @@ import React from 'react';
 import './NotificationBox.css';
 
 const NotificationBox = ({message}) => {
-  return <div> <h1>{message}</h1> </div>
+  let style = {display: 'none'}
+  if(message) {
+    style = {display: 'block'}
+  }
+  return <div style={style} className='notification-box'> <span>{message}</span> </div>
 }
 
 export default NotificationBox;

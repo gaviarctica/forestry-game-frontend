@@ -1,0 +1,14 @@
+.notification-box {
+  width: 20%;
+  text-align: center;
+  padding: 2vw;
+  margin: 1vw;
+  z-index: 999;  
+  position: fixed;
+  box-shadow: var(--menu-shadow);
+  background-color: var(--jd-yellow);
+}
+
+.notification-box span {
+  color: black;
+}
