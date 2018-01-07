@@ -7,6 +7,7 @@ import Settings from './settings';
 import {Key} from './controls';
 import Controls from './controls';
 import Weather from './weather';
+import {secondsToDateFormat} from './helpers';
 
 export default class GameCanvas {
   constructor(mapData, updateUI) {
@@ -30,7 +31,7 @@ export default class GameCanvas {
 
     this.controls = new Controls();
 
-    this.stats = new Stats(updateUI);
+    this.stats = new Stats(updateUI, this.controls);
     this.gameEnded = false;
 
     this.map = new Level(this.mapData);
@@ -174,19 +175,31 @@ export default class GameCanvas {
       this.gameEnded = true;
     }
 
-    var totalDistance = this.stats.getDistanceMoved();
-    var totalfuelBurned = this.stats.getFuelUsed();
-    var cost = this.stats.getCost();
-
     this.truck.update(delta);
-    this.stats.updateUI({
-      distance: Math.round(totalDistance),
-      fuel: totalfuelBurned,
-      cost: cost.toFixed(2)
-    });
 
     this.controls.update();
     this.weather.update(delta);
+
+    var report = this.stats.getReport();
+    this.stats.updateUI({
+      time: secondsToDateFormat(report.time),
+      rawtime: report.time,
+      distance: report.distanceMoved.toFixed(this.stats.settings.DISTANCE_MOVED_DECIMALS),
+      fuel: report.fuelUsed.toFixed(this.stats.settings.FUEL_USED_DECIMALS),
+      cost: report.total_cost.toFixed(this.stats.settings.TOTAL_COST_DECIMALS),
+      driving_unloaded_time: report.driving_unloaded_time,
+      driving_loaded_time: report.driving_loaded_time,
+      loading_and_unloading: report.loading_and_unloading,
+      idling: report.idling,
+      driving_forward: report.driving_forward.toFixed(this.stats.settings.DISTANCE_MOVED_DECIMALS),
+      reverse: report.reverse.toFixed(this.stats.settings.DISTANCE_MOVED_DECIMALS),
+      driving_unloaded_distance: report.driving_unloaded_distance,
+      driving_loaded_distance: report.driving_loaded_distance,
+      fuel_cost: report.fuel_cost.toFixed(this.stats.settings.FUEL_COST_DECIMALS),
+      worker_salary: report.worker_salary.toFixed(this.stats.settings.WORKER_SALARY_DECIMALS),
+      loads_transported: report.loads_transported,
+      productivity: report.productivity
+    });
   }
 
   isInEndGameState() {

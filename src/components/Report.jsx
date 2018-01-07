@@ -73,9 +73,8 @@ export default function Report(props) {
               <h3>{LANG[props.lang].detailedReport.time}</h3>
               <p>{LANG[props.lang].detailedReport.workingTime}: <span>{props.time}</span></p>
               <p>{LANG[props.lang].detailedReport.drivingUnloadedTime}: <span>{props.driving_unloaded_time}</span></p>
-              <p>{LANG[props.lang].detailedReport.loadingTime}: <span>{props.loading}</span></p>
               <p>{LANG[props.lang].detailedReport.drivingLoadedTime}: <span>{props.driving_loaded_time}</span></p>
-              <p>{LANG[props.lang].detailedReport.unloadingTime}: <span>{props.unloading}</span></p>
+              <p>{LANG[props.lang].detailedReport.loadingUnloadingTime}: <span>{props.loading_and_unloading}</span></p>
               <p>{LANG[props.lang].detailedReport.idling}: <span>{props.idling}</span></p>
 
               <h3>{LANG[props.lang].detailedReport.distance}</h3>

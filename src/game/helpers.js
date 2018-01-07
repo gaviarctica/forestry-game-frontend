@@ -73,3 +73,10 @@ export function normalize(vector2) {
 export function isLeft(p1, p2, p){
   return ((p2.x - p1.x)*(p.y - p1.y) - (p2.y - p1.y)*(p.x - p1.x)) > 0;
 }
+
+export function secondsToDateFormat(secs) {
+  var date = new Date(null);
+  date.setSeconds(secs);
+  var dateformat = date.toISOString().substr(11,8);
+  return dateformat;
+}

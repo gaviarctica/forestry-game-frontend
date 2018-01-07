@@ -52,7 +52,11 @@ export default class Settings {
       HOUR : 3600,
       DIESEL_PRICE : 1.2,
       // ui
-      FUEL_USED_DECIMALS : 2
+      FUEL_USED_DECIMALS : 2,
+      FUEL_COST_DECIMALS: 2,
+      WORKER_SALARY_DECIMALS: 2,
+      DISTANCE_MOVED_DECIMALS : 2,
+      TOTAL_COST_DECIMALS: 2
     };
 
     this.log_deposit = {

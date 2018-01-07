@@ -147,9 +147,8 @@ export default class Profile extends Component {
 			                logs={this.state.content.logs}
 			                cost={this.state.content.m_score}
 			                driving_unloaded_time={this.state.content.driving_unloaded_time}
-			                loading={this.state.content.loading}
 			                driving_loaded_time={this.state.content.driving_loaded_time}
-			                unloading={this.state.content.unloading}
+			                loading_and_unloading={this.state.content.loading_and_unloading}
 			                idling={this.state.content.idling}
 			                driving_forward={this.state.content.driving_forward}
 			                reverse={this.state.content.reverse}

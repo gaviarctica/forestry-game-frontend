@@ -49,24 +49,23 @@ export default class Game extends Component {
       });
       API.postReport({
         distance: this.state.distance,
-        time: this.state.time,
+        time: Math.round(this.state.rawtime),
         fuel: this.state.fuel,
         logs: JSON.stringify(this.parseLogs(this.state.mapdata.logs)),
         enddate: this.state.gameEndDate,
         id: this.state.mapID,
-        driving_unloaded_time: 0,
-        loading: 0,
-        driving_loaded_time: 0,
-        unloading: 0,
-        idling: 0,
-        driving_forward: 0,
-        reverse: 0,
-        driving_unloaded_distance: 0,
-        driving_loaded_distance: 0,
-        fuel_cost: 0,
-        worker_salary: 0,
-        loads_transported: 0,
-        productivity: 0
+        driving_unloaded_time: this.state.driving_unloaded_time,
+        driving_loaded_time: this.state.driving_loaded_time,
+        loading_and_unloading: this.state.loading_and_unloading,
+        idling: this.state.idling,
+        driving_forward: this.state.driving_forward,
+        reverse: this.state.reverse,
+        driving_unloaded_distance: this.state.driving_unloaded_distance,
+        driving_loaded_distance: this.state.driving_loaded_distance,
+        fuel_cost: this.state.fuel_cost,
+        worker_salary: this.state.worker_salary,
+        loads_transported: this.state.loads_transported,
+        productivity: this.state.productivity
       }, function(err) {
         if (err) throw err;
       })
@@ -162,25 +161,23 @@ export default class Game extends Component {
                 lang={this.props.lang}
                 enddate={this.state.gameEndDate}
                 mapname={this.state.mapname}
-                time={this.state.timestring}
-                duration={this.state.time}
+                time={this.state.time}
                 distance={this.state.distance}
                 fuel={this.state.fuel}
                 cost={this.state.cost}
                 logs={this.parseLogs(this.state.mapdata.logs)}
-                driving_unloaded_time={0}
-                loading={0}
-                driving_loaded_time={0}
-                unloading={0}
-                idling={0}
-                driving_forward={0}
-                reverse={0}
-                driving_unloaded_distance={0}
-                driving_loaded_distance={0}
-                fuel_cost={0}
-                worker_salary={0}
-                loads_transported={0}
-                productivity={0} />
+                driving_unloaded_time={this.state.driving_unloaded_time}
+                driving_loaded_time={this.state.driving_loaded_time}
+                loading_and_unloading={this.state.loading_and_unloading}
+                idling={this.state.idling}
+                driving_forward={this.state.driving_forward}
+                reverse={this.state.reverse}
+                driving_unloaded_distance={this.state.driving_unloaded_distance}
+                driving_loaded_distance={this.state.driving_loaded_distance}
+                fuel_cost={this.state.fuel_cost}
+                worker_salary={this.state.worker_salary}
+                loads_transported={this.state.loads_transported}
+                productivity={this.state.productivity} />
             </div>
           </div>
         </div>
@@ -194,7 +191,7 @@ export default class Game extends Component {
         <div id="game-info">
           <GameStat
             header={LANG[this.props.lang].game.time}
-            value={this.state.timestring} />
+            value={this.state.time} />
           <GameStat
             header={LANG[this.props.lang].game.distance}
             value={this.state.distance + ' m'} />

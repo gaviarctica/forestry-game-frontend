@@ -61,9 +61,8 @@ export const LANG = {
       time: "Time",
       workingTime: "Working time",
       drivingUnloadedTime: "Driving unloaded",
-      loadingTime: "Loading",
       drivingLoadedTime: "Driving loaded",
-      unloadingTime: "Unloading",
+      loadingUnloadingTime: "Loading & Unloading",
       idling: "Idling",
 
       distance: "Distance (m)",
@@ -201,9 +200,8 @@ export const LANG = {
       time: "Aika",
       workingTime: "Työskentelyaika",
       drivingUnloadedTime: "Tyhjällä kuormalla ajo",
-      loadingTime: "Lastaus",
       drivingLoadedTime: "Lastin kanssa ajo",
-      unloadingTime: "Tyhjennys",
+      loadingUnloadingTime: "Lastaus & Tyhjennys",
       idling: "Toimeton",
 
       distance: "Matka (m)",
