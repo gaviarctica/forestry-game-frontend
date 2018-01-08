@@ -77,7 +77,11 @@ export const LANG = {
       weather: "Weather",
       enableFog: "Enable fog",
       fogDensity: "Density",
-      fogVisibility: "Visibility"
+      fogVisibility: "Visibility",
+      messages: {
+        levelSaved: "Level saved",
+        levelLoaded: "Level loaded"
+      }
     },
     buttons: {
       startGame: "Start game",
@@ -186,7 +190,11 @@ export const LANG = {
       weather: "Säätila",
       enableFog: "Sumu",
       fogDensity: "Tiheys",
-      fogVisibility: "Näkyvyys"
+      fogVisibility: "Näkyvyys",
+      messages: {
+        levelSaved: "Taso tallennettu",
+        levelLoaded: "Taso ladattu"
+      }
     },
     buttons: {
       startGame: "Aloita peli",

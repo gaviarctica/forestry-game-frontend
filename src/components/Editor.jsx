@@ -305,6 +305,7 @@ export default class Editor extends Component {
         });
       }
       self.updatePreviousSavedStatus();
+      self.props.notify(LANG[self.props.lang].editor.messages.levelLoaded);
     });
   }
 
@@ -333,6 +334,8 @@ export default class Editor extends Component {
     });
     // Update list of user's maps
     this.loadUserLevels();
+
+    this.props.notify(LANG[this.props.lang].editor.messages.levelSaved);
   }
 
   handleSaveAsSecondaryClick() {
