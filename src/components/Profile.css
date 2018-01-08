@@ -8,8 +8,10 @@
 	box-shadow: var(--menu-shadow);
 	display:inline-block;
 	margin: 20px;
-	vertical-align: middle;
+	vertical-align: top;
 	min-width: 500px;
+	max-height: 60vh;
+	overflow-y: auto;
 }
 
 #left-content table {
@@ -18,17 +20,6 @@
 
 ul {
 	list-style-type: none;
-}
-
-#right-content {
-	display:inline-block;
-	background-color: var(--jd-gray);
-	width: 300px;
-	height: 500px;
-	margin: 20px;
-	vertical-align: middle;
-	padding-left: 20px;
-	padding-right: 20px;
 }
 
 #right-content > h1 {
