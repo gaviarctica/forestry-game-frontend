@@ -1,6 +1,19 @@
+#closeButton {
+	float: right;
+	position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
 #endgame-report {
 	min-width: 250px;
   float: right;
+  max-height: 100vh;
+  overflow-y: scroll;
+}
+
+#endgame-report > * {
+	padding: 10px;
 }
 
 #endgame-report span, #report span {
@@ -9,4 +22,16 @@
 
 #endgame-report h1, #endgame-report h2, #endgame-report h3 {
   color: #eee;
+}
+
+#right-content {
+	display:inline-block;
+	background-color: var(--jd-gray);
+	width: 300px;
+	margin: 20px;
+	vertical-align: top;
+	padding-left: 20px;
+	padding-right: 20px;
+	max-height: 60vh;
+	overflow-y: scroll;
 }

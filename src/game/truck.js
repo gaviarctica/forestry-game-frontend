@@ -92,7 +92,7 @@ export default class Truck {
     this.checkLogs();
     this.checkDeposits();
     this.draw();
-    this.stats.calculateMovement(this.currentSegment.getPositionAt(this.pointDelta));
+    this.stats.calculateMovement(this.currentSegment.getPositionAt(this.pointDelta), this.logContainer.getLogCount());
     this.stats.calculateFuel(this.logContainer.getLogCount());
   }
 
@@ -136,7 +136,7 @@ export default class Truck {
       this.selectNearbyItemAtDir(-1);
     }
 
-    if(this.controls.wasKeyPressed(Key.Space)) {
+    if(this.controls.wasKeyPressed(Key.Space) && this.controls.isKeyUp(Key.Up) && this.controls.isKeyUp(Key.Up)) {
       this.doLogAction = true;
     } else {
       this.doLogAction = false;
@@ -318,7 +318,7 @@ export default class Truck {
   // returns boolean if the log was picked up
   pickLog(log) {
     if(this.logContainer.addLog(log, this.sprite)) {
-      this.stats.updateLogs(this.logContainer);
+      this.stats.updateLogs(this.logContainer, undefined, "pickup");
       this.logsRemaining[log.type] -= 1;
       this.stats.updateUI({
         logsRemainingOnGround: this.logsRemaining
@@ -332,7 +332,7 @@ export default class Truck {
 
   unloadLogTo(deposit) {
     if(this.logContainer.unloadLogTo(deposit, this.depositsOnLevel)) {
-      this.stats.updateLogs(this.logContainer);   
+      this.stats.updateLogs(this.logContainer, this.logContainer.getLogCount(), "unload");
       return true;
     }
     return false;

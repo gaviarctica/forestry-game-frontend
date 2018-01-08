@@ -52,7 +52,36 @@ export const LANG = {
       distanceTravelled: "Distance travelled",
       fuelConsumed: "Fuel consumed",
       logsCollected: "Logs collected",
-      finalCost: "Total cost"
+      finalCost: "Total cost",
+      close: "Close",
+      details: "Show details",
+      dismissDetails: "Dismiss details"
+    },
+    detailedReport: {
+      time: "Time (hh:mm:ss)",
+      workingTime: "Working time",
+      drivingUnloadedTime: "Driving unloaded",
+      drivingLoadedTime: "Driving loaded",
+      loadingUnloadingTime: "Loading & Unloading",
+      idling: "Idling",
+
+      distance: "Distance (m)",
+      distanceTravelled: "Distance travelled",
+      drivingForwardTime: "Driving forward",
+      drivingBackwardTime: "Reverse",
+      drivingUnloadedDistance: "Driving unloaded",
+      drivingLoadedDistance: "Driving loaded",
+
+      costTitle: "Cost (€)",
+      fuelConsumed: "Fuel consumed",
+      fuelCost: "Fuel cost",
+      workerSalary: "Worker salary",
+
+      productivityTitle: "Productivity",
+      loadsTransported: "Loads transported (pc.)",
+      logsDeposited: "Logs deposited (pc.)",
+      totalVolume: "Total volume (m3)",
+      productivity: "Productivity (m3/h)"
     },
     game: {
       time: "Time",
@@ -77,7 +106,11 @@ export const LANG = {
       weather: "Weather",
       enableFog: "Enable fog",
       fogDensity: "Density",
-      fogVisibility: "Visibility"
+      fogVisibility: "Visibility",
+      messages: {
+        levelSaved: "Level saved",
+        levelLoaded: "Level loaded"
+      }
     },
     buttons: {
       startGame: "Start game",
@@ -162,7 +195,36 @@ export const LANG = {
       distanceTravelled: "Matkustettu etäisyys",
       fuelConsumed: "Polttoaineen kulutus",
       logsCollected: "Puita kerätty",
-      finalCost: "Työn kulut"
+      finalCost: "Työn kulut",
+      close: "Sulje",
+      details: "Näytä tilastot",
+      dismissDetails: "Sulje tilastot"
+    },
+    detailedReport: {
+      time: "Aika (tt:mm:ss)",
+      workingTime: "Työskentelyaika",
+      drivingUnloadedTime: "Tyhjällä kuormalla ajo",
+      drivingLoadedTime: "Lastin kanssa ajo",
+      loadingUnloadingTime: "Lastaus & Tyhjennys",
+      idling: "Toimeton",
+
+      distance: "Matka (m)",
+      distanceTravelled: "Matkustettu etäisyys",
+      drivingForwardTime: "Eteenpäin ajo",
+      drivingBackwardTime: "Peruuttaminen",
+      drivingUnloadedDistance: "Tyhjällä kuormalla ajo",
+      drivingLoadedDistance: "Lastin kanssa ajo",
+
+      costTitle: "Kulut (€)",
+      fuelConsumed: "Polttoaineen kulutus",
+      fuelCost: "Polttoaineen kokonaishinta",
+      workerSalary: "Työntekijän palkka",
+
+      productivityTitle: "Productivity",
+      loadsTransported: "Lasteja kuljetettu (kpl)",
+      logsDeposited: "Puita kuljetettu (kpl)",
+      totalVolume: "Kokonaistilavuus (m3)",
+      productivity: "Tuottavuus (m3/t)"
     },
     game: {
       time: "Aika",
@@ -187,7 +249,11 @@ export const LANG = {
       weather: "Säätila",
       enableFog: "Sumu",
       fogDensity: "Tiheys",
-      fogVisibility: "Näkyvyys"
+      fogVisibility: "Näkyvyys",
+      messages: {
+        levelSaved: "Taso tallennettu",
+        levelLoaded: "Taso ladattu"
+      }
     },
     buttons: {
       startGame: "Aloita peli",

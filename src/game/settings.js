@@ -52,7 +52,12 @@ export default class Settings {
       HOUR : 3600,
       DIESEL_PRICE : 1.2,
       // ui
-      FUEL_USED_DECIMALS : 2
+      FUEL_USED_DECIMALS : 2,
+      FUEL_COST_DECIMALS : 2,
+      WORKER_SALARY_DECIMALS : 2,
+      DISTANCE_MOVED_DECIMALS : 2,
+      TOTAL_COST_DECIMALS : 2,
+      VOLUME_DECIMALS : 2
     };
 
     this.log_deposit = {
@@ -71,6 +76,11 @@ export default class Settings {
       // Graphics
       SPRITE_ANCHOR : 0.5,
       SPRITE_SCALE : 0.1
+    }
+
+    this.productivity = {
+      // Volume of cylinder = pi*r^2*h (with these values approx 0.98, width and height divided by 10)
+      Volume : Math.PI * Math.pow(((this.log.Height / 10) / 2), 2) * (this.log.Width / 10)
     }
 
     this.anomalies = {

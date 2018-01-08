@@ -6,10 +6,12 @@ import Editor from './Editor';
 import { FadeInFadeOut } from './animation';
 import './animation.css';
 import { API } from './api';
+import NotificationBox from './NotificationBox'
 
 export default class App extends Component {
   constructor(props) {
     super(props);
+    this.timer;
     this.state = {
       currentView: '',
       viewData: undefined,
@@ -18,7 +20,8 @@ export default class App extends Component {
       email: '',
       lang: 'en',
       viewAnimation: false,
-      validationDone: false
+      validationDone: false,
+      notification: ""
     }
   }
 
@@ -58,6 +61,18 @@ export default class App extends Component {
         });
       }
     });    
+  }
+
+  componentWillUpdate() {
+    clearTimeout(this.timer);
+  }
+
+  componentDidUpdate() {
+    this.timer = setTimeout(() => {
+      this.setState({
+        notification: ""
+      })
+    }, 4000)
   }
 
   componentDidMount() {
@@ -107,6 +122,15 @@ export default class App extends Component {
        
   }
 
+  // Displays a notification message on top left corner
+  // Pass this in props as notify. Use by giving the function
+  // a message as a parameter
+  notify(message) {
+    this.setState({
+      notification: message
+    })
+  }
+
   render() {
     var view;
     switch(this.state.currentView) {
@@ -120,7 +144,9 @@ export default class App extends Component {
             username={this.state.username}
             email={this.state.email}
             lang={this.state.lang}
-            changeLanguage={this.changeLanguage.bind(this)} />
+            changeLanguage={this.changeLanguage.bind(this)} 
+            notify={this.notify.bind(this)}
+            />
         );
         break;
 
@@ -155,7 +181,8 @@ export default class App extends Component {
             viewData={this.state.viewData}
             loggedIn={this.state.loggedIn}
             username={username}
-            lang={this.state.lang} />
+            lang={this.state.lang}
+            notify={this.notify.bind(this)} />
         );
         break;
       default:
@@ -164,10 +191,10 @@ export default class App extends Component {
     }
     return (
       <div className="App">
+      <NotificationBox message={this.state.notification} />
       <FadeInFadeOut in={this.state.viewAnimation}>
         {view}
       </FadeInFadeOut>
-        
       </div>
     );
   }
