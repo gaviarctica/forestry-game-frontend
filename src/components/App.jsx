@@ -181,7 +181,8 @@ export default class App extends Component {
             viewData={this.state.viewData}
             loggedIn={this.state.loggedIn}
             username={username}
-            lang={this.state.lang} />
+            lang={this.state.lang}
+            notify={this.notify.bind(this)} />
         );
         break;
       default:
