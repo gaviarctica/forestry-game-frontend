@@ -226,6 +226,7 @@ export default class MainMenu extends Component {
 
     return (
       <div className="MainMenu">
+        <div id="menu-background"></div>
 
         <div id="navbar">          
             <TranslateRight in={this.state.appearAnimation}>
