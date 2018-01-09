@@ -222,10 +222,10 @@ export default class AnomalyTool extends ITool {
         var number = parseInt(event.key);
         if(number || number === 0) {
           // adding number
-          if(this.type === AnomalyType[0].type) {
+          if(this.type === AnomalyType[0].type && node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name]) {
               node_data.node.anomalies[node_data.anomaly_index].weight_limit =
               node_data.node.anomalies[node_data.anomaly_index].weight_limit * 10 + number;
-          } else if(this.type === AnomalyType[1].type) {
+          } else if(this.type === AnomalyType[1].type && node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name]) {
               node_data.node.anomalies[node_data.anomaly_index].dying_road =
               node_data.node.anomalies[node_data.anomaly_index].dying_road * 10 + number;
           }
