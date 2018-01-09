@@ -196,8 +196,8 @@ export default class EditorCanvas {
     }
   }
 
-  serializeLevel() {
-    return this.level.serialize();
+  serializeLevel(fog) {
+    return this.level.serialize(fog);
   }
 
   levelInfo() {
@@ -206,9 +206,7 @@ export default class EditorCanvas {
 
   update(delta)
   {
-    // Commented this out because it sends empty updates constantly regards gaviarctica
-    // this.ui.updateUI({
-    // });
+    
   }
 
   destroy()

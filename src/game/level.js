@@ -319,7 +319,7 @@ export default class Level {
     return this.logDeposits;
   }
 
-  serialize() {
+  serialize(fog) {
     var routes = [];
     for (let [id, node] of this.routeNodes) {
       var pos = node.getPos();
@@ -352,13 +352,21 @@ export default class Level {
       }
     }
 
+    var weather = {}
+    if (fog.enabled) {
+      weather.type = 'fog';
+      weather.density = fog.density;
+      weather.visibility = fog.visibility;
+    }
+
     return {
       startpoint: this.getStartingSegment().getPositionAt(this.startingInterpolation),
       startseg: startingSegmentIdx,
       startinterp: this.startingInterpolation,
       routes: routes,
       logs: logs,
-      logdeposits: deposits
+      logdeposits: deposits,
+      weather: weather
     };
   }
 

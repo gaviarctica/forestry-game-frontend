@@ -229,7 +229,11 @@ export default class Editor extends Component {
         });
       } else {
         // Otherwise overwrite old level
-        var mapData = this.editorCanvas.serializeLevel();
+        var mapData = this.editorCanvas.serializeLevel({
+          enabled: this.state.fogEnabled,
+          density: this.state.fogDensity,
+          visibility: this.state.fogVisibility
+        });
         var mapInfo = this.editorCanvas.levelInfo();
         if (this.state.loadedMapID) {
           API.updateMap(this.state.loadedMapID, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
@@ -310,7 +314,11 @@ export default class Editor extends Component {
   }
 
   handleSaveAsPrimaryClick(newMapName) {
-    var mapData = this.editorCanvas.serializeLevel();
+    var mapData = this.editorCanvas.serializeLevel({
+      enabled: this.state.fogEnabled,
+      density: this.state.fogDensity,
+      visibility: this.state.fogVisibility
+    });
     var mapInfo = this.editorCanvas.levelInfo();
     var self = this;
     API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err, response) {
