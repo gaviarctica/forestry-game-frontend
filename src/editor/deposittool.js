@@ -3,16 +3,20 @@ import PlaceTool from './placetool';
 import {createLogDepositGraphics} from '../game/logdeposit';
 
 export default class DepositTool extends PlaceTool {
-  constructor(stage, level) {
+  constructor(stage, level, type) {
     super(stage, level);
-    var pointerGraphics = createLogDepositGraphics();
+    if (type !== undefined) {
+      var pointerGraphics = createLogDepositGraphics([type]);
+    } else {
+      var pointerGraphics = createLogDepositGraphics();      
+    }
 
     this.pointerContainer.addChild(pointerGraphics);
 
     this.minDistanceFromRoad = 70;
     this.maxDistanceFromRoad = 50;
 
-    this.type = undefined;
+    this.type = type;
   }
 
   activate() {

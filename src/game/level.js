@@ -341,7 +341,7 @@ export default class Level {
     var deposits = [];
     for (var deposit of this.logDeposits) {
       pos = deposit.getPosition();
-      deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.type});
+      deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.types[0]});
     }
 
     var startingSegmentIdx = 0;

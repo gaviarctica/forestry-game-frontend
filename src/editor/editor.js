@@ -68,8 +68,19 @@ export default class EditorCanvas {
       dying : new AnomalyTool(this.pixiApp.stage, this.level, AnomalyType[1].type),
       oneway : new AnomalyTool(this.pixiApp.stage, this.level, AnomalyType[2].type)
     };
-    this.tools['log'] = new LogTool(this.pixiApp.stage, this.level);
-    this.tools['deposit'] = new DepositTool(this.pixiApp.stage, this.level);
+    this.tools['log_0'] = new LogTool(this.pixiApp.stage, this.level, 0);
+    this.tools['log_1'] = new LogTool(this.pixiApp.stage, this.level, 1);
+    this.tools['log_2'] = new LogTool(this.pixiApp.stage, this.level, 2);
+    this.tools['log_3'] = new LogTool(this.pixiApp.stage, this.level, 3);
+    this.tools['log_4'] = new LogTool(this.pixiApp.stage, this.level, 4);
+    this.tools['log_5'] = new LogTool(this.pixiApp.stage, this.level, 5);
+    this.tools['deposit_free'] = new DepositTool(this.pixiApp.stage, this.level, undefined);
+    this.tools['deposit_0'] = new DepositTool(this.pixiApp.stage, this.level, 0);
+    this.tools['deposit_1'] = new DepositTool(this.pixiApp.stage, this.level, 1);
+    this.tools['deposit_2'] = new DepositTool(this.pixiApp.stage, this.level, 2);
+    this.tools['deposit_3'] = new DepositTool(this.pixiApp.stage, this.level, 3);
+    this.tools['deposit_4'] = new DepositTool(this.pixiApp.stage, this.level, 4);
+    this.tools['deposit_5'] = new DepositTool(this.pixiApp.stage, this.level, 5);
     this.tools['truck'] = new TruckTool(this.pixiApp.stage, this.level);
     this.tools['remove'] = new RemoveTool(this.pixiApp.stage, this.level);
   }
