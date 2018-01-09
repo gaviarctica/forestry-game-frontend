@@ -3,9 +3,9 @@ import {length, distance, distanceToSegment} from '../game/helpers';
 import PlaceTool from './placetool';
 
 export default class LogTool extends PlaceTool {
-  constructor(stage, level) {
+  constructor(stage, level, type) {
     super(stage, level);
-    var pointerSprite = PIXI.Sprite.fromImage('/static/log0.png');
+    var pointerSprite = PIXI.Sprite.fromImage('/static/log' + type + '.png');
     pointerSprite.anchor.set(0.5, 0.5);
     pointerSprite.scale.set(0.1);
 
@@ -14,7 +14,7 @@ export default class LogTool extends PlaceTool {
     this.minDistanceFromRoad = 70;
     this.maxDistanceFromRoad = 25;
 
-    this.type = 0;
+    this.type = type;
   }
 
   activate() {

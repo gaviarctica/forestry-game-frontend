@@ -40,19 +40,19 @@ export default class Editor extends Component {
       'road_dying': '/static/road_water.png',
       'road_weightlimit': '/static/road_mud.png',
       'road_oneway': '/static/road_oneway2.png',
-      'logs_0': '/static/log0.png',
-      'logs_1': '/static/log1.png',
-      'logs_2': '/static/log2.png',
-      'logs_3': '/static/log3.png',
-      'logs_4': '/static/log4.png',
-      'logs_5': '/static/log5.png',
-      'deposits_free': '/static/deposit_empty.svg',
-      'deposits_0': '/static/deposit_0.svg',
-      'deposits_1': '/static/deposit_1.svg',
-      'deposits_2': '/static/deposit_2.svg',
-      'deposits_3': '/static/deposit_3.svg',
-      'deposits_4': '/static/deposit_4.svg',
-      'deposits_5': '/static/deposit_5.svg',
+      'log_0': '/static/log0.png',
+      'log_1': '/static/log1.png',
+      'log_2': '/static/log2.png',
+      'log_3': '/static/log3.png',
+      'log_4': '/static/log4.png',
+      'log_5': '/static/log5.png',
+      'deposit_free': '/static/deposit_empty.svg',
+      'deposit_0': '/static/deposit_0.svg',
+      'deposit_1': '/static/deposit_1.svg',
+      'deposit_2': '/static/deposit_2.svg',
+      'deposit_3': '/static/deposit_3.svg',
+      'deposit_4': '/static/deposit_4.svg',
+      'deposit_5': '/static/deposit_5.svg',
       'truck': '/static/truck.svg',
       'remove': '/static/editor_remove.png'
     }
@@ -65,10 +65,10 @@ export default class Editor extends Component {
   }
 
   componentDidMount() {
-    var self = this;
-    self.editorCanvas = new EditorCanvas(self.updateUI.bind(self));
+    this.editorCanvas = new EditorCanvas(this.updateUI.bind(this));
     this.updatePreviousSavedStatus();
     this.loadUserLevels();
+    this.editorCanvas.selectTool('road');
   }
 
   updatePreviousSavedStatus() {
@@ -181,24 +181,20 @@ export default class Editor extends Component {
       this.props.switchView('mainmenu');
     }
     if (clicked === 'button-road') {
-      this.editorCanvas.selectTool('road');
       this.setState({
         activeToolButton: 'road'
       });
       this.updateActiveTool('road');
     }
     if (clicked === 'button-anomalies') {
-      this.editorCanvas.selectTool('anomalies');
     }
     if (clicked === 'button-logs') {
-      this.editorCanvas.selectTool('log');
       this.setState({
         activeToolButton: 'logs'
       });
       this.updateActiveTool('logs');
     }
     if (clicked === 'button-deposits') {
-      this.editorCanvas.selectTool('deposit');
       this.setState({
         activeToolButton: 'deposits'
       });
@@ -233,7 +229,11 @@ export default class Editor extends Component {
         });
       } else {
         // Otherwise overwrite old level
-        var mapData = this.editorCanvas.serializeLevel();
+        var mapData = this.editorCanvas.serializeLevel({
+          enabled: this.state.fogEnabled,
+          density: this.state.fogDensity,
+          visibility: this.state.fogVisibility
+        });
         var mapInfo = this.editorCanvas.levelInfo();
         if (this.state.loadedMapID) {
           API.updateMap(this.state.loadedMapID, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
@@ -314,7 +314,11 @@ export default class Editor extends Component {
   }
 
   handleSaveAsPrimaryClick(newMapName) {
-    var mapData = this.editorCanvas.serializeLevel();
+    var mapData = this.editorCanvas.serializeLevel({
+      enabled: this.state.fogEnabled,
+      density: this.state.fogDensity,
+      visibility: this.state.fogVisibility
+    });
     var mapInfo = this.editorCanvas.levelInfo();
     var self = this;
     API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err, response) {
@@ -351,10 +355,10 @@ export default class Editor extends Component {
   updateActiveTool(button) {
     let newTool;
     if (button === 'logs') {
-      newTool = 'logs_' + document.getElementById('log-tool-type').value;
+      newTool = 'log_' + document.getElementById('log-tool-type').value;
     }
     if (button === 'deposits') {
-      newTool = 'deposits_' + document.getElementById('deposit-tool-type').value;
+      newTool = 'deposit_' + document.getElementById('deposit-tool-type').value;
     }
     if (button === 'road') {
       newTool = 'road_' + document.getElementById('road-tool-type').value;
@@ -367,6 +371,8 @@ export default class Editor extends Component {
       } else {
         this.editorCanvas.selectTool('road');
       }
+    } else {
+      this.editorCanvas.selectTool(newTool);
     }
     this.setState({
       activeTool: newTool
