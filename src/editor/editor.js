@@ -11,7 +11,7 @@ import {AnomalyType} from './anomalytool';
 
 export default class EditorCanvas {
   constructor(updateUI) {
-    var pixiApp = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x7da66e, antialias: true});
+    var pixiApp = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x438b38, antialias: true});
     this.pixiApp = pixiApp;
 
     this.tools = [];

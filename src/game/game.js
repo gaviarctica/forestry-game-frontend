@@ -11,7 +11,7 @@ import {secondsToDateFormat} from './helpers';
 
 export default class GameCanvas {
   constructor(mapData, updateUI) {
-    var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x7da66e, antialias: true});
+    var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x438b38, antialias: true});
     this.game = game;
 
     this.settings = new Settings();
