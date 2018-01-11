@@ -228,7 +228,10 @@ export default class AnomalyTool extends ITool {
       // weight limit update
       if(this.type === AnomalyType[0].type) {
         var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[0].name);
-        
+
+          if(!node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] &&
+          node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] !== 0) return false;
+
         if(event.deltaY < 0) {
           node_data.node.anomalies[node_data.anomaly_index].weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit + this.log_settings.Weight;
           this.snappedToSegment.weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit;
@@ -243,6 +246,9 @@ export default class AnomalyTool extends ITool {
       // dead road update
       else if(this.type === AnomalyType[1].type) {
         var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[1].name);
+
+        if(!node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] &&
+        node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] !== 0) return false;
 
         if(event.deltaY < 0) {
           node_data.node.anomalies[node_data.anomaly_index].dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road + 1;
