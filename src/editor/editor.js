@@ -156,13 +156,17 @@ export default class EditorCanvas {
     }
 
     var mouseWheelEvent = function(event) {
-      if ((event.wheelDelta < -1 || event.deltaY > 1) && self.pixiApp.stage.scale.x > 0.5) {
-        self.pixiApp.stage.scale.x -=  0.05;
-        self.pixiApp.stage.scale.y -=   0.05;
-      } else if ((event.wheelDelta > 1 || event.deltaY < -1) && self.pixiApp.stage.scale.x < 3.0) {
-        self.pixiApp.stage.scale.x +=  0.05;
-        self.pixiApp.stage.scale.y +=  0.05;
+      if(!self.currentTool.mouseWheelEvent(event)) {
+        if ((event.wheelDelta < -1 || event.deltaY > 1) && self.pixiApp.stage.scale.x > 0.5) {
+          self.pixiApp.stage.scale.x -=  0.05;
+          self.pixiApp.stage.scale.y -=   0.05;
+        } else if ((event.wheelDelta > 1 || event.deltaY < -1) && self.pixiApp.stage.scale.x < 3.0) {
+          self.pixiApp.stage.scale.x +=  0.05;
+          self.pixiApp.stage.scale.y +=  0.05;
+        }
       }
+
+
     }
     document.getElementById('canvas-editor').addEventListener("wheel", mouseWheelEvent, false);
     this.pixiApp.stage.position.x += this.pixiApp.renderer.width / 2;

@@ -15,6 +15,10 @@ export default class ITool {
   mouseMove(mouseInput) {}
   mouseDown(mouseInput) {}
   mouseUp(mouseInput) {}
+  mouseWheelEvent(event) {
+    // return true if camera doesn't update
+    return false;
+  }
   keyDown(event) {
     this.keyWasDown = true;
   }

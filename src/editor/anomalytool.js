@@ -16,6 +16,7 @@ export default class AnomalyTool extends ITool {
     this.level = level;
 
     this.settings = new Settings().anomalies;
+    this.log_settings = new Settings().log;
 
     // type of the anomaly tool
     this.type = type;
@@ -200,8 +201,6 @@ export default class AnomalyTool extends ITool {
           } else {
             node_data.node.anomalies = [];
           }
-
-
         }
       }
 
@@ -216,8 +215,67 @@ export default class AnomalyTool extends ITool {
           // adjusting the color after the changes to text
           this.snappedToSegment.weight_limit_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
           this.snappedToSegment.dying_road_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
+          this.pointerContainer.visible = false;
+        } else {
+          this.pointerContainer.visible = true;
         }
     }
+  }
+
+  mouseWheelEvent(event) {
+
+    if(this.snappedToSegment) {
+      // weight limit update
+      if(this.type === AnomalyType[0].type) {
+        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[0].name);
+        
+        if(event.deltaY < 0) {
+          node_data.node.anomalies[node_data.anomaly_index].weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit + this.log_settings.Weight;
+          this.snappedToSegment.weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit;
+        } else if(node_data.node.anomalies[node_data.anomaly_index].weight_limit > 0){
+          var absval = node_data.node.anomalies[node_data.anomaly_index].weight_limit - this.log_settings.Weight;
+          absval = absval < 0 ? 0 : absval;
+          node_data.node.anomalies[node_data.anomaly_index].weight_limit = absval;
+          this.snappedToSegment.weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit;
+        }
+
+      }
+      // dead road update
+      else if(this.type === AnomalyType[1].type) {
+        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[1].name);
+
+        if(event.deltaY < 0) {
+          node_data.node.anomalies[node_data.anomaly_index].dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road + 1;
+          this.snappedToSegment.dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road;
+        } else if(node_data.node.anomalies[node_data.anomaly_index].dying_road > 0){
+          var absval = node_data.node.anomalies[node_data.anomaly_index].dying_road - 1;
+          absval = absval < 0 ? 0 : absval;
+          node_data.node.anomalies[node_data.anomaly_index].dying_road = absval;
+          this.snappedToSegment.dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road;
+        }
+      }
+
+      if(this.type === AnomalyType[0].type)
+        this.snappedToSegment.weight_limit_text.text = node_data.node.anomalies[node_data.anomaly_index].weight_limit + 'kg';
+      else if(this.type === AnomalyType[1].type)
+        this.snappedToSegment.dying_road_text.text = node_data.node.anomalies[node_data.anomaly_index].dying_road + 'm';
+
+      // refreshing routes to keep ui look responsive
+      this.calculateSnappedSegment(this.currentMousePosition);
+      if(this.snappedToSegment) {
+        // adjusting the color after the changes to text
+        this.snappedToSegment.weight_limit_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
+        this.snappedToSegment.dying_road_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
+        this.pointerContainer.visible = false;
+      } else {
+        this.pointerContainer.visible = true;
+      }
+
+      return true;
+    }
+
+    return false;
+
   }
 
   keyDown(event) {
@@ -233,7 +291,6 @@ export default class AnomalyTool extends ITool {
       var node_data = snode.node ? snode : enode;
       if(node_data.node) {
         var number = parseInt(event.key);
-        console.log(number);
         if(number || number === 0) {
           // adding number
           if(self.type === AnomalyType[0].type &&
@@ -271,8 +328,8 @@ export default class AnomalyTool extends ITool {
       }
 
       // refreshing routes to keep ui look responsive
-      this.calculateSnappedSegment(this.currentMousePosition);
-      // adjusting the color after the changes to text
+      self.calculateSnappedSegment(self.currentMousePosition);
+      // adjusting the color after the changes to segments
       self.snappedToSegment.weight_limit_text.style.fill = self.settings.SNAPPED_HIGHLIGHT_COLOR;
       self.snappedToSegment.dying_road_text.style.fill = self.settings.SNAPPED_HIGHLIGHT_COLOR;
       self.pointerContainer.visible = false;
