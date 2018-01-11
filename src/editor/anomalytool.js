@@ -38,6 +38,8 @@ export default class AnomalyTool extends ITool {
 
     this.snappedToSegment = null;
     this.snappingDistance = 35;
+
+    this.currentMousePosition = null;
   }
 
   getWeightLimitPointerSprite() {
@@ -72,16 +74,13 @@ export default class AnomalyTool extends ITool {
     return this.one_way_road_pointer_sprite;
   }
 
-  mouseMove(mouseInput) {
-    var epos = mouseInput.worldPosition;
-    this.pointerContainer.position = epos;
-
+  calculateSnappedSegment(mousePos) {
     // do a search for nearest node in snapping distance
     this.snappedToSegment = null;
     this.level.refreshRoutes();
 
     var segments = this.level.getRouteSegments();
-    var segment_amount =  segments.length;
+    var segment_amount = segments.length;
 
     for (var i = 0; i < segment_amount; ++i) {
       var segment = segments[i];
@@ -90,13 +89,21 @@ export default class AnomalyTool extends ITool {
         y: (segment.endNode.getPos().y + segment.startNode.getPos().y) / 2
       };
 
-      if (distance(mouseInput.worldPosition, segment_pos) < this.snappingDistance) {
+      if (distance(mousePos, segment_pos) < this.snappingDistance) {
         this.pointerContainer.position.set(segment_pos.x, segment_pos.y);
         this.snappedToSegment = segment;
-        epos = segment_pos;
         break;
       }
     }
+
+    return this.snappedToSegment;
+  }
+
+  mouseMove(mouseInput) {
+    var epos = mouseInput.worldPosition;
+    this.pointerContainer.position = epos;
+
+    this.calculateSnappedSegment(epos);
 
     //toggling visibility of pointer if we have snapped and there is anomaly
 
@@ -109,6 +116,8 @@ export default class AnomalyTool extends ITool {
     } else {
       this.pointerContainer.visible = true;
     }
+
+    this.currentMousePosition = mouseInput.worldPosition;
 
   }
 
@@ -201,7 +210,13 @@ export default class AnomalyTool extends ITool {
       else if(this.type === AnomalyType[1].type)
         this.snappedToSegment.dying_road_text.text = node_data.node.anomalies[node_data.anomaly_index].dying_road + 'm';
 
-      this.level.refreshRoutes();
+        // refreshing routes to keep ui look responsive
+        this.calculateSnappedSegment(this.currentMousePosition);
+        if(this.snappedToSegment) {
+          // adjusting the color after the changes to text
+          this.snappedToSegment.weight_limit_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
+          this.snappedToSegment.dying_road_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
+        }
     }
   }
 
@@ -256,8 +271,7 @@ export default class AnomalyTool extends ITool {
       }
 
       // refreshing routes to keep ui look responsive
-      self.level.refreshRoutes();
-      console.log("Color corrected");
+      this.calculateSnappedSegment(this.currentMousePosition);
       // adjusting the color after the changes to text
       self.snappedToSegment.weight_limit_text.style.fill = self.settings.SNAPPED_HIGHLIGHT_COLOR;
       self.snappedToSegment.dying_road_text.style.fill = self.settings.SNAPPED_HIGHLIGHT_COLOR;
