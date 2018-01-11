@@ -219,19 +219,23 @@ export default class AnomalyTool extends ITool {
       var node_data = snode.node ? snode : enode;
       console.log(self.keyWasDown);
       console.log(node_data.node);
-      if( self.keyWasDown && node_data.node) {
+      if(node_data.node) {
         var number = parseInt(event.key);
         console.log(number);
         if(number || number === 0) {
           // adding number
           if(self.type === AnomalyType[0].type &&
             (node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] || node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] === 0)) {
+            if (self.keyWasDown || node_data.node.anomalies[node_data.anomaly_index].weight_limit % 10 !== number ) {
               node_data.node.anomalies[node_data.anomaly_index].weight_limit =
               node_data.node.anomalies[node_data.anomaly_index].weight_limit * 10 + number;
+            }
           } else if(self.type === AnomalyType[1].type &&
             (node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] || node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] === 0)) {
+            if (self.keyWasDown || node_data.node.anomalies[node_data.anomaly_index].dying_road % 10 !== number ) {
               node_data.node.anomalies[node_data.anomaly_index].dying_road =
               node_data.node.anomalies[node_data.anomaly_index].dying_road * 10 + number;
+            }
           }
         }
       } else if (self.keyWasDown && !node_data.node) {
@@ -269,7 +273,7 @@ export default class AnomalyTool extends ITool {
       self.pointerContainer.visible = true;
     }
 
-    super.keyUp(event);
+    self.keyWasDown = false;
   }
 
   activate() {
