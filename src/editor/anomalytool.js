@@ -103,8 +103,8 @@ export default class AnomalyTool extends ITool {
     if(this.snappedToSegment !== null
       && (this.nodeHasAnomalyTo(this.snappedToSegment.startNode,this.snappedToSegment.endNode).node
       || this.nodeHasAnomalyTo(this.snappedToSegment.endNode,this.snappedToSegment.startNode).node)) {
-      this.snappedToSegment.weight_limit_text.style.fill = 0x00FF00;
-      this.snappedToSegment.dying_road_text.style.fill = 0x00FF00;
+      this.snappedToSegment.weight_limit_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
+      this.snappedToSegment.dying_road_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
       this.pointerContainer.visible = false;
     } else {
       this.pointerContainer.visible = true;
@@ -206,49 +206,53 @@ export default class AnomalyTool extends ITool {
   }
 
   keyDown(event) {
-    super.keyDown(event);
+    var self = this.currentTool;
+    self.keyWasDown = true;
   }
 
   keyUp(event) {
-    var self = this;
+    var self = this.currentTool;
     if(self.snappedToSegment) {
-
       // getting all available anomaly info from the nodes
-      var snode = this.nodeHasAnomalyTo(self.snappedToSegment.startNode,self.snappedToSegment.endNode);
-      var enode = this.nodeHasAnomalyTo(self.snappedToSegment.endNode,self.snappedToSegment.startNode);
+      var snode = self.nodeHasAnomalyTo(self.snappedToSegment.startNode,self.snappedToSegment.endNode);
+      var enode = self.nodeHasAnomalyTo(self.snappedToSegment.endNode,self.snappedToSegment.startNode);
       var node_data = snode.node ? snode : enode;
-
-      if(this.keyWasDown && node_data.node) {
+      console.log(self.keyWasDown);
+      console.log(node_data.node);
+      if( self.keyWasDown && node_data.node) {
         var number = parseInt(event.key);
+        console.log(number);
         if(number || number === 0) {
           // adding number
-          if(this.type === AnomalyType[0].type && node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name]) {
+          if(self.type === AnomalyType[0].type &&
+            (node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] || node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] === 0)) {
               node_data.node.anomalies[node_data.anomaly_index].weight_limit =
               node_data.node.anomalies[node_data.anomaly_index].weight_limit * 10 + number;
-          } else if(this.type === AnomalyType[1].type && node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name]) {
+          } else if(self.type === AnomalyType[1].type &&
+            (node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] || node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] === 0)) {
               node_data.node.anomalies[node_data.anomaly_index].dying_road =
               node_data.node.anomalies[node_data.anomaly_index].dying_road * 10 + number;
           }
         }
-      } else if (this.keyWasDown && !node_data.node) {
+      } else if (self.keyWasDown && !node_data.node) {
         // when we know we have no anomalies, just initialize the values
 
-        if(this.type === AnomalyType[0].type) {
-          this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), weight_limit:1});
-          this.snappedToSegment.weight_limit = 1;
-        } else if(this.type === AnomalyType[1].type) {
-          this.snappedToSegment.startNode.anomalies.push({to:this.snappedToSegment.endNode.getId(), dying_road:1});
-          this.snappedToSegment.anomalies = this.snappedToSegment.startNode.anomalies;
+        if(self.type === AnomalyType[0].type) {
+          self.snappedToSegment.startNode.anomalies.push({to:self.snappedToSegment.endNode.getId(), weight_limit:1});
+          self.snappedToSegment.weight_limit = 1;
+        } else if(self.type === AnomalyType[1].type) {
+          self.snappedToSegment.startNode.anomalies.push({to:self.snappedToSegment.endNode.getId(), dying_road:1});
+          self.snappedToSegment.anomalies = self.snappedToSegment.startNode.anomalies;
         }
       }
 
       // checking backspace
-      if(this.keyWasDown && event.key === 'Backspace' && node_data.node) {
+      if( self.keyWasDown && event.key === 'Backspace' && node_data.node) {
           // decreasing number
-          if(this.type === AnomalyType[0].type) {
+          if(self.type === AnomalyType[0].type && node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name]) {
             node_data.node.anomalies[node_data.anomaly_index].weight_limit =
             Math.floor(node_data.node.anomalies[node_data.anomaly_index].weight_limit / 10);
-          } else if(this.type === AnomalyType[1].type) {
+          } else if(self.type === AnomalyType[1].type && node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name]) {
             node_data.node.anomalies[node_data.anomaly_index].dying_road =
             Math.floor(node_data.node.anomalies[node_data.anomaly_index].dying_road / 10);
           }
@@ -256,6 +260,13 @@ export default class AnomalyTool extends ITool {
 
       // refreshing routes to keep ui look responsive
       self.level.refreshRoutes();
+      console.log("Color corrected");
+      // adjusting the color after the changes to text
+      self.snappedToSegment.weight_limit_text.style.fill = self.settings.SNAPPED_HIGHLIGHT_COLOR;
+      self.snappedToSegment.dying_road_text.style.fill = self.settings.SNAPPED_HIGHLIGHT_COLOR;
+      self.pointerContainer.visible = false;
+    } else {
+      self.pointerContainer.visible = true;
     }
 
     super.keyUp(event);

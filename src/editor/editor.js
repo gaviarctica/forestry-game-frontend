@@ -170,10 +170,10 @@ export default class EditorCanvas {
     var self = this;
     if (this.currentTool) {
       window.removeEventListener(
-        "keydown", self.currentTool.keyDown.bind(self.currentTool), false
+        "keydown", self.currentTool.keyDown.bind(self), false
       );
       window.removeEventListener(
-        "keyup", self.currentTool.keyUp.bind(self.currentTool), false
+        "keyup", self.currentTool.keyUp.bind(self), false
       );
 
       this.currentTool.deactivate();
@@ -187,10 +187,10 @@ export default class EditorCanvas {
 
     if (this.currentTool !== null && this.currentTool !== undefined) {
       window.addEventListener(
-        "keydown", self.currentTool.keyDown.bind(self.currentTool), false
+        "keydown", self.currentTool.keyDown.bind(self), false
       );
       window.addEventListener(
-        "keyup", self.currentTool.keyUp.bind(self.currentTool), false
+        "keyup", self.currentTool.keyUp.bind(self), false
       );
       this.currentTool.activate();
     }
@@ -206,7 +206,7 @@ export default class EditorCanvas {
 
   update(delta)
   {
-    
+
   }
 
   destroy()

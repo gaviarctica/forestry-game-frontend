@@ -42,7 +42,7 @@ export default class Settings {
 
     this.stats = {
       FULL_START_STOP_TIME : 3,
-      SHORT_START_STOP_TIME : 1, 
+      SHORT_START_STOP_TIME : 1,
       // average velocity in m/s
       AVG_VELOCITY : 3,
       LOG_DELAY : 15,
@@ -93,7 +93,8 @@ export default class Settings {
       WEIGHT_LIMIT_EXCEED_SPEED_FACTOR : 0.01,
       ONE_DIR_ARROW_SPRITE_ANCHOR : 0.5,
       ONE_DIR_ARROW_SPRITE_SCALE: 0.2,
-      ONE_DIR_ROAD_SPEED_FACTOR: 0.01
+      ONE_DIR_ROAD_SPEED_FACTOR: 0.01,
+      SNAPPED_HIGHLIGHT_COLOR: 0x00FF00
     }
 
     this.debug = {
