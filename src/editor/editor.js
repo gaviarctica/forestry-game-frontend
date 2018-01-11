@@ -35,6 +35,9 @@ export default class EditorCanvas {
 
     this.setupCameraControl();
     pixiApp.stage.addChild(this.level.getStage());
+
+    this.currentKeyBoardFunctionDown = null;
+    this.currentKeyBoardFunctionUp = null;
  }
 
   buildGrid() {
@@ -169,12 +172,18 @@ export default class EditorCanvas {
   selectTool(name, placeType) {
     var self = this;
     if (this.currentTool) {
-      window.removeEventListener(
-        "keydown", self.currentTool.keyDown.bind(self), false
-      );
-      window.removeEventListener(
-        "keyup", self.currentTool.keyUp.bind(self), false
-      );
+      if(this.currentKeyBoardFunctionDown) {
+        window.removeEventListener(
+          "keydown", this.currentKeyBoardFunctionDown, false
+        );
+        this.currentKeyBoardFunctionDown = null;
+      }
+      if(this.currentKeyBoardFunctionUp) {
+        window.removeEventListener(
+          "keyup", this.currentKeyBoardFunctionUp, false
+        );
+        this.currentKeyBoardFunctionUp = null;
+      }
 
       this.currentTool.deactivate();
     }
@@ -186,12 +195,16 @@ export default class EditorCanvas {
     }
 
     if (this.currentTool !== null && this.currentTool !== undefined) {
+      self.currentKeyBoardFunctionDown = self.currentTool.keyDown.bind(self.currentTool);
+      self.currentKeyBoardFunctionUp = self.currentTool.keyUp.bind(self.currentTool);
+
       window.addEventListener(
-        "keydown", self.currentTool.keyDown.bind(self), false
+        "keydown", self.currentKeyBoardFunctionDown, false
       );
       window.addEventListener(
-        "keyup", self.currentTool.keyUp.bind(self), false
+        "keyup", self.currentKeyBoardFunctionUp, false
       );
+
       this.currentTool.activate();
     }
   }

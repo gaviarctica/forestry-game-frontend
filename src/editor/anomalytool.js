@@ -206,19 +206,16 @@ export default class AnomalyTool extends ITool {
   }
 
   keyDown(event) {
-    var self = this.currentTool;
-    self.keyWasDown = true;
+    super.keyDown(event);
   }
 
   keyUp(event) {
-    var self = this.currentTool;
+    var self = this;
     if(self.snappedToSegment) {
       // getting all available anomaly info from the nodes
       var snode = self.nodeHasAnomalyTo(self.snappedToSegment.startNode,self.snappedToSegment.endNode);
       var enode = self.nodeHasAnomalyTo(self.snappedToSegment.endNode,self.snappedToSegment.startNode);
       var node_data = snode.node ? snode : enode;
-      console.log(self.keyWasDown);
-      console.log(node_data.node);
       if(node_data.node) {
         var number = parseInt(event.key);
         console.log(number);
@@ -226,19 +223,15 @@ export default class AnomalyTool extends ITool {
           // adding number
           if(self.type === AnomalyType[0].type &&
             (node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] || node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] === 0)) {
-            if (self.keyWasDown || node_data.node.anomalies[node_data.anomaly_index].weight_limit % 10 !== number ) {
               node_data.node.anomalies[node_data.anomaly_index].weight_limit =
               node_data.node.anomalies[node_data.anomaly_index].weight_limit * 10 + number;
-            }
           } else if(self.type === AnomalyType[1].type &&
             (node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] || node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] === 0)) {
-            if (self.keyWasDown || node_data.node.anomalies[node_data.anomaly_index].dying_road % 10 !== number ) {
               node_data.node.anomalies[node_data.anomaly_index].dying_road =
               node_data.node.anomalies[node_data.anomaly_index].dying_road * 10 + number;
-            }
           }
         }
-      } else if (self.keyWasDown && !node_data.node) {
+      } else if (!node_data.node) {
         // when we know we have no anomalies, just initialize the values
 
         if(self.type === AnomalyType[0].type) {
@@ -251,7 +244,7 @@ export default class AnomalyTool extends ITool {
       }
 
       // checking backspace
-      if( self.keyWasDown && event.key === 'Backspace' && node_data.node) {
+      if( event.key === 'Backspace' && node_data.node) {
           // decreasing number
           if(self.type === AnomalyType[0].type && node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name]) {
             node_data.node.anomalies[node_data.anomaly_index].weight_limit =
@@ -273,7 +266,7 @@ export default class AnomalyTool extends ITool {
       self.pointerContainer.visible = true;
     }
 
-    self.keyWasDown = false;
+    super.keyUp(event);
   }
 
   activate() {
