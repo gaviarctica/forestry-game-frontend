@@ -9,6 +9,26 @@ export const AnomalyType = [
   { type : 'oneway', name : 'one_way_road' }
 ];
 
+
+export function nodeHasAnomalyTo(node,to_node) {
+    var rnode = null;
+    var anomaly_index = -1;
+
+    if(!node || !to_node)
+      return {node:rnode, anomaly_index:anomaly_index};
+
+    for(var i = 0; i < node.anomalies.length; ++i) {
+
+      if(node.anomalies[i].to === to_node.getId()) {
+        rnode = node;
+        anomaly_index = i;
+        break;
+      }
+    }
+
+    return {node:rnode, anomaly_index:anomaly_index};
+}
+
 export default class AnomalyTool extends ITool {
   constructor(stage, level, type) {
     super(stage);
@@ -109,8 +129,8 @@ export default class AnomalyTool extends ITool {
     //toggling visibility of pointer if we have snapped and there is anomaly
 
     if(this.snappedToSegment !== null
-      && (this.nodeHasAnomalyTo(this.snappedToSegment.startNode,this.snappedToSegment.endNode).node
-      || this.nodeHasAnomalyTo(this.snappedToSegment.endNode,this.snappedToSegment.startNode).node)) {
+      && (nodeHasAnomalyTo(this.snappedToSegment.startNode,this.snappedToSegment.endNode).node
+      || nodeHasAnomalyTo(this.snappedToSegment.endNode,this.snappedToSegment.startNode).node)) {
       this.snappedToSegment.weight_limit_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
       this.snappedToSegment.dying_road_text.style.fill = this.settings.SNAPPED_HIGHLIGHT_COLOR;
       this.pointerContainer.visible = false;
@@ -122,32 +142,13 @@ export default class AnomalyTool extends ITool {
 
   }
 
-  nodeHasAnomalyTo(node,to_node) {
-    var rnode = null;
-    var anomaly_index = -1;
-
-    if(!node || !to_node)
-      return {node:rnode, anomaly_index:anomaly_index};
-
-    for(var i = 0; i < node.anomalies.length; ++i) {
-
-      if(node.anomalies[i].to === to_node.getId()) {
-        rnode = node;
-        anomaly_index = i;
-        break;
-      }
-    }
-
-    return {node:rnode, anomaly_index:anomaly_index};
-  }
-
   updateAnomalyInfo(segment, anomaly_name) {
     var node = null;
     var anomaly_index = -1;
 
     // getting all available anomaly info from the nodes
-    var snode = this.nodeHasAnomalyTo(segment.startNode,segment.endNode);
-    var enode = this.nodeHasAnomalyTo(segment.endNode,segment.startNode);
+    var snode = nodeHasAnomalyTo(segment.startNode,segment.endNode);
+    var enode = nodeHasAnomalyTo(segment.endNode,segment.startNode);
     var node_data = snode.node ? snode : enode;
 
     if (!node_data.node) {
@@ -292,8 +293,8 @@ export default class AnomalyTool extends ITool {
     var self = this;
     if(self.snappedToSegment) {
       // getting all available anomaly info from the nodes
-      var snode = self.nodeHasAnomalyTo(self.snappedToSegment.startNode,self.snappedToSegment.endNode);
-      var enode = self.nodeHasAnomalyTo(self.snappedToSegment.endNode,self.snappedToSegment.startNode);
+      var snode = nodeHasAnomalyTo(self.snappedToSegment.startNode,self.snappedToSegment.endNode);
+      var enode = nodeHasAnomalyTo(self.snappedToSegment.endNode,self.snappedToSegment.startNode);
       var node_data = snode.node ? snode : enode;
       if(node_data.node) {
         var number = parseInt(event.key);

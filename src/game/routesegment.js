@@ -224,4 +224,22 @@ export default class RouteSegment {
 
     return false;
   }
+
+  removeAnomalies() {
+    var snode_anom =  this.startNode.anomalies;
+    for(var i = 0; i < snode_anom.length; ++i) {
+      if(snode_anom[i].to === this.endNode.getId()) {
+        snode_anom.splice(i,1);
+        return;
+      }
+    }
+
+    var enode_anom =  this.endNode.anomalies;
+    for(var i = 0; i < enode_anom.length; ++i) {
+      if(enode_anom[i].to === this.startNode.getId()) {
+        enode_anom.splice(i,1);
+        return;
+      }
+    }
+  }
 }

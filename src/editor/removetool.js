@@ -1,8 +1,10 @@
 import * as PIXI from 'pixi.js';
-import {length} from '../game/helpers';
+import {length,distance} from '../game/helpers';
 import ITool from './itool';
 import Log from '../game/log';
 import LogDeposit from '../game/logdeposit';
+import {nodeHasAnomalyTo} from './anomalytool';
+import Settings from '../game/settings';
 
 
 export default class RemoveTool extends ITool {
@@ -10,6 +12,11 @@ export default class RemoveTool extends ITool {
     super(stage);
 
     this.level = level;
+    this.snappedToSegment = null;
+    this.segmentSnappingDistance = 35;
+
+    this.anomaly_settings = new Settings().anomalies;
+
     var pointer = new PIXI.Graphics();
     pointer.lineStyle(2, 0xff0000);
     pointer.moveTo(-10, -10);
@@ -19,7 +26,7 @@ export default class RemoveTool extends ITool {
 
 
     this.pointerContainer.addChild(pointer);
-    
+
   }
 
   activate() {
@@ -42,7 +49,7 @@ export default class RemoveTool extends ITool {
         this.pointerContainer.alpha = 1.0
         this.targetLog = log;
         return;
-      } 
+      }
     }
 
     for (var deposit of this.level.getLogDeposits()) {
@@ -50,18 +57,37 @@ export default class RemoveTool extends ITool {
         this.pointerContainer.alpha = 1.0
         this.targetDeposit = deposit;
         return;
-      } 
+      }
     }
-    
+
     /* TODO:
-    
+
     // Do nearest neightbor search and snap to that
     for (var node of this.level.getRouteNodes()) {
-      // find closest 
+      // find closest
       // move pointer to that if close enough and target it
     }
-    
+
     */
+
+    this.calculateSnappedSegment(epos);
+
+
+    if(this.snappedToSegment !== null) {
+      var segment = this.snappedToSegment;
+      // getting all available anomaly info from the nodes
+      var snode = nodeHasAnomalyTo(segment.startNode,segment.endNode);
+      var enode = nodeHasAnomalyTo(segment.endNode,segment.startNode);
+      var node_data = snode.node ? snode : enode;
+
+      segment.weight_limit_text.style.fill = this.anomaly_settings.SNAPPED_HIGHLIGHT_COLOR;
+      segment.dying_road_text.style.fill = this.anomaly_settings.SNAPPED_HIGHLIGHT_COLOR;
+
+      this.snappedToSegment.weight_limit_text.style.fill = this.anomaly_settings.SNAPPED_HIGHLIGHT_COLOR;
+      this.snappedToSegment.dying_road_text.style.fill = this.anomaly_settings.SNAPPED_HIGHLIGHT_COLOR;
+    }
+
+
   }
   mouseDown(mouseInput) {
 
@@ -80,6 +106,12 @@ export default class RemoveTool extends ITool {
       } else if (this.targetNode) [
         // TODO: this.level.removeRouteNode(this.targetNode);
       ]
+
+    // if we are snapped to a segment we try to remove its anomalies
+    if(this.snappedToSegment) {
+      this.snappedToSegment.removeAnomalies();
+      this.level.refreshRoutes();
+    }
   }
 
 
@@ -87,5 +119,30 @@ export default class RemoveTool extends ITool {
   keyUp(event) {}
   deactivate() {
     super.deactivate();
+  }
+
+  calculateSnappedSegment(mousePos) {
+    // do a search for nearest node in snapping distance
+    this.snappedToSegment = null;
+    this.level.refreshRoutes();
+
+    var segments = this.level.getRouteSegments();
+    var segment_amount = segments.length;
+
+    for (var i = 0; i < segment_amount; ++i) {
+      var segment = segments[i];
+      var segment_pos = {
+        x: (segment.endNode.getPos().x + segment.startNode.getPos().x) / 2,
+        y: (segment.endNode.getPos().y + segment.startNode.getPos().y) / 2
+      };
+
+      if (distance(mousePos, segment_pos) < this.segmentSnappingDistance) {
+        this.pointerContainer.position.set(segment_pos.x, segment_pos.y);
+        this.snappedToSegment = segment;
+        break;
+      }
+    }
+
+    return this.snappedToSegment;
   }
 }
