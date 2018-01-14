@@ -115,6 +115,14 @@ html {
   margin-top: 5px;
 }
 
+#toolbar-info {
+  margin-left: 25px;
+  margin-right: 25px;
+  font-size: 16px;
+  color: #bbb;
+  line-height: 20px;
+}
+
 #editor-toolbar input[type="number"] {
   -webkit-appearance: none;
   outline: none;

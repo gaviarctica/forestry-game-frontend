@@ -97,7 +97,7 @@ export const LANG = {
       toolType: "Tool type",
       free: "Free",
       normalRoad: "Normal road",
-      dyingRoad: "Dying road",
+      dyingRoad: "Crossing limited road",
       weightLimitedRoad: "Weight limited road",
       onewayRoad: "One-way road",
       saveAsNewLevel: "Save as new level",
@@ -105,6 +105,17 @@ export const LANG = {
       enableFog: "Enable fog",
       fogDensity: "Density",
       fogVisibility: "Visibility",
+      info: "Info",
+      toolInfo: {
+        road: "Click anywhere to draw a road. Double click to end the road.",
+        roadWeightlimit: "Click the middle of a road segment to apply a weight limit. Adjust the weight limit value by hovering over the current value and using number keys or the mouse wheel.",
+        roadDying: "Click the middle of a road segment to apply a crossing limit. Adjust the crossing limit value by hovering over the current value and using number keys or the mouse wheel.",
+        roadOneway: "Click the middle of a road segment to make it a one way road. Click again to change direction.",
+        log: "Click anywhere next to a road to place a log. You can select the assortment type with the tool type dropdown menu.",
+        deposit: "Click anywhere next to a road to place a deposit. You can select the accepted assortment type with the tool type dropdown menu.",
+        truck: "Click anywhere on a road to set the truck starting position. Change the starting direction with right click.",
+        remove: "Click anything to remove it from the level."
+      },
       messages: {
         levelSaved: "Level saved",
         levelLoaded: "Level loaded"
@@ -238,7 +249,7 @@ export const LANG = {
       toolType: "Työkalun tyyppi",
       free: "Vapaa",
       normalRoad: "Normaali tie",
-      dyingRoad: "Kuoleva tie",
+      dyingRoad: "Ylitysrajoitettu tie",
       weightLimitedRoad: "Painorajoitettu tie",
       onewayRoad: "Yksisuuntainen tie",
       saveAsNewLevel: "Tallenna uutena tasona",
@@ -246,6 +257,17 @@ export const LANG = {
       enableFog: "Sumu",
       fogDensity: "Tiheys",
       fogVisibility: "Näkyvyys",
+      info: "Tietoja",
+      toolInfo: {
+        road: "Klikkaa piirtääksesi tie. Lopeta piirto tuplaklikkaamalla.",
+        roadWeightlimit: "Klikkaa tiesegmentin keskikohtaa lisätäksesi painorajoituksen. Voit säätää painorajoitusta pitämällä hiirtä rajoitusarvon päällä ja käyttämällä numeronäppäimiä tai hiiren rullaa.",
+        roadDying: "Klikkaa tiesegmentin keskikohtaa lisätäksesi ylitysrajoituksen. Voit säätää ylitysrajoitusta pitämällä hiirtä rajoitusarvon päällä ja käyttämällä numeronäppäimiä tai hiiren rullaa.",
+        roadOneway: "Klikkaa tiesegmentin keskikohtaa tehdäksesi siitä yksisuuntaisen. Klikkaa uudestaan vaihtaaksesi suuntaa.",
+        log: "Klikkaa tien vierusta asettaaksesi tukin. Voit muuttaa puutavaralajia työkalun tyyppi -valinnalla.",
+        deposit: "Klikkaa tien vierusta asettaaksesi säilöntäalueen. Voit muuttaa hyväksyttyä puutavaralajia työkalun tyyppi -valinnalla.",
+        truck: "Klikkaa haluamaasi tien kohtaa asettaaksesi aloituspisteen. Vaihda aloitussuuntaa oikealla hiiren painiketta.",
+        remove: "Klikkaa mitä vain poistaaksesi sen tasosta."
+      },
       messages: {
         levelSaved: "Taso tallennettu",
         levelLoaded: "Taso ladattu"

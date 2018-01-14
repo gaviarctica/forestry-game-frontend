@@ -15,6 +15,7 @@ export default class Editor extends Component {
     this.state = {
       activeToolButton: 'road',
       activeTool: 'road_normal',
+      toolInfo: LANG[this.props.lang].editor.toolInfo.road,
       menuOpen: false,
       loadMenuOpen: false,
       saveAsMenuOpen: false,
@@ -200,14 +201,16 @@ export default class Editor extends Component {
       this.editorCanvas.selectTool('truck');
       this.setState({
         activeToolButton: 'truck',
-        activeTool: 'truck'
+        activeTool: 'truck',
+        toolInfo: LANG[this.props.lang].editor.toolInfo.truck
       });
     }
     if (clicked === 'button-remove') {
       this.editorCanvas.selectTool('remove');
       this.setState({
         activeToolButton: 'remove',
-        activeTool: 'remove'
+        activeTool: 'remove',
+        toolInfo: LANG[this.props.lang].editor.toolInfo.remove
       });
     }
     if (clicked === 'button-editormenu') {
@@ -349,21 +352,27 @@ export default class Editor extends Component {
   }
 
   updateActiveTool(button) {
-    let newTool;
+    let newTool, newInfo;
     if (button === 'logs') {
       newTool = 'log_' + document.getElementById('log-tool-type').value;
+      newInfo = LANG[this.props.lang].editor.toolInfo.log;
     }
     if (button === 'deposits') {
       newTool = 'deposit_' + document.getElementById('deposit-tool-type').value;
+      newInfo = LANG[this.props.lang].editor.toolInfo.deposit;
     }
     if (button === 'road') {
       newTool = 'road_' + document.getElementById('road-tool-type').value;
+      newInfo = LANG[this.props.lang].editor.toolInfo.road;
       if(document.getElementById('road-tool-type').value === 'weightlimit') {
         this.editorCanvas.selectTool('anomalies', AnomalyType[0].type);
+        newInfo = LANG[this.props.lang].editor.toolInfo.roadWeightlimit;
       } else if(document.getElementById('road-tool-type').value === 'dying') {
         this.editorCanvas.selectTool('anomalies', AnomalyType[1].type);
+        newInfo = LANG[this.props.lang].editor.toolInfo.roadDying;
       } else if(document.getElementById('road-tool-type').value === 'oneway') {
         this.editorCanvas.selectTool('anomalies', AnomalyType[2].type);
+        newInfo = LANG[this.props.lang].editor.toolInfo.roadOneway;
       } else {
         this.editorCanvas.selectTool('road');
       }
@@ -371,7 +380,8 @@ export default class Editor extends Component {
       this.editorCanvas.selectTool(newTool);
     }
     this.setState({
-      activeTool: newTool
+      activeTool: newTool,
+      toolInfo: newInfo
     });
   }
 
@@ -583,6 +593,11 @@ export default class Editor extends Component {
                 value={this.state.fogVisibility}
                 name="fogVisibility"
                 onChange={this.handleInputChange.bind(this)} />
+          </div>
+
+          <div className="toolbar-header">{LANG[this.props.lang].editor.info}</div>
+          <div id="toolbar-info">
+            {this.state.toolInfo}
           </div>
         </div>
 
