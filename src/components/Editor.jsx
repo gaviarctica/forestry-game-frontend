@@ -18,10 +18,6 @@ export default class Editor extends Component {
       menuOpen: false,
       loadMenuOpen: false,
       saveAsMenuOpen: false,
-      dyingRoadLimit: 1,
-      dyingRoadLimitIllegal: false,
-      weightlimitedRoadLimit: 0,
-      weightlimitedRoadLimitIllegal: false,
       fogEnabled: false,
       fogDensity: 0.75,
       fogDensityIllegal: false,
@@ -545,35 +541,6 @@ export default class Editor extends Component {
             <option value="weightlimit">{LANG[this.props.lang].editor.weightLimitedRoad}</option>
             <option value="oneway">{LANG[this.props.lang].editor.onewayRoad}</option>
           </select>
-
-          <div
-            className="details-road"
-            id="details-road-dying"
-            style={this.state.activeTool !== 'road_dying' ? {display: 'none'} : {}} >
-              {LANG[this.props.lang].editor.maxCrossings + ': '}
-              <input
-                className={this.state.dyingRoadLimitIllegal ? 'input-illegal': ''}
-                type="number"
-                min="1"
-                value={this.state.dyingRoadLimit}
-                name="dyingRoadLimit"
-                onChange={this.handleInputChange.bind(this)} />
-          </div>
-          <div
-            className="details-road"
-            id="details-road-weightlimit"
-            style={this.state.activeTool !== 'road_weightlimit' ? {display: 'none'} : {}} >
-              {LANG[this.props.lang].editor.maxLoad + ': '}
-              <input
-                className={this.state.weightlimitedRoadLimitIllegal ? 'input-illegal': ''}
-                type="number"
-                min="0"
-                step={this.settings.log.Weight}
-                value={this.state.weightlimitedRoadLimit}
-                name="weightlimitedRoadLimit"
-                onChange={this.handleInputChange.bind(this)} />
-              {' kg'}
-          </div>
 
           <div className="toolbar-header">{LANG[this.props.lang].editor.weather}</div>
           <div
