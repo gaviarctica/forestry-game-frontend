@@ -129,6 +129,12 @@ export default class Editor extends Component {
         self.setState({
           userLevels: maps
         });
+      } else {
+        // Close menu if no maps remaining
+        self.setState({
+          loadMenuOpen: false,
+          userLevels: undefined
+        })
       }
     });
   }
@@ -280,6 +286,11 @@ export default class Editor extends Component {
         });
       }
     }
+    if (clicked === 'button-editor-mapmenu-delete') {
+      if (this.state.selectedUserLevel) {
+        this.deleteSelectedMap();
+      }
+    }
   }
 
   loadSelectedMapData() {
@@ -310,6 +321,28 @@ export default class Editor extends Component {
       self.updatePreviousSavedStatus();
       self.props.notify(LANG[self.props.lang].editor.messages.levelLoaded);
     });
+  }
+
+  deleteSelectedMap() {
+    var self = this;
+    API.deleteMap(this.state.selectedUserLevel, function(err) {
+      if (err) throw err;
+
+      if (self.state.loadedMapID === self.state.selectedUserLevel) {
+        self.setState({
+          selectedUserLevel: undefined,
+          loadedMapID: undefined,
+          loadedMapData: undefined
+        });
+      } else {
+        self.setState({
+          selectedUserLevel: undefined
+        });
+      }
+      
+      self.loadUserLevels();
+      self.props.notify(LANG[self.props.lang].editor.messages.levelDeleted);
+    })
   }
 
   handleSaveAsPrimaryClick(newMapName) {
@@ -425,11 +458,17 @@ export default class Editor extends Component {
             id="button-editor-mapmenu-back"
             text={LANG[this.props.lang].buttons.back}
             buttonType='default'
-            handleClick={this.handleButtonClick.bind(this)} />
+            handleClick={this.handleButtonClick.bind(this)} />          
           <Button
             id="button-editor-mapmenu-load"
             text={LANG[this.props.lang].buttons.loadLevel}
             buttonType='primary'
+            inactive={this.state.selectedUserLevel ? false : true}
+            handleClick={this.handleButtonClick.bind(this)} />
+          <Button
+            id="button-editor-mapmenu-delete"
+            buttonType='close-or-delete'
+            style={this.state.selectedUserLevel ? {} : {display: 'none'}}
             inactive={this.state.selectedUserLevel ? false : true}
             handleClick={this.handleButtonClick.bind(this)} />
         </div>

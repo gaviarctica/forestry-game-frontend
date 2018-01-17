@@ -118,7 +118,8 @@ export const LANG = {
       },
       messages: {
         levelSaved: "Level saved",
-        levelLoaded: "Level loaded"
+        levelLoaded: "Level loaded",
+        levelDeleted: "Level deleted"
       }
     },
     buttons: {
@@ -270,7 +271,8 @@ export const LANG = {
       },
       messages: {
         levelSaved: "Taso tallennettu",
-        levelLoaded: "Taso ladattu"
+        levelLoaded: "Taso ladattu",
+        levelDeleted: "Taso poistettu"
       }
     },
     buttons: {

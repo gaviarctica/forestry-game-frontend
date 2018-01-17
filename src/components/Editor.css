@@ -151,6 +151,13 @@ html {
   float: right;
 }
 
+#button-editor-mapmenu-delete {
+  float: right;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+}
+
 #editor-mapmenu-bottomrow {
   text-align: left;
 }
@@ -162,7 +169,9 @@ html {
   padding-right: 5px;
   text-align: left;
   overflow-y: auto;
+  overflow-x: hidden;
   display: inline-block;
+  position: fixed;
 }
 
 .editor-maplist-button {
