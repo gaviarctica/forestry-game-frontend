@@ -15,13 +15,10 @@ export default class Editor extends Component {
     this.state = {
       activeToolButton: 'road',
       activeTool: 'road_normal',
+      toolInfo: LANG[this.props.lang].editor.toolInfo.road,
       menuOpen: false,
       loadMenuOpen: false,
       saveAsMenuOpen: false,
-      dyingRoadLimit: 1,
-      dyingRoadLimitIllegal: false,
-      weightlimitedRoadLimit: 0,
-      weightlimitedRoadLimitIllegal: false,
       fogEnabled: false,
       fogDensity: 0.75,
       fogDensityIllegal: false,
@@ -132,6 +129,12 @@ export default class Editor extends Component {
         self.setState({
           userLevels: maps
         });
+      } else {
+        // Close menu if no maps remaining
+        self.setState({
+          loadMenuOpen: false,
+          userLevels: undefined
+        })
       }
     });
   }
@@ -204,14 +207,16 @@ export default class Editor extends Component {
       this.editorCanvas.selectTool('truck');
       this.setState({
         activeToolButton: 'truck',
-        activeTool: 'truck'
+        activeTool: 'truck',
+        toolInfo: LANG[this.props.lang].editor.toolInfo.truck
       });
     }
     if (clicked === 'button-remove') {
       this.editorCanvas.selectTool('remove');
       this.setState({
         activeToolButton: 'remove',
-        activeTool: 'remove'
+        activeTool: 'remove',
+        toolInfo: LANG[this.props.lang].editor.toolInfo.remove
       });
     }
     if (clicked === 'button-editormenu') {
@@ -281,6 +286,11 @@ export default class Editor extends Component {
         });
       }
     }
+    if (clicked === 'button-editor-mapmenu-delete') {
+      if (this.state.selectedUserLevel) {
+        this.deleteSelectedMap();
+      }
+    }
   }
 
   loadSelectedMapData() {
@@ -311,6 +321,28 @@ export default class Editor extends Component {
       self.updatePreviousSavedStatus();
       self.props.notify(LANG[self.props.lang].editor.messages.levelLoaded);
     });
+  }
+
+  deleteSelectedMap() {
+    var self = this;
+    API.deleteMap(this.state.selectedUserLevel, function(err) {
+      if (err) throw err;
+
+      if (self.state.loadedMapID === self.state.selectedUserLevel) {
+        self.setState({
+          selectedUserLevel: undefined,
+          loadedMapID: undefined,
+          loadedMapData: undefined
+        });
+      } else {
+        self.setState({
+          selectedUserLevel: undefined
+        });
+      }
+      
+      self.loadUserLevels();
+      self.props.notify(LANG[self.props.lang].editor.messages.levelDeleted);
+    })
   }
 
   handleSaveAsPrimaryClick(newMapName) {
@@ -353,21 +385,27 @@ export default class Editor extends Component {
   }
 
   updateActiveTool(button) {
-    let newTool;
+    let newTool, newInfo;
     if (button === 'logs') {
       newTool = 'log_' + document.getElementById('log-tool-type').value;
+      newInfo = LANG[this.props.lang].editor.toolInfo.log;
     }
     if (button === 'deposits') {
       newTool = 'deposit_' + document.getElementById('deposit-tool-type').value;
+      newInfo = LANG[this.props.lang].editor.toolInfo.deposit;
     }
     if (button === 'road') {
       newTool = 'road_' + document.getElementById('road-tool-type').value;
+      newInfo = LANG[this.props.lang].editor.toolInfo.road;
       if(document.getElementById('road-tool-type').value === 'weightlimit') {
         this.editorCanvas.selectTool('anomalies', AnomalyType[0].type);
+        newInfo = LANG[this.props.lang].editor.toolInfo.roadWeightlimit;
       } else if(document.getElementById('road-tool-type').value === 'dying') {
         this.editorCanvas.selectTool('anomalies', AnomalyType[1].type);
+        newInfo = LANG[this.props.lang].editor.toolInfo.roadDying;
       } else if(document.getElementById('road-tool-type').value === 'oneway') {
         this.editorCanvas.selectTool('anomalies', AnomalyType[2].type);
+        newInfo = LANG[this.props.lang].editor.toolInfo.roadOneway;
       } else {
         this.editorCanvas.selectTool('road');
       }
@@ -375,7 +413,8 @@ export default class Editor extends Component {
       this.editorCanvas.selectTool(newTool);
     }
     this.setState({
-      activeTool: newTool
+      activeTool: newTool,
+      toolInfo: newInfo
     });
   }
 
@@ -419,11 +458,17 @@ export default class Editor extends Component {
             id="button-editor-mapmenu-back"
             text={LANG[this.props.lang].buttons.back}
             buttonType='default'
-            handleClick={this.handleButtonClick.bind(this)} />
+            handleClick={this.handleButtonClick.bind(this)} />          
           <Button
             id="button-editor-mapmenu-load"
             text={LANG[this.props.lang].buttons.loadLevel}
             buttonType='primary'
+            inactive={this.state.selectedUserLevel ? false : true}
+            handleClick={this.handleButtonClick.bind(this)} />
+          <Button
+            id="button-editor-mapmenu-delete"
+            buttonType='close-or-delete'
+            style={this.state.selectedUserLevel ? {} : {display: 'none'}}
             inactive={this.state.selectedUserLevel ? false : true}
             handleClick={this.handleButtonClick.bind(this)} />
         </div>
@@ -546,35 +591,6 @@ export default class Editor extends Component {
             <option value="oneway">{LANG[this.props.lang].editor.onewayRoad}</option>
           </select>
 
-          <div
-            className="details-road"
-            id="details-road-dying"
-            style={this.state.activeTool !== 'road_dying' ? {display: 'none'} : {}} >
-              {LANG[this.props.lang].editor.maxCrossings + ': '}
-              <input
-                className={this.state.dyingRoadLimitIllegal ? 'input-illegal': ''}
-                type="number"
-                min="1"
-                value={this.state.dyingRoadLimit}
-                name="dyingRoadLimit"
-                onChange={this.handleInputChange.bind(this)} />
-          </div>
-          <div
-            className="details-road"
-            id="details-road-weightlimit"
-            style={this.state.activeTool !== 'road_weightlimit' ? {display: 'none'} : {}} >
-              {LANG[this.props.lang].editor.maxLoad + ': '}
-              <input
-                className={this.state.weightlimitedRoadLimitIllegal ? 'input-illegal': ''}
-                type="number"
-                min="0"
-                step={this.settings.log.Weight}
-                value={this.state.weightlimitedRoadLimit}
-                name="weightlimitedRoadLimit"
-                onChange={this.handleInputChange.bind(this)} />
-              {' kg'}
-          </div>
-
           <div className="toolbar-header">{LANG[this.props.lang].editor.weather}</div>
           <div
             className="details-weather-checkbox"
@@ -616,6 +632,11 @@ export default class Editor extends Component {
                 value={this.state.fogVisibility}
                 name="fogVisibility"
                 onChange={this.handleInputChange.bind(this)} />
+          </div>
+
+          <div className="toolbar-header">{LANG[this.props.lang].editor.info}</div>
+          <div id="toolbar-info">
+            {this.state.toolInfo}
           </div>
         </div>
 

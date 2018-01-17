@@ -115,6 +115,14 @@ html {
   margin-top: 5px;
 }
 
+#toolbar-info {
+  margin-left: 25px;
+  margin-right: 25px;
+  font-size: 16px;
+  color: #bbb;
+  line-height: 20px;
+}
+
 #editor-toolbar input[type="number"] {
   -webkit-appearance: none;
   outline: none;
@@ -143,6 +151,13 @@ html {
   float: right;
 }
 
+#button-editor-mapmenu-delete {
+  float: right;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+}
+
 #editor-mapmenu-bottomrow {
   text-align: left;
 }
@@ -154,7 +169,9 @@ html {
   padding-right: 5px;
   text-align: left;
   overflow-y: auto;
+  overflow-x: hidden;
   display: inline-block;
+  position: fixed;
 }
 
 .editor-maplist-button {

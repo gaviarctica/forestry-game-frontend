@@ -254,6 +254,29 @@ export const API = {
     });
   },
 
+  deleteMap: function (levelID, callback) {
+    var err = undefined;
+    var url = '/api/v1/level/delete';
+    var form = new FormData();
+    form.append('id', levelID);
+    var init = {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+      body: form
+    };
+
+    fetch(url, init).then(function (response) {
+      if (response.status === 200) {
+        callback(err);
+        return;
+      } else {
+        err = 'Error deleting map.';
+        callback(err);
+      }
+    });
+  },
+
   getReports: function (n, callback) {
     var err = undefined;
     var url = '/api/v1/report?n=' + n;
