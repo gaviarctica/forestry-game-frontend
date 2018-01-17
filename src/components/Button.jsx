@@ -43,7 +43,7 @@ export default function Button(props) {
       className={buttonClass}
       id={props.id}
       style={props.style}
-      onClick={props.handleClick} >
+      onClick={props.inactive ? '' : props.handleClick} >
 
     {props.icon ? <Icon size={'1.3em'} icon={props.icon} className="navbar-icon"/> : ''}
 
