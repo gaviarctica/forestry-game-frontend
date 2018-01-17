@@ -28,7 +28,7 @@ export default class Settings {
       ARROW_SPRITE_SCALE: 0.2,
       // other
       // 10 -> 1m
-      MAX_DISTANCE_TO_DEPOSIT : 150,
+      MAX_DISTANCE_TO_DEPOSIT : 100,
       MAX_DISTANCE_TO_LOG : 100,
       // affects speed when there are logs loaded
       MAX_LOAD_FACTOR: 16
@@ -37,7 +37,7 @@ export default class Settings {
 
     this.camera = {
       // speed that camera follows the truck
-      CONVERGENCE_FACTOR : (1 / 60)
+      CONVERGENCE_FACTOR : (1 / 30)
     };
 
     this.stats = {
