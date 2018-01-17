@@ -25,6 +25,10 @@ export default function Button(props) {
         buttonClass = buttonClass + ' primary';
       }
       break;
+
+    case 'close-or-delete':
+      buttonClass = buttonClass + ' delete-button';
+      break;
     
     default:
       break;
@@ -39,11 +43,11 @@ export default function Button(props) {
       className={buttonClass}
       id={props.id}
       style={props.style}
-      onClick={props.handleClick} >
+      onClick={props.inactive ? '' : props.handleClick} >
 
     {props.icon ? <Icon size={'1.3em'} icon={props.icon} className="navbar-icon"/> : ''}
 
-    {props.text}
+    {props.buttonType == 'close-or-delete' ? 'x' : props.text}
     
     </div>
   );
