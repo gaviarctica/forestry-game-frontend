@@ -410,18 +410,11 @@ export default class Level {
     };
   }
 
-  getInfo() {
+  getInfo(fog) {
 
-    var pileTypes = [];
+    var pileTypes = {'0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0};
     for (var log of this.logs) {
-      for (var pileType of pileTypes) {
-        if (pileTypes.type === log.type) {
-          pileTypes.amount += 1;
-          break;
-        }
-      }
-
-      pileTypes.push({name: LogType[log.type].name, type: log.type, amount: 1});
+      pileTypes[log.type] += 1;
     }
 
     var totalRouteLength = 0;
@@ -429,11 +422,26 @@ export default class Level {
       totalRouteLength += segment.getLength();
     }
 
+    var anomalies = false;
+    for (let [id, node] of this.routeNodes) {
+      if(node.anomalies && node.anomalies.length === 1) {
+        anomalies = true;
+      }
+    }
+
+    var weather = {}
+    if (fog.enabled) {
+      weather.type = 'fog';
+      weather.density = fog.density;
+      weather.visibility = fog.visibility;
+    }
+
     return {
       pileTypes: pileTypes,
       routeLength: Math.round(totalRouteLength / this.settings.PIXELS_TO_METERS),
       storageAreas: this.logDeposits.length,
-      passingLimit: false
+      anomalies: anomalies,
+      weather: weather
     };
 
   }

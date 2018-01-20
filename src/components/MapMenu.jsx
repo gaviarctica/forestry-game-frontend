@@ -135,20 +135,32 @@ export default class MapMenu extends Component {
     if (this.state.maps) {
       var selMap = this.state.maps[this.state.selectedMapIndex];
 
-      var pileTypes = selMap.mapinfo.pileTypes.map(pileType =>
-        <div className="section-list-item" key={pileType.name}>
-          <div className="section-list-item-name">
-            {pileType.name}
-          </div>
-          <div className="section-list-item-value">
-            {pileType.amount}
-          </div>
-        </div>
-      );
+      var pileTypes = [];
+      Object.keys(selMap.mapinfo.pileTypes).forEach(key => {
+        if (selMap.mapinfo.pileTypes[key] > 0) {
+          pileTypes.push(
+            <div className="section-list-item" key={key}>
+              <div className="section-list-item-name">
+                {LANG[this.props.lang].logs['type' + (parseInt(key)+1)]}
+              </div>
+              <div className="section-list-item-value">
+                {selMap.mapinfo.pileTypes[key]}
+              </div>
+            </div>
+          );
+        }
+      });
 
       var mapImage = {
         backgroundImage: 'url(/levelimage/' + selMap.id + '.svg)'
       };
+
+      var mapWeather = '';
+      if (selMap.mapinfo.hasOwnProperty('weather') && selMap.mapinfo.weather.hasOwnProperty('type') && selMap.mapinfo.weather.type === 'fog') {
+        mapWeather = 'foggy';
+      } else {
+        mapWeather = 'clear';
+      }
     }
 
     if (this.state.maps === undefined) {
@@ -233,7 +245,16 @@ export default class MapMenu extends Component {
                     {LANG[this.props.lang].mainMenu.playTab.roadAnomalies}
                     </div>
                     <div className="section-value">
-                      {selMap.mapinfo.passingLimit ? 'YES' : 'NO'}
+                      {selMap.mapinfo.anomalies ? LANG[this.props.lang].mainMenu.playTab.yes : LANG[this.props.lang].mainMenu.playTab.no}
+                    </div>
+                  </div>
+
+                  <div className="section">
+                    <div className="section-header">
+                    {LANG[this.props.lang].mainMenu.playTab.weather}
+                    </div>
+                    <div className="section-value">
+                      {LANG[this.props.lang].mainMenu.playTab[mapWeather]}
                     </div>
                   </div>
 
