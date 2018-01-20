@@ -217,8 +217,8 @@ export default class EditorCanvas {
     return this.level.serialize(fog);
   }
 
-  levelInfo() {
-    return this.level.getInfo();
+  levelInfo(fog) {
+    return this.level.getInfo(fog);
   }
 
   update(delta)

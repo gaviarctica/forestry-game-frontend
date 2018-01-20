@@ -350,12 +350,13 @@ export default class Editor extends Component {
   }
 
   overwriteSaveLevel() {
-    var mapData = this.editorCanvas.serializeLevel({
+    var fogInfo = {
       enabled: this.state.fogEnabled,
       density: this.state.fogDensity,
       visibility: this.state.fogVisibility
-    });
-    var mapInfo = this.editorCanvas.levelInfo();
+    };
+    var mapData = this.editorCanvas.serializeLevel(fogInfo);
+    var mapInfo = this.editorCanvas.levelInfo(fogInfo);
     var self = this;
     if (this.state.loadedMapID) {
       API.updateMap(this.state.loadedMapID, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
@@ -374,12 +375,13 @@ export default class Editor extends Component {
       return;
     }
     
-    var mapData = this.editorCanvas.serializeLevel({
+    var fogInfo = {
       enabled: this.state.fogEnabled,
       density: this.state.fogDensity,
       visibility: this.state.fogVisibility
-    });
-    var mapInfo = this.editorCanvas.levelInfo();
+    };
+    var mapData = this.editorCanvas.serializeLevel(fogInfo);
+    var mapInfo = this.editorCanvas.levelInfo(fogInfo);
     var self = this;
     API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err, response) {
       if (err) throw err;
