@@ -6,7 +6,11 @@ export const Key = {
  Down: 40,
  Space: 32,
  Q: 81,
- E: 69
+ E: 69,
+ W: 87,
+ A: 65,
+ S: 83,
+ D: 68
 }
 
 export default class Controls {
@@ -32,6 +36,7 @@ export default class Controls {
   }
 
   handleKeyDown(event) {
+    console.log(event.keyCode);
     var key = this.keys[event.keyCode];
     if (!key.isDown)
       key.justPressed = true;
