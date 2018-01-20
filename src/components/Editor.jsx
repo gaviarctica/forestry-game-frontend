@@ -465,12 +465,6 @@ export default class Editor extends Component {
             buttonType='primary'
             inactive={this.state.selectedUserLevel ? false : true}
             handleClick={this.handleButtonClick.bind(this)} />
-          <Button
-            id="button-editor-mapmenu-delete"
-            buttonType='close-or-delete'
-            style={this.state.selectedUserLevel ? {} : {display: 'none'}}
-            inactive={this.state.selectedUserLevel ? false : true}
-            handleClick={this.handleButtonClick.bind(this)} />
         </div>
         <div id="editor-mapmenu-bottomrow">
           <div id="editor-mapmenu-list">
@@ -485,7 +479,14 @@ export default class Editor extends Component {
               )
             }) : ''}
           </div>
-          <div id="editor-mapmenu-image" style={mapImage}></div>
+          <div id="editor-mapmenu-image" style={mapImage}>
+            <Button
+              id="button-editor-mapmenu-delete"
+              buttonType='close-or-delete'
+              style={this.state.selectedUserLevel ? {} : {display: 'none'}}
+              inactive={this.state.selectedUserLevel ? false : true}
+              handleClick={this.handleButtonClick.bind(this)} />
+          </div>
         </div>
       </div>
     );
