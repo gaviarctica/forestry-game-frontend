@@ -7,7 +7,7 @@ export const Key = {
  Space: 32,
  Q: 81,
  E: 69
-} 
+}
 
 export default class Controls {
   constructor() {
