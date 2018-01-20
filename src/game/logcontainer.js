@@ -26,9 +26,9 @@ export default class LogContainer {
     return false;
   }
 
-  unloadLogTo(deposit, deposits) {
+  unloadLogTo(deposit, deposits, check_only = false) {
     for( var i = this.log_rows.length-1; i >= 0; --i) {
-      if(this.log_rows[i].unloadLogsTo(deposit, deposits)) {
+      if(this.log_rows[i].unloadLogsTo(deposit, deposits, check_only)) {
         return true;
       }
     }
@@ -112,8 +112,9 @@ class LogRow {
   }
 
   // tries to unload all possible logs from this deposit
-  unloadLogsTo(deposit, deposits) {
+  unloadLogsTo(deposit, deposits, check_only = false) {
     var all_null = true;
+
     for (var x = 0; x < this.type.log_amount; ++x) {
 
       // using reverse traverse order
@@ -123,7 +124,10 @@ class LogRow {
       // checking if level already has current log type
       var levelHasType = this.depositTypeExists(log.type, deposits);
 
-      if (deposit.addLog(log, levelHasType)) {
+      if(check_only) {
+        var log_can_be_added = deposit.addLog(log, levelHasType, check_only);
+        if(log_can_be_added) return true;
+      } else if (deposit.addLog(log, levelHasType)) {
         this.logs[this.type.traverse_order[this.type.log_amount-x-1]] = null;
         this.stats.addLogDelay();
         return true;
@@ -131,7 +135,7 @@ class LogRow {
     }
 
     // only when all logs are null we return false (termination condition)
-    if(all_null) return false;
+    if(all_null || check_only) return false;
 
     return true;
   }

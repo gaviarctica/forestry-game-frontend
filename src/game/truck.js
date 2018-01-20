@@ -10,7 +10,7 @@ import Controls from './controls';
 export default class Truck {
 
   constructor(stage, controls, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats, logsRemaining) {
-    
+
     this.drawable_container = new PIXI.Container();
     // store the stage so we can control the camera when we need it
     this.stage = stage;
@@ -323,7 +323,7 @@ export default class Truck {
       this.stats.updateUI({
         logsRemainingOnGround: this.logsRemaining
       });
-      this.stats.addLogDelay();      
+      this.stats.addLogDelay();
       return true;
     }
 
@@ -339,13 +339,19 @@ export default class Truck {
   }
 
   checkDeposits() {
+
     for (var i = 0; i < this.depositsOnLevel.length; ++i) {
       var deposit = this.depositsOnLevel[i];
 
       // check if deposit is close to truck
       var distanceToDeposit = distance(this.sprite.position, deposit.getPosition());
       if (distanceToDeposit < this.maxDistanceToDeposit) {
-        deposit.setCanBeUnloadedTo(true);
+        var log_can_be_added = this.logContainer.unloadLogTo(deposit, this.depositsOnLevel, true);
+        if(log_can_be_added) {
+          deposit.setCanBeUnloadedTo(1);
+        } else {
+          deposit.setCanBeUnloadedTo(2);
+        }
 
         if (this.selectableItems.indexOf(deposit) === -1) {
           this.selectableItems.push(deposit);

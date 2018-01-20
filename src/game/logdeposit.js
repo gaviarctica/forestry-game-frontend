@@ -12,8 +12,10 @@ const depositSpriteByType = {
 }
 
 export function createLogDepositGraphics(types = []) {
+  var depositContainer = new PIXI.Container();
+
   if (types.length > 0) {
-  var depositSprite = PIXI.Sprite.fromImage(depositSpriteByType[types[0]]);      
+  var depositSprite = PIXI.Sprite.fromImage(depositSpriteByType[types[0]]);
   } else {
     var depositSprite = PIXI.Sprite.fromImage('/static/deposit_empty.svg');
   }
@@ -93,15 +95,19 @@ export default class LogDeposit {
 
     this.graphics = graphics;
     this.inRangeBackground = inRangeBackground;
+    this.inRangeBackgroundState = 0;
   }
 
   setMaxTypes(max_types) {
     this.max_types = max_types;
   }
 
-  addLog(log, levelHasType) {
+  addLog(log, levelHasType, check_only = false) {
+
+    if(!levelHasType && check_only) return true;
+
     // if we have no type, we assign type and mark it with appropriate texture
-    if( !levelHasType && this.types.length < this.max_types) {
+    if( !levelHasType && this.types.length < this.max_types && !check_only) {
       this.types.push(log.type);
       this.graphics.texture = PIXI.Texture.fromImage(depositSpriteByType[log.type]);
     }
@@ -116,7 +122,12 @@ export default class LogDeposit {
       }
     }
 
-    if(can_add) {
+    if(can_add && check_only) {
+      return true;
+    }
+    else if(check_only) return false;
+
+    if(can_add && !check_only) {
       // reset the state for clicking
       this.setMarkedForUnload(false);
       // in this case parent is truck
@@ -139,11 +150,34 @@ export default class LogDeposit {
 
   setCanBeUnloadedTo(value) {
     this._canBeUnloadedTo = value;
+    var settings = (new Settings()).log_deposit;
     // alter bg color if log can be picked up
-    if (this._canBeUnloadedTo) {
+    // can add
+    if (this._canBeUnloadedTo === 1 && this.inRangeBackgroundState !== 1) {
+      this.inRangeBackground.beginFill(0xFFFFFF, 1);
+      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
+      this.inRangeBackground.alpha = 1;
+      this.inRangeBackground.beginFill(0x000000, 1);
+      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
       this.inRangeBackground.alpha = 0.25;
-    } else {
+      this.inRangeBackgroundState = 1;
+    }
+    // can't add or empty
+    else if (this._canBeUnloadedTo === 2 && this.inRangeBackgroundState !== 2) {
+      this.inRangeBackground.beginFill(0x000000, 1);
+      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
+      this.inRangeBackground.alpha = 1;
+      this.inRangeBackground.beginFill(0xFF2222, 1);
+      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
+      this.inRangeBackground.alpha = 0.5;
+      this.inRangeBackgroundState = 2;
+    }
+    // default
+    else if(!this._canBeUnloadedTo) {
+      this.inRangeBackground.beginFill(0x000000, 1);
+      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
       this.inRangeBackground.alpha = 0;
+      this.inRangeBackgroundState = 0;
     }
   }
 
