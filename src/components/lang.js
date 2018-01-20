@@ -120,6 +120,10 @@ export const LANG = {
         levelSaved: "Level saved",
         levelLoaded: "Level loaded",
         levelDeleted: "Level deleted"
+      },
+      confirmMessages: {
+        deleteConfirm: "Are you sure you want to delete this level?",
+        overwriteConfirm: "Are you sure you want to overwrite your previously saved level?"
       }
     },
     buttons: {
@@ -141,7 +145,9 @@ export const LANG = {
       loadLevel: "Load level",
       menu: "Menu",
       back: "Back",
-      cancel: "Cancel"
+      cancel: "Cancel",
+      yes: "Yes",
+      no: "No"
     },
     logs: {
       type1: "Type 1",
@@ -273,6 +279,10 @@ export const LANG = {
         levelSaved: "Taso tallennettu",
         levelLoaded: "Taso ladattu",
         levelDeleted: "Taso poistettu"
+      },
+      confirmMessages: {
+        deleteConfirm: "Tahdotko varmasti poistaa tämän tason?",
+        overwriteConfirm: "Tahdotko varmasti tallentaa aiemmin tallennetun tason päälle?"
       }
     },
     buttons: {
@@ -293,7 +303,9 @@ export const LANG = {
       loadLevel: "Lataa taso",
       menu: "Valikko",
       back: "Takaisin",
-      cancel: "Peruuta"
+      cancel: "Peruuta",
+      yes: "Kyllä",
+      no: "Ei"
     },
     logs: {
       type1: "Tyyppi 1",
