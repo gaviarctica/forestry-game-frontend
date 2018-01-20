@@ -176,7 +176,9 @@ export default class MapMenu extends Component {
             <div id="top">
 
               <TranslateRight in={this.state.appearAnimation}>
-                <div id="left">
+                <div
+                  id="left"
+                  style={mapWeather === 'foggy' ? {backgroundColor: '#7F7F7F'} : {}} >
                 {
                   this.state.loadingContent ? (
                     <Loader />

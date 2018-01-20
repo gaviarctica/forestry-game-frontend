@@ -129,6 +129,8 @@
   text-align: center;
   border-radius: calc(var(--list-item-size) / 2);
   font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0.5px 0.5px 5px #111;
 }
 
 .value-type-0 {
