@@ -146,7 +146,7 @@ export default class GameCanvas {
     var mouseRightClickEvent = function(event) {
       event.preventDefault();
 
-      if (event.which === 2 || event.which === 3) {
+      if (event.which === 2 || event.which === 3) {
         mouseInput.isRightDown = true;
       }
     }

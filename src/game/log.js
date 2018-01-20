@@ -45,9 +45,9 @@ export default class Log {
 			-(this.settings.Height+20)/2.0, this.settings.Width, this.settings.Height+20);
 
     this.container.owner = this;
-    this.container.pointerdown = function() {
+    this.container.pointerdown = function(e) {
       // check if truck is in pickup range (flag managed by truck)
-      if (this.owner.canBePickedUp()) {
+      if (this.owner.canBePickedUp() && e && e.data.originalEvent && e.data.originalEvent.which === 1) {
         this.owner.setMarkedForPickUp(true);
       } else {
         this.owner.setMarkedForPickUp(false);
