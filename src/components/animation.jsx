@@ -40,3 +40,13 @@ export const TranslateLeft = ({ children, ...props }) => (
     {children}
   </CSSTransition>
 );
+
+export const TranslateLeftOut = ({ children, ...props }) => (
+  <CSSTransition
+    {...props}
+    timeout={700}
+    classNames="translate-left-out"
+  >
+    {children}
+  </CSSTransition>
+);

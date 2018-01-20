@@ -21,6 +21,7 @@ export const LANG = {
       profileTab: {
         profile: "Profile",
         noScoresFound: "You don't have any scores yet!",
+        timestamp: "Time",
         cost: "Cost",
         map: "Map",
         info: "Info"
@@ -174,6 +175,7 @@ export const LANG = {
       profileTab: {
         profile: "Profiili",
         noScoresFound: "Sinulla ei ole vielä tuloksia!",
+        timestamp: "Aika",
         cost: "Kulut",
         map: "Kartta",
         info: "Tiedot"
