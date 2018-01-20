@@ -143,7 +143,7 @@ export default class MapMenu extends Component {
               <div className="section-list-item-name">
                 {LANG[this.props.lang].logs['type' + (parseInt(key)+1)]}
               </div>
-              <div className="section-list-item-value">
+              <div className={'section-list-item-value value-type-' + key}>
                 {selMap.mapinfo.pileTypes[key]}
               </div>
             </div>

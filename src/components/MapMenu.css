@@ -127,9 +127,32 @@
   width: var(--list-item-size);
   height: var(--list-item-size);
   text-align: center;
-  background-color: var(--jd-yellow);
   border-radius: calc(var(--list-item-size) / 2);
   font-size: 0.9em;
+}
+
+.value-type-0 {
+  background-color: #a28569;
+}
+
+.value-type-1 {
+  background-color: #e4d73d;
+}
+
+.value-type-2 {
+  background-color: #f27f1a;
+}
+
+.value-type-3 {
+  background-color: #d85040;
+}
+
+.value-type-4 {
+  background-color: #946fed;
+}
+
+.value-type-5 {
+  background-color: #2c57c3;
 }
 
 .map-chevron {
