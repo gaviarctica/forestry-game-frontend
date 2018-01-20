@@ -52,6 +52,7 @@ export default class Stats {
     this.actionDone = false;
 
     this.report.time += 1;
+    this.report.idling += 1;
     this.updateUI({
       time: this.report.time
     });

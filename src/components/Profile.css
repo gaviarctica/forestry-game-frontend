@@ -15,7 +15,17 @@
 }
 
 #left-content table {
-	width: 100%;
+	width: 500px;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+#map-search {
+	width: 200px;
+	background: transparent;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
 
 ul {
@@ -32,6 +42,26 @@ ul {
 
 #profile-header {
 	text-align: center;
+}
+
+#profile-score-info td {
+	padding: 5px;
+}
+
+td {
+	text-align: center;
+}
+
+thead tr {
+	background-color: var(--jd-gray) !important;
+}
+
+tr:nth-child(even) {
+    background-color: #d1d2d2;
+}
+
+tr:nth-child(odd) {
+    background-color: #dbdcdc;
 }
 
 #profile-score-info td:nth-child(2){

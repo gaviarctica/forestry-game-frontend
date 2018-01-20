@@ -8,6 +8,26 @@ import Icon from 'react-icons-kit';
 import { user } from 'react-icons-kit/icomoon/user';
 import { mail } from 'react-icons-kit/icomoon/mail';
 import { secondsToDateFormat } from '../game/helpers';
+import { TranslateRight, TranslateLeftOut } from './animation';
+
+function filterByMap() {
+	var input, filter, table, tr;
+	input = document.getElementById("map-search");
+	filter = input.value.toUpperCase();
+	table = document.getElementById("profile-score-info");
+	tr = table.getElementsByTagName("tr");
+
+	for (var i = 0; i < tr.length; i++) {
+		var td = tr[i].getElementsByTagName("td")[2];
+		if (td) {
+			if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+				tr[i].style.display = "";
+			} else {
+				tr[i].style.display = "none";
+			}
+		}
+	}
+}
 
 const Rows = (props) => {
 	var rows = [];
@@ -22,7 +42,15 @@ const Rows = (props) => {
 	}
 
 	for (let i = 0; i < props.data.length; i++) {
+		var date = new Date(props.data[i].timestamp);
+		var d = date.getDate();
+		var m = date.getMonth()+1;
+		var y = date.getFullYear();
+		var hh = date.getHours();
+		var mm = date.getMinutes();
+
 		rows.push(<tr key={props.data[i].id}>
+					<td>{hh}:{mm}<br/>{d}.{m}.{y}</td>
 				    <td>{props.data[i].m_score} €</td>
 				    <td>{props.data[i].level}</td>
 				    <td>
@@ -35,9 +63,12 @@ const Rows = (props) => {
 				  </tr>);
 	}
 	
-	return (<table id="profile-score-info">
+	return (<div>
+			<input type="text" id="map-search" onKeyUp={filterByMap} placeholder="Search map.." />
+			<table id="profile-score-info">
 			  <thead>
 			  	<tr>
+			  		<th>{LANG[props.lang].mainMenu.profileTab.timestamp}</th>
 				    <th>{LANG[props.lang].mainMenu.profileTab.cost}</th>
 				    <th>{LANG[props.lang].mainMenu.profileTab.map}</th>
 				    <th style={{"width": "100px"}}>{LANG[props.lang].mainMenu.profileTab.info}</th>
@@ -46,7 +77,41 @@ const Rows = (props) => {
 			  <tbody>
 			  	{rows}
 			  </tbody>
-			</table>);
+			</table>
+	</div>);
+}
+
+function getRightContentData(t) {
+	if (t.state.report) {
+		return (
+			<Report type="profile_report"
+						close={t.handleReportCloseClick.bind(t)}
+						lang={t.props.lang}
+		                enddate={new Date(t.state.content.timestamp)}
+		                mapname={t.state.content.level}
+		                time={secondsToDateFormat(t.state.content.duration)}
+		                distance={t.state.content.distance}
+		                fuel={t.state.content.gas_consumption}
+		                logs={t.state.content.logs}
+		                cost={t.state.content.m_score}
+		                driving_unloaded_time={secondsToDateFormat(t.state.content.driving_unloaded_time)}
+		                driving_loaded_time={secondsToDateFormat(t.state.content.driving_loaded_time)}
+		                loading_and_unloading={secondsToDateFormat(t.state.content.loading_and_unloading)}
+		                idling={secondsToDateFormat(t.state.content.idling)}
+		                driving_forward={t.state.content.driving_forward}
+		                reverse={t.state.content.reverse}
+		                driving_unloaded_distance={t.state.content.driving_unloaded_distance}
+		                driving_loaded_distance={t.state.content.driving_loaded_distance}
+		                fuel_cost={t.state.content.fuel_cost}
+		                worker_salary={t.state.content.worker_salary}
+		                loads_transported={t.state.content.loads_transported}
+		                logs_deposited={t.state.content.logs_deposited}
+		                total_volume={t.state.content.total_volume}
+		                productivity={t.state.content.productivity}/>
+		);
+	} else {
+		return '';
+	}
 }
 
 export default class Profile extends Component {
@@ -55,7 +120,9 @@ export default class Profile extends Component {
 	    this.state = {
 	    	scores: undefined,
 			report: undefined,
-			openedReport: undefined
+			openedReport: undefined,
+			appearAnimation: false,
+			closing: false
 	    }
     }
 
@@ -96,17 +163,33 @@ export default class Profile extends Component {
 	    this.setState({
 			report: true,
 			content: content,
-			openedReport: e.target
+			openedReport: e.target,
+			appearAnimation: true,
+			closing: false
 	    });
-
+	    var self = this;
+	    setTimeout(function() {
+          self.setState({
+            appearAnimation: false,
+            closing: true
+          });
+        }, 350);
 	}
 
 	handleReportCloseClick() {
 		this.state.openedReport.style['background-color'] = 'var(--jd-yellow)';
 		this.setState({
-			report: false,
-			openedReport: undefined
+			appearAnimation: true
 	    });
+	    var self = this;
+	    setTimeout(function() {
+          self.setState({
+          	report: false,
+			openedReport: undefined,
+            appearAnimation: false,
+            closing: false
+          });
+        }, 350);
 	}
 
 	render() {
@@ -125,40 +208,34 @@ export default class Profile extends Component {
 			);
 		}
 
-		if (this.state.report) {
-
-			//Date when game finished
-			var date = new Date(this.state.content.timestamp);
-
+		if (!this.state.closing) {
 			rightContent = (
+
+				<TranslateRight in={this.state.appearAnimation}>
 				<div id="right-content">
-					<Report type="profile_report"
-							close={this.handleReportCloseClick.bind(this)}
-							lang={this.props.lang}
-			                enddate={date}
-			                mapname={this.state.content.level}
-			                time={secondsToDateFormat(this.state.content.duration)}
-			                distance={this.state.content.distance}
-			                fuel={this.state.content.gas_consumption}
-			                logs={this.state.content.logs}
-			                cost={this.state.content.m_score}
-			                driving_unloaded_time={secondsToDateFormat(this.state.content.driving_unloaded_time)}
-			                driving_loaded_time={secondsToDateFormat(this.state.content.driving_loaded_time)}
-			                loading_and_unloading={secondsToDateFormat(this.state.content.loading_and_unloading)}
-			                idling={secondsToDateFormat(this.state.content.idling)}
-			                driving_forward={this.state.content.driving_forward}
-			                reverse={this.state.content.reverse}
-			                driving_unloaded_distance={this.state.content.driving_unloaded_distance}
-			                driving_loaded_distance={this.state.content.driving_loaded_distance}
-			                fuel_cost={this.state.content.fuel_cost}
-			                worker_salary={this.state.content.worker_salary}
-			                loads_transported={this.state.content.loads_transported}
-			                logs_deposited={this.state.content.logs_deposited}
-			                total_volume={this.state.content.total_volume}
-			                productivity={this.state.content.productivity}/>
+				{
+	              this.state.report ? (
+	                getRightContentData(this)
+	              ) : ('')
+				}
 				</div>
-        	);
+				</TranslateRight>
+	    	);
+		} else {
+			rightContent = (
+
+				<TranslateLeftOut in={this.state.appearAnimation}>
+				<div id="right-content">
+				{
+	              this.state.report ? (
+	                getRightContentData(this)
+	              ) : ('')
+				}
+				</div>
+				</TranslateLeftOut>
+	    	);
 		}
+
 		return (
 			<div className="Profile">
 				<div id="left-content">
@@ -180,7 +257,9 @@ export default class Profile extends Component {
 						{leftContent}
 					</div>
 				</div>
+				
 				{rightContent}
+				
 			</div>
 		);
 	}
