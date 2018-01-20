@@ -1,0 +1,34 @@
+.ConfirmDialog {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 999;
+}
+
+#confirm-dialog {
+  margin: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 400px;
+}
+
+.ConfirmDialog .dialog-text {
+  color: #ddd;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 50px;
+  text-shadow: var(--menu-shadow);
+}
+
+.ConfirmDialog .Button {
+    width: 125px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 18px;    
+}
+
+.ConfirmDialog #confirm-dialog-button-primary {
+  float: right;
+}
