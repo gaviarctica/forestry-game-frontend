@@ -28,8 +28,11 @@ export default class LogContainer {
 
   unloadLogTo(deposit, deposits, check_only = false) {
     for( var i = this.log_rows.length-1; i >= 0; --i) {
-      if(this.log_rows[i].unloadLogsTo(deposit, deposits, check_only)) {
+      var unload = this.log_rows[i].unloadLogsTo(deposit, deposits, check_only);
+      if(unload === 1) {
         return true;
+      } else if(unload === 2) {
+        return false;
       }
     }
     return false;
@@ -116,7 +119,6 @@ class LogRow {
     var all_null = true;
 
     for (var x = 0; x < this.type.log_amount; ++x) {
-
       // using reverse traverse order
       var log = this.logs[this.type.traverse_order[this.type.log_amount-x-1]];
       all_null = all_null && !log;
@@ -126,18 +128,19 @@ class LogRow {
 
       if(check_only) {
         var log_can_be_added = deposit.addLog(log, levelHasType, check_only);
-        if(log_can_be_added) return true;
+        if(log_can_be_added) return 1;
       } else if (deposit.addLog(log, levelHasType)) {
         this.logs[this.type.traverse_order[this.type.log_amount-x-1]] = null;
         this.stats.addLogDelay();
-        return true;
+        return 1;
       }
     }
 
+    if(!all_null && check_only) return 2;
     // only when all logs are null we return false (termination condition)
     if(all_null || check_only) return false;
 
-    return true;
+    return 1;
   }
 
   depositTypeExists(type, deposits) {
