@@ -369,6 +369,11 @@ export default class Editor extends Component {
   }
 
   handleSaveAsPrimaryClick(newMapName) {
+    if (!this.editorCanvas.isValidLevel()) {
+      this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+      return;
+    }
+    
     var mapData = this.editorCanvas.serializeLevel({
       enabled: this.state.fogEnabled,
       density: this.state.fogDensity,
