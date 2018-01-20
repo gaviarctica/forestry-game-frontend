@@ -226,6 +226,26 @@ export default class EditorCanvas {
 
   }
 
+  isValidLevel()
+  {
+    // no truck position set
+    if (!this.level.hasCustomStartingSegment()) {
+      return false;
+    } 
+
+    // no logs
+    if (this.level.logs.length === 0) {
+      return false;
+    }
+
+    // logs have their place
+    if (!this.level.hasEnoughLogDeposits()) {
+      return false;
+    }
+
+    return true;
+  }
+
   destroy()
   {
     var self = this;

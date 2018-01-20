@@ -307,6 +307,10 @@ export default class Level {
     return this.startingSegment;
   }
 
+  hasCustomStartingSegment() {
+    return this.startingInterpolation > 0 || this.startingSegment !== this.routeSegments[0];
+  }
+
   getStaringInterpolation() {
     return this.startingInterpolation;
   }
@@ -317,6 +321,42 @@ export default class Level {
 
   getLogDeposits() {
     return this.logDeposits;
+  }
+  
+  hasEnoughLogDeposits() {
+    // find free deposits
+    var numOfFreeDeposits = 0;
+    var depositTypes = new Set();
+    for (var depo of this.logDeposits) {
+      if (depo.types.length === 0)
+        numOfFreeDeposits++;
+      else if (!depositTypes.has(depo.types[0]))
+        depositTypes.add(depo.types[0]);
+    }
+
+    // find all pile types
+    var pileTypes = new Set();
+    for (var log of this.logs) {
+      if (!pileTypes.has(log.type)) {
+          pileTypes.add(log.type);
+      }
+    }
+
+    for (var pileType of pileTypes) {
+      // has deposit for that pile type
+      if (depositTypes.has(pileType))
+        continue;
+      
+      numOfFreeDeposits = numOfFreeDeposits - 1;
+      // not enough free deposits either
+      if (numOfFreeDeposits >= 0)
+        continue;
+      // not enough deposits
+      return false;
+    }
+
+    // deposits found
+    return true;
   }
 
   serialize(fog) {

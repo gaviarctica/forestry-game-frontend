@@ -119,7 +119,12 @@ export const LANG = {
       messages: {
         levelSaved: "Level saved",
         levelLoaded: "Level loaded",
-        levelDeleted: "Level deleted"
+        levelDeleted: "Level deleted",
+        levelInvalid: "Level doesn`t have truck or logs or there is not enough log deposits for different log types"
+      },
+      confirmMessages: {
+        deleteConfirm: "Are you sure you want to delete this level?",
+        overwriteConfirm: "Are you sure you want to overwrite your previously saved level?"
       }
     },
     buttons: {
@@ -141,7 +146,9 @@ export const LANG = {
       loadLevel: "Load level",
       menu: "Menu",
       back: "Back",
-      cancel: "Cancel"
+      cancel: "Cancel",
+      yes: "Yes",
+      no: "No"
     },
     logs: {
       type1: "Type 1",
@@ -272,7 +279,12 @@ export const LANG = {
       messages: {
         levelSaved: "Taso tallennettu",
         levelLoaded: "Taso ladattu",
-        levelDeleted: "Taso poistettu"
+        levelDeleted: "Taso poistettu",
+        levelInvalid: "Tasolla ei ole aloituspistettä tai puutavaraa tai siinä on liian vähän säilöntäalueita eri puutavaralajeille"
+      },
+      confirmMessages: {
+        deleteConfirm: "Tahdotko varmasti poistaa tämän tason?",
+        overwriteConfirm: "Tahdotko varmasti tallentaa aiemmin tallennetun tason päälle?"
       }
     },
     buttons: {
@@ -293,7 +305,9 @@ export const LANG = {
       loadLevel: "Lataa taso",
       menu: "Valikko",
       back: "Takaisin",
-      cancel: "Peruuta"
+      cancel: "Peruuta",
+      yes: "Kyllä",
+      no: "Ei"
     },
     logs: {
       type1: "Tyyppi 1",

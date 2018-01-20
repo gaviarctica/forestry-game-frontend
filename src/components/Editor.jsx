@@ -4,6 +4,7 @@ import Button from './Button';
 import EditorCanvas from '../editor/editor';
 import FloatingMenu from './FloatingMenu';
 import FloatingDialog from './FloatingDialog';
+import ConfirmDialog from './ConfirmDialog';
 import { API } from './api';
 import { LANG } from './lang';
 import Settings from '../game/settings';
@@ -29,7 +30,9 @@ export default class Editor extends Component {
       selectedUserLevel: undefined,
       loadedMapData: undefined,
       loadedMapID: undefined,
-      previousSavedStatus: undefined
+      previousSavedStatus: undefined,
+      levelDeleteConfirmOpen: false,
+      levelOverwriteConfirmOpen: false
     }
 
     this.toolImagePaths = {
@@ -227,31 +230,29 @@ export default class Editor extends Component {
       }));
     }
     if (clicked === 'button-save') {
+      if (!this.editorCanvas.isValidLevel()) {
+        this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+        return;
+      }
+
       // If saving a new level, open save as dialog
       if (!this.state.loadedMapData) {
         this.setState({
           saveAsMenuOpen: true
         });
       } else {
-        // Otherwise overwrite old level
-        var mapData = this.editorCanvas.serializeLevel({
-          enabled: this.state.fogEnabled,
-          density: this.state.fogDensity,
-          visibility: this.state.fogVisibility
+        // Otherwise overwrite old level, confirm first
+        this.setState({
+          levelOverwriteConfirmOpen: true
         });
-        var mapInfo = this.editorCanvas.levelInfo();
-        if (this.state.loadedMapID) {
-          API.updateMap(this.state.loadedMapID, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
-            if (err) throw err;
-
-            self.postSaveOperations(mapData);
-          });
-        } else {
-          throw 'No loaded map ID known';
-        }
       }
     }
     if (clicked === 'button-save-as') {
+      if (!this.editorCanvas.isValidLevel()) {
+        this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+        return;
+      }
+
       this.setState({
         saveAsMenuOpen: true
       });
@@ -288,7 +289,10 @@ export default class Editor extends Component {
     }
     if (clicked === 'button-editor-mapmenu-delete') {
       if (this.state.selectedUserLevel) {
-        this.deleteSelectedMap();
+        // Open delete confirm dialog
+        this.setState({
+          levelDeleteConfirmOpen: true
+        });
       }
     }
   }
@@ -345,7 +349,31 @@ export default class Editor extends Component {
     })
   }
 
+  overwriteSaveLevel() {
+    var mapData = this.editorCanvas.serializeLevel({
+      enabled: this.state.fogEnabled,
+      density: this.state.fogDensity,
+      visibility: this.state.fogVisibility
+    });
+    var mapInfo = this.editorCanvas.levelInfo();
+    var self = this;
+    if (this.state.loadedMapID) {
+      API.updateMap(this.state.loadedMapID, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
+        if (err) throw err;
+
+        self.postSaveOperations(mapData);
+      });
+    } else {
+      throw 'No loaded map ID known';
+    }
+  }
+
   handleSaveAsPrimaryClick(newMapName) {
+    if (!this.editorCanvas.isValidLevel()) {
+      this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+      return;
+    }
+    
     var mapData = this.editorCanvas.serializeLevel({
       enabled: this.state.fogEnabled,
       density: this.state.fogDensity,
@@ -465,12 +493,6 @@ export default class Editor extends Component {
             buttonType='primary'
             inactive={this.state.selectedUserLevel ? false : true}
             handleClick={this.handleButtonClick.bind(this)} />
-          <Button
-            id="button-editor-mapmenu-delete"
-            buttonType='close-or-delete'
-            style={this.state.selectedUserLevel ? {} : {display: 'none'}}
-            inactive={this.state.selectedUserLevel ? false : true}
-            handleClick={this.handleButtonClick.bind(this)} />
         </div>
         <div id="editor-mapmenu-bottomrow">
           <div id="editor-mapmenu-list">
@@ -485,10 +507,43 @@ export default class Editor extends Component {
               )
             }) : ''}
           </div>
-          <div id="editor-mapmenu-image" style={mapImage}></div>
+          <div id="editor-mapmenu-image" style={mapImage}>
+            <Button
+              id="button-editor-mapmenu-delete"
+              buttonType='close-or-delete'
+              style={this.state.selectedUserLevel ? {} : {display: 'none'}}
+              inactive={this.state.selectedUserLevel ? false : true}
+              handleClick={this.handleButtonClick.bind(this)} />
+          </div>
         </div>
       </div>
     );
+  }
+
+  levelDeleteYes() {
+    this.deleteSelectedMap();    
+    this.setState({
+      levelDeleteConfirmOpen: false
+    });
+  }
+
+  levelDeleteNo() {
+    this.setState({
+      levelDeleteConfirmOpen: false
+    });
+  }
+
+  levelOverwriteYes() {
+    this.overwriteSaveLevel();
+    this.setState({
+      levelOverwriteConfirmOpen: false
+    });
+  }
+
+  levelOverwriteNo() {
+    this.setState({
+      levelOverwriteConfirmOpen: false
+    });
   }
 
   render() {
@@ -663,6 +718,23 @@ export default class Editor extends Component {
                 buttons={menuButtons} />
           : ''
         }
+
+        {this.state.levelDeleteConfirmOpen ? 
+          <ConfirmDialog
+            id="delete-confirm-dialog"
+            lang={this.props.lang}
+            text={LANG[this.props.lang].editor.confirmMessages.deleteConfirm}
+            yesClicked={() => this.levelDeleteYes()}
+            noClicked={() => this.levelDeleteNo()} />
+        : ''}
+        {this.state.levelOverwriteConfirmOpen ? 
+          <ConfirmDialog
+            id="overwrite-confirm-dialog"
+            lang={this.props.lang}
+            text={LANG[this.props.lang].editor.confirmMessages.overwriteConfirm}
+            yesClicked={() => this.levelOverwriteYes()}
+            noClicked={() => this.levelOverwriteNo()} />
+        : ''}
 
       </div>
     );
