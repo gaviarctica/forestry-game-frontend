@@ -57,9 +57,9 @@ export default class LogDeposit {
 
     this.numOfLogs = 0;
 
-    this.container.pointerdown = function() {
+    this.container.pointerdown = function(e) {
       // check if truck is in unload range (flag managed by truck)
-      if (this.owner.canBeUnloadedTo()) {
+      if (this.owner.canBeUnloadedTo() && e && e.data.originalEvent && e.data.originalEvent.which === 1) {
         this.owner.setMarkedForUnload(true);
       } else {
         this.owner.setMarkedForUnload(false);
