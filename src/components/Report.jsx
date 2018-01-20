@@ -49,7 +49,7 @@ export default function Report(props) {
       <h1>{LANG[props.lang].report.report}</h1> 
       <div id="report-header">
         <div>
-          <p>{date.getDate()}.{date.getMonth()}.{date.getFullYear()}, {date.getHours()}:{date.getMinutes()<10?'0':''}{date.getMinutes()}</p>
+          <p>{date.getDate()}.{date.getMonth()+1}.{date.getFullYear()}, {date.getHours()}:{date.getMinutes()<10?'0':''}{date.getMinutes()}</p>
           <p>{LANG[props.lang].report.map}: {props.mapname}</p>
         </div>
         <div>

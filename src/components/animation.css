@@ -53,3 +53,15 @@
   transition: 700ms ease;
   transform: translateX(0px);
 }
+
+/* TranslateLeftOut */
+.translate-left-out-enter {
+  opacity: 1;
+  transform: translateX(0px);
+}
+
+.translate-left-out-enter.translate-left-out-enter-active {
+  opacity: 0;
+  transition: 700ms ease;
+  transform: translateX(-30px);
+}
