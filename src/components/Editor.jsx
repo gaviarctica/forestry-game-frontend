@@ -227,6 +227,11 @@ export default class Editor extends Component {
       }));
     }
     if (clicked === 'button-save') {
+      if (!this.editorCanvas.isValidLevel()) {
+        this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+        return;
+      }
+
       // If saving a new level, open save as dialog
       if (!this.state.loadedMapData) {
         this.setState({
@@ -252,6 +257,11 @@ export default class Editor extends Component {
       }
     }
     if (clicked === 'button-save-as') {
+      if (!this.editorCanvas.isValidLevel()) {
+        this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+        return;
+      }
+
       this.setState({
         saveAsMenuOpen: true
       });

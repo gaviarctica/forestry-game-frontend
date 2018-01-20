@@ -119,7 +119,8 @@ export const LANG = {
       messages: {
         levelSaved: "Level saved",
         levelLoaded: "Level loaded",
-        levelDeleted: "Level deleted"
+        levelDeleted: "Level deleted",
+        levelInvalid: "Level doesn`t have truck or logs or there is not enough log deposits for different log types"
       }
     },
     buttons: {
@@ -272,7 +273,8 @@ export const LANG = {
       messages: {
         levelSaved: "Taso tallennettu",
         levelLoaded: "Taso ladattu",
-        levelDeleted: "Taso poistettu"
+        levelDeleted: "Taso poistettu",
+        levelInvalid: "Tasolla ei ole aloituspistettä tai puutavaraa tai siinä on liian vähän säilöntäalueita eri puutavaralajeille"
       }
     },
     buttons: {
