@@ -16,7 +16,12 @@ export const LANG = {
         pileTypesAndAmounts: "Pile Types and Amounts",
         routeLength: "Route Length",
         storageAreaAmount: "Storage Area Amount",
-        roadAnomalies: "Road Anomalies"
+        roadAnomalies: "Road Anomalies",
+        yes: "Yes",
+        no: "No",
+        weather: "Weather",
+        foggy: "Foggy",
+        clear: "Clear"
       },
       profileTab: {
         profile: "Profile",
@@ -176,7 +181,12 @@ export const LANG = {
         pileTypesAndAmounts: "Puutyypit ja lukumäärät",
         routeLength: "Tien pituus",
         storageAreaAmount: "Säilytysalueet",
-        roadAnomalies: "Tiemuuttujat"
+        roadAnomalies: "Tiemuuttujat",
+        yes: "Kyllä",
+        no: "Ei",
+        weather: "Sää",
+        foggy: "Sumuinen",
+        clear: "Selkeä"
       },
       profileTab: {
         profile: "Profiili",
