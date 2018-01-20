@@ -119,4 +119,28 @@ export default class Log {
   getRotation() {
     return this.container.rotation;
   }
+
+	update(visible_type) {
+		console.log("Updating log");
+	 // TODO hide if something is selected
+	 if(visible_type && visible_type === this.getType()) {
+		 this.setVisible(true);
+		 return;
+	 } else if(visible_type) {
+		 this.setVisible(false);
+		 return;
+	 }
+
+	 this.setVisible(true);
+
+
+	}
+
+	getType() {
+		return this.type;
+	}
+
+	setVisible(visible) {
+		this.container.visible = visible;
+	}
 }

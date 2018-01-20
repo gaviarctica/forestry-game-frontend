@@ -10,7 +10,13 @@ export const Key = {
  W: 87,
  A: 65,
  S: 83,
- D: 68
+ D: 68,
+ 1: 49,
+ 2: 50,
+ 3: 51,
+ 4: 52,
+ 5: 53,
+ 6: 54,
 }
 
 export default class Controls {
@@ -37,6 +43,7 @@ export default class Controls {
 
   handleKeyDown(event) {
     var key = this.keys[event.keyCode];
+    console.log(event.keyCode);
     if (!key.isDown)
       key.justPressed = true;
     key.justReleased = false;
