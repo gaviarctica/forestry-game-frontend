@@ -42,7 +42,7 @@ export default class RemoveTool extends ITool {
 
     this.targetLog = null;
     this.targetDeposit = null;
-    this.targetNode = null;
+    this.targetNodeId = null;
 
     for (var log of this.level.getLogs()) {
       if (log.isHighlighted()) {
@@ -67,7 +67,7 @@ export default class RemoveTool extends ITool {
       if (distance(node.getPos(), epos) < this.snappingDistance) {
         this.pointerContainer.alpha = 1.0
         this.pointerContainer.position.set(node.getPos().x, node.getPos().y);
-        this.targetNode = id;
+        this.targetNodeId = id;
         return;
       }
     }
@@ -103,8 +103,8 @@ export default class RemoveTool extends ITool {
       this.level.removeLog(this.targetLog);
     } else if (this.targetDeposit) {
       this.level.removeDeposit(this.targetDeposit);
-    } else if (this.targetNode) {
-      this.level.removeRouteNode(this.targetNode);
+    } else if (this.targetNodeId !== null) {
+      this.level.removeRouteNode(this.targetNodeId);
       this.level.refreshRoutes();
     } else if(this.snappedToSegment) {
       // if we are snapped to a segment we try to remove its anomalies
