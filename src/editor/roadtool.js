@@ -171,6 +171,7 @@ export default class RoadTool extends ITool {
   keyUp(event) {}
 
   activate() {
+    this.previousNodeId = -1;
     super.activate();
     this.stage.addChildAt(this.road_container,1);
     this.stage.addChildAt(this.draw_container,3);

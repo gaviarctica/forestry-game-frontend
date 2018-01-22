@@ -15,6 +15,7 @@ export default class Level {
     this.routeContainer = new PIXI.Container();
     this.stage.addChild(this.routeContainer);
     this.routeNodes = new Map();
+    this.routeNodesNextId = -1; // used for editor
     this.routeSegments = [];
     this.logs = [];
     this.logDeposits = [];
@@ -60,7 +61,8 @@ export default class Level {
 
   // used by map editor
   getNextRouteNodeId() {
-    return this.routeNodes.size + 1;
+    this.routeNodesNextId = this.routeNodesNextId + 1;
+    return this.routeNodesNextId;
   }
 
   drawRoutes() {
@@ -174,8 +176,46 @@ export default class Level {
     }
   }
 
+  // used by editor
   addRouteNode(id, pos, to, anomalies = null) {
     this.routeNodes.set(id, new RouteNode(id, pos, to, anomalies));
+  }
+
+  // used by editor
+  removeRouteNode(removeId) {
+    // remove connections if exists
+    for (let [id, node] of this.routeNodes) {
+      var index = node.to.indexOf(removeId);
+      if (index > -1) {
+        node.to.splice(index, 1);
+      }
+    }
+
+    this.routeNodes.delete(removeId);
+  }
+
+  // used by editor
+  removeRouteSegment(idFrom, idTo) {
+    var fromNode = this.routeNodes.get(idFrom);
+    var toNode = this.routeNodes.get(idTo);
+
+    var index = fromNode.to.indexOf(idTo);
+    if (index > -1) {
+      fromNode.to.splice(index, 1);
+    }
+
+    if (fromNode.to.length === 0) {
+      this.removeRouteNode(idFrom);
+    }
+
+    index = toNode.to.indexOf(idFrom);
+    if (index > -1) {
+      toNode.to.splice(index, 1);
+    }
+
+    if (toNode.to.length === 0) {
+      this.removeRouteNode(idTo);
+    }
   }
 
   // used by map editor
