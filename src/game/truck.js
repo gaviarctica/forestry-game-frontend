@@ -86,7 +86,11 @@ export default class Truck {
 
   update(timeDelta, stopAutomaticCamera = false) {
     // stopping automatic camera updates untill we move truck next time
-    if(stopAutomaticCamera) this.forceCameraMovement = false;
+    if(stopAutomaticCamera && timeDelta === 0) {
+      this.forceCameraMovement = false;
+      return;
+    }
+
     this.move(timeDelta);
     this.updateCamera();
     this.checkLogs();
