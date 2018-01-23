@@ -112,10 +112,11 @@ export default class Game extends Component {
       hideLogType: hidden
     });
 
-    // TODO: Get this info to the game canvas and hide/unhide affected logs
+    // updating the log type visibility accordingly
     if (hidden[type]) {
-      console.log('type ' + type + ' hidden!');
+      this.gameCanvas.map.update(type,false);
     } else {
+      this.gameCanvas.map.update(type,true);
       console.log('type ' + type + ' unhidden!');
     }
   }
@@ -135,9 +136,9 @@ export default class Game extends Component {
 
   render() {
     var quitButtonStyle = {
-      
+
     };
-    
+
     return (
       <div className="Game">
         {
@@ -151,7 +152,7 @@ export default class Game extends Component {
           <div id="game-end-container">
             <div id="game-end-menu">
               <h1>{LANG[this.props.lang].game.levelFinished}</h1>
-              <Button 
+              <Button
                 id="game-end-button-quit"
                 text={LANG[this.props.lang].buttons.quit}
                 buttonType='default'
@@ -187,7 +188,7 @@ export default class Game extends Component {
           </div>
         </div>
         }
-        <Button 
+        <Button
           id="button-quit"
           text={LANG[this.props.lang].buttons.quit}
           buttonType='default'
@@ -221,7 +222,7 @@ export default class Game extends Component {
                   );
                 })}
               </div>
-            } />          
+            } />
         </div>
         <div id="log-load-container">
           <div id="log-load">

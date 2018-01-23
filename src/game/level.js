@@ -365,7 +365,7 @@ export default class Level {
   }
 
   // some general updates in the level level
-  update() {
+  update(type = false, state = false) {
 
     // update of logs is done only after key presses
     if(this.controls.wasKeyPressed(Key['1'])) {
@@ -385,6 +385,14 @@ export default class Level {
       this.updateLogs();
     } else if(this.controls.wasKeyPressed(Key['6'])) {
       this.updateLogVisibilityArray(5);
+      this.updateLogs();
+    }
+
+    // TODO: Might want to use state check at later date to make sure toggle
+    // does't brake. (Shouln't be possible brake it though.
+    // As it reconstructs the state after every toggle)
+    if(type !== false) {
+      this.updateLogVisibilityArray(parseInt(type));
       this.updateLogs();
     }
 
