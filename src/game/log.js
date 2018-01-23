@@ -45,9 +45,9 @@ export default class Log {
 			-(this.settings.Height+20)/2.0, this.settings.Width, this.settings.Height+20);
 
     this.container.owner = this;
-    this.container.pointerdown = function() {
+    this.container.pointerdown = function(e) {
       // check if truck is in pickup range (flag managed by truck)
-      if (this.owner.canBePickedUp()) {
+      if (this.owner.canBePickedUp() && e && e.data.originalEvent && e.data.originalEvent.which === 1) {
         this.owner.setMarkedForPickUp(true);
       } else {
         this.owner.setMarkedForPickUp(false);
@@ -83,6 +83,10 @@ export default class Log {
   }
 
 	canBePickedUp() {
+		// we have manually set this to not be visible
+		// console.log(this.container.visible);
+		if(!this.container.visible) return false;
+
 		return this._canBePickedUp;
 	}
 
@@ -119,4 +123,31 @@ export default class Log {
   getRotation() {
     return this.container.rotation;
   }
+
+	update(visible_type) {
+
+		// if visible type is false we set everything visible
+		if(visible_type === false) {
+			this.setVisible(false);
+			return true;
+		}
+
+		// console.log("Updating log: " + this.getType() + " with: " + visible_type);
+	 // TODO hide if something is selected
+	 if(visible_type === this.getType()) {
+		 this.setVisible(true);
+		 return true;
+	 }
+
+		this.setVisible(false);
+		return false;
+	}
+
+	getType() {
+		return this.type;
+	}
+
+	setVisible(visible) {
+		this.container.visible = visible;
+	}
 }

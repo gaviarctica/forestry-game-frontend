@@ -5,10 +5,11 @@ import Log from './log';
 import LogDeposit from './logdeposit';
 import { endpointByStartPointDistanceAndAngle, distance } from './helpers';
 import {LogType} from './logtypes';
+import {Key} from './controls';
 import Settings from './settings';
 
 export default class Level {
-  constructor(map) {
+  constructor(map, updateUI = null, controls = null) {
     this.settings = (new Settings()).map;
     this.map = map;
     this.stage = new PIXI.Container();
@@ -19,6 +20,10 @@ export default class Level {
     this.routeSegments = [];
     this.logs = [];
     this.logDeposits = [];
+    this.controls = controls;
+
+    this.updateUI = updateUI;
+    this.log_toggle_visibility = [0,1,2,3,4,5];
 
     this.routeTexture = PIXI.Texture.fromImage('/static/road.png');
     this.dyingRouteTexture = PIXI.Texture.fromImage('/static/road_water.png');
@@ -362,7 +367,7 @@ export default class Level {
   getLogDeposits() {
     return this.logDeposits;
   }
-  
+
   hasEnoughLogDeposits() {
     // find free deposits
     var numOfFreeDeposits = 0;
@@ -386,7 +391,7 @@ export default class Level {
       // has deposit for that pile type
       if (depositTypes.has(pileType))
         continue;
-      
+
       numOfFreeDeposits = numOfFreeDeposits - 1;
       // not enough free deposits either
       if (numOfFreeDeposits >= 0)
@@ -397,6 +402,89 @@ export default class Level {
 
     // deposits found
     return true;
+  }
+
+  // some general updates in the level level
+  update(type = false, state = false) {
+
+    // update of logs is done only after key presses
+    if(this.controls.wasKeyPressed(Key['1'])) {
+      this.updateLogVisibilityArray(0);
+      this.updateLogs();
+    } else if(this.controls.wasKeyPressed(Key['2'])) {
+      this.updateLogVisibilityArray(1);
+      this.updateLogs();
+    } else if(this.controls.wasKeyPressed(Key['3'])) {
+      this.updateLogVisibilityArray(2);
+      this.updateLogs();
+    } else if(this.controls.wasKeyPressed(Key['4'])) {
+      this.updateLogVisibilityArray(3);
+      this.updateLogs();
+    } else if(this.controls.wasKeyPressed(Key['5'])) {
+      this.updateLogVisibilityArray(4);
+      this.updateLogs();
+    } else if(this.controls.wasKeyPressed(Key['6'])) {
+      this.updateLogVisibilityArray(5);
+      this.updateLogs();
+    }
+
+    // TODO: Might want to use state check at later date to make sure toggle
+    // does't brake. (Shouln't be possible brake it though.
+    // As it reconstructs the state after every toggle)
+    if(type !== false) {
+      this.updateLogVisibilityArray(parseInt(type));
+      this.updateLogs();
+    }
+
+  }
+
+  updateLogs() {
+    for( let log of this.getLogs() ) {
+      log.update(false);
+      for(let type of this.log_toggle_visibility) {
+        if(log.update(type)) break;
+      }
+    }
+
+
+  }
+
+  updateLogVisibilityArray(type) {
+    var has_type = false;
+
+    // finding if we already have typein our array
+    for(var i = 0; i < this.log_toggle_visibility.length; ++i) {
+      if(this.log_toggle_visibility[i] === type) {
+        has_type = i;
+        break;
+      }
+    }
+
+    // comparing if we toggle type off or on
+    if(has_type !== false) {
+      this.log_toggle_visibility.splice(has_type, 1);
+    } else {
+      this.log_toggle_visibility.push(type);
+    }
+
+    // updating the UI
+    var uiUpdate = { '0': false, '1': false, '2': false, '3': false, '4': false, '5': false };
+
+    for(let prop in uiUpdate) {
+      uiUpdate[[prop]] = true;
+      for(let logvis of this.log_toggle_visibility) {
+        uiUpdate[[prop]] = true;
+
+        if(logvis === parseInt(prop)) {
+          uiUpdate[[prop]] = false;
+          break;
+        }
+      }
+    }
+
+    this.updateUI( {
+      hideLogType: uiUpdate
+    })
   }
 
   serialize(fog) {

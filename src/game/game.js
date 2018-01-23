@@ -5,6 +5,7 @@ import Stats from './stats';
 import Forest from './forest';
 import Settings from './settings';
 import {Key} from './controls';
+import {LogType} from './logtypes';
 import Controls from './controls';
 import Weather from './weather';
 import {secondsToDateFormat} from './helpers';
@@ -34,7 +35,7 @@ export default class GameCanvas {
     this.stats = new Stats(updateUI, this.controls);
     this.gameEnded = false;
 
-    this.map = new Level(this.mapData);
+    this.map = new Level(this.mapData, updateUI, this.controls);
     this.game.stage.addChild(this.map.getStage());
 
     // counting different log types
@@ -120,13 +121,13 @@ export default class GameCanvas {
     this.game.stage.pointerdown = function() {
       // stopping camera updates when we want to control the camera manually
       truck.update(0,true);
-      mouseInput.isDown = true;
+      // mouseInput.isDown = true;
     };
     this.game.stage.pointerup = function() {
-      mouseInput.isDown = false;
+      mouseInput.isRightDown = false;
     };
     this.game.stage.pointerupoutside = function() {
-      mouseInput.isDown = false;
+      mouseInput.isRightDown = false;
     };
 
     this.game.stage.pointermove = function() {
@@ -135,13 +136,23 @@ export default class GameCanvas {
       mouseInput.position = {x: interaction.mouse.global.x, y: interaction.mouse.global.y};
       mouseInput.delta = {x: mouseInput.lastPosition.x - mouseInput.position.x, y: mouseInput.lastPosition.y - mouseInput.position.y};
 
-      if (mouseInput.isDown === true) {
+      if (mouseInput.isRightDown === true) {
         self.game.stage.pivot.x +=  mouseInput.delta.x / self.game.stage.scale.x;
         self.game.stage.pivot.y +=  mouseInput.delta.y / self.game.stage.scale.y;
       }
 
 
     }
+
+    var mouseRightClickEvent = function(event) {
+      event.preventDefault();
+
+      if (event.which === 2 || event.which === 3) {
+        mouseInput.isRightDown = true;
+      }
+    }
+
+    document.getElementById('canvas-game').onmousedown = mouseRightClickEvent;
 
     var mouseWheelEvent = function(event) {
       var settings = self.settings.map;
@@ -176,6 +187,7 @@ export default class GameCanvas {
     }
 
     this.truck.update(delta);
+    this.map.update();
 
     this.controls.update();
     this.weather.update(delta);

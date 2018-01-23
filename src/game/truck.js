@@ -100,7 +100,7 @@ export default class Truck {
     var direction = 0;
 
 
-    if(this.controls.isKeyDown(Key.Up)) {
+    if(this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.W)) {
       // when we start moving we force the camera to center again
       this.forceCameraMovement = true;
 
@@ -114,7 +114,7 @@ export default class Truck {
       direction = 1;
     }
 
-    if(this.controls.isKeyDown(Key.Down)) {
+    if(this.controls.isKeyDown(Key.Down) || this.controls.isKeyDown(Key.S)) {
       // when we start moving we force the camera to center again
       this.forceCameraMovement = true;
 
@@ -136,19 +136,22 @@ export default class Truck {
       this.selectNearbyItemAtDir(-1);
     }
 
-    if(this.controls.wasKeyPressed(Key.Space) && this.controls.isKeyUp(Key.Up) && this.controls.isKeyUp(Key.Up)) {
+    if(this.controls.wasKeyPressed(Key.Space) &&
+        this.controls.isKeyUp(Key.Up) && this.controls.isKeyUp(Key.Down) &&
+        this.controls.isKeyUp(Key.W) && this.controls.isKeyUp(Key.S)
+      ) {
       this.doLogAction = true;
     } else {
       this.doLogAction = false;
     }
 
     // Selecting route if arrow keys were pressed
-    if(this.controls.wasKeyPressed(Key.Left)) {
+    if(this.controls.wasKeyPressed(Key.Left) || this.controls.wasKeyPressed(Key.A)) {
       ++this.routeIndex;
       var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1) :
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
       this.routeIndex = seg['index'];
-    } else if(this.controls.wasKeyPressed(Key.Right)) {
+    } else if(this.controls.wasKeyPressed(Key.Right) || this.controls.wasKeyPressed(Key.D)) {
       --this.routeIndex;
       seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1) :
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1);
@@ -249,6 +252,11 @@ export default class Truck {
       var distanceToLog = distance(this.sprite.position, log.getPosition());
       if (distanceToLog < this.settings.MAX_DISTANCE_TO_LOG) {
         log.setCanBePickedUp(true);
+      } else {
+        log.setCanBePickedUp(false);
+      }
+
+      if (log.canBePickedUp()) {
 
         if (this.selectableItems.indexOf(log) === -1) {
           this.selectableItems.push(log);
@@ -265,7 +273,7 @@ export default class Truck {
         }
 
       } else {
-        log.setCanBePickedUp(false);
+
         if (this.selectedItem === log) {
           this.deselectItem();
         }

@@ -6,8 +6,18 @@ export const Key = {
  Down: 40,
  Space: 32,
  Q: 81,
- E: 69
-} 
+ E: 69,
+ W: 87,
+ A: 65,
+ S: 83,
+ D: 68,
+ 1: 49,
+ 2: 50,
+ 3: 51,
+ 4: 52,
+ 5: 53,
+ 6: 54,
+}
 
 export default class Controls {
   constructor() {

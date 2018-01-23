@@ -125,23 +125,25 @@ export default class Stats {
 
       // Calculate time according to truck speed and distance moved
       this.report.time = this.report.time + (distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS)/this.settings.AVG_VELOCITY;
-      
+
       // Update the distance moved
       var dist = distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS;
       this.report.distanceMoved += dist;
 
       // Update the distance moved forward or backward
-      if (this.controls.isKeyDown(Key.Up)) {
+      if (this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.W)) {
         this.report.driving_forward += dist;
-      } else if (this.controls.isKeyDown(Key.Down)) {
+      } else if (this.controls.isKeyDown(Key.Down) || this.controls.isKeyDown(Key.S)) {
         this.report.reverse += dist;
       }
 
       // Update distance moved with empty or loaded truck
-      if ((this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.Down)) && logCount > 0) {
+      if ((this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.Down) ||
+          this.controls.isKeyDown(Key.W) || this.controls.isKeyDown(Key.S)) && logCount > 0) {
         this.report.driving_loaded_distance += dist;
         this.report.driving_loaded_time += this.timeDelta(this.report.time);
-      } else if ((this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.Down)) && logCount === 0) {
+      } else if ((this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.Down) ||
+          this.controls.isKeyDown(Key.W) || this.controls.isKeyDown(Key.S)) && logCount === 0) {
         this.report.driving_unloaded_distance += dist;
         this.report.driving_unloaded_time += this.timeDelta(this.report.time);
       }
