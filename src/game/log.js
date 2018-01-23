@@ -83,6 +83,10 @@ export default class Log {
   }
 
 	canBePickedUp() {
+		// we have manually set this to not be visible
+		// console.log(this.container.visible);
+		if(!this.container.visible) return false;
+
 		return this._canBePickedUp;
 	}
 
@@ -121,19 +125,22 @@ export default class Log {
   }
 
 	update(visible_type) {
-		console.log("Updating log");
+
+		// if visible type is false we set everything visible
+		if(visible_type === false) {
+			this.setVisible(false);
+			return true;
+		}
+
+		// console.log("Updating log: " + this.getType() + " with: " + visible_type);
 	 // TODO hide if something is selected
-	 if(visible_type && visible_type === this.getType()) {
+	 if(visible_type === this.getType()) {
 		 this.setVisible(true);
-		 return;
-	 } else if(visible_type) {
-		 this.setVisible(false);
-		 return;
+		 return true;
 	 }
 
-	 this.setVisible(true);
-
-
+		this.setVisible(false);
+		return false;
 	}
 
 	getType() {

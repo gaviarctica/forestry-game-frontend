@@ -5,6 +5,7 @@ import Stats from './stats';
 import Forest from './forest';
 import Settings from './settings';
 import {Key} from './controls';
+import {LogType} from './logtypes';
 import Controls from './controls';
 import Weather from './weather';
 import {secondsToDateFormat} from './helpers';
@@ -34,7 +35,7 @@ export default class GameCanvas {
     this.stats = new Stats(updateUI, this.controls);
     this.gameEnded = false;
 
-    this.map = new Level(this.mapData);
+    this.map = new Level(this.mapData, updateUI, this.controls);
     this.game.stage.addChild(this.map.getStage());
 
     // counting different log types
@@ -186,6 +187,7 @@ export default class GameCanvas {
     }
 
     this.truck.update(delta);
+    this.map.update();
 
     this.controls.update();
     this.weather.update(delta);

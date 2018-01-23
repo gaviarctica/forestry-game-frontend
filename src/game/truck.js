@@ -252,6 +252,11 @@ export default class Truck {
       var distanceToLog = distance(this.sprite.position, log.getPosition());
       if (distanceToLog < this.settings.MAX_DISTANCE_TO_LOG) {
         log.setCanBePickedUp(true);
+      } else {
+        log.setCanBePickedUp(false);
+      }
+
+      if (log.canBePickedUp()) {
 
         if (this.selectableItems.indexOf(log) === -1) {
           this.selectableItems.push(log);
@@ -268,7 +273,7 @@ export default class Truck {
         }
 
       } else {
-        log.setCanBePickedUp(false);
+
         if (this.selectedItem === log) {
           this.deselectItem();
         }

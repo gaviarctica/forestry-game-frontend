@@ -43,7 +43,6 @@ export default class Controls {
 
   handleKeyDown(event) {
     var key = this.keys[event.keyCode];
-    console.log(event.keyCode);
     if (!key.isDown)
       key.justPressed = true;
     key.justReleased = false;
