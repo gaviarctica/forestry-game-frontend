@@ -18,7 +18,6 @@ export default class GameCanvas {
     this.settings = new Settings();
 
     this.mapData = mapData;
-
     this.forest = new Forest(this.game.stage, mapData);
     this.game.stage.addChild(this.forest.getGroundContainer());
     this.game.stage.addChild(this.forest.getTreeContainer());
