@@ -20,10 +20,10 @@ export default class Weather {
 
       this.visible_distance = attr.visibility;
       var fog_texture = PIXI.Texture.fromImage('/static/fog.png');
-      var fog_tiling_sprite = new PIXI.extras.TilingSprite(fog_texture, 10000, 10000);
-      fog_tiling_sprite.x = -5000;
-      fog_tiling_sprite.y = -5000;
-      fog_tiling_sprite.tileScale.set(0.05);
+      var fog_tiling_sprite = new PIXI.extras.TilingSprite(fog_texture, 5000, 5000);
+      fog_tiling_sprite.x = -2500;
+      fog_tiling_sprite.y = -2500;
+      fog_tiling_sprite.tileScale.set(0.1);
       fog_tiling_sprite.alpha = attr.density;
       this.weather_container = new PIXI.Container();
       this.weather_container.addChild(fog_tiling_sprite);

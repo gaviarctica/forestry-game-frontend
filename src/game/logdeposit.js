@@ -26,6 +26,27 @@ export function createLogDepositGraphics(types = []) {
   return depositSprite;
 }
 
+export function generateLogDepositBackgrounds() {
+  var depositInRangeBackgrounds = [new PIXI.Graphics(), new PIXI.Graphics(), new PIXI.Graphics()];
+
+  var settings = (new Settings()).log_deposit;
+
+  depositInRangeBackgrounds[0].beginFill(0x000000, 1);
+  depositInRangeBackgrounds[1].beginFill(0x000000, 1);
+  depositInRangeBackgrounds[2].beginFill(0xFF1111, 1);
+
+  // draw centered
+  depositInRangeBackgrounds[0].drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
+  depositInRangeBackgrounds[1].drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
+  depositInRangeBackgrounds[2].drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
+
+  depositInRangeBackgrounds[0].alpha = 0;
+  depositInRangeBackgrounds[1].alpha = 0.25;
+  depositInRangeBackgrounds[2].alpha = 0.75;
+
+  return depositInRangeBackgrounds;
+}
+
 export default class LogDeposit {
   constructor(position, rotation, types, stage, max_types = 1) {
     this.settings = (new Settings()).log_deposit;
@@ -80,12 +101,7 @@ export default class LogDeposit {
 
     var settings = (new Settings()).log_deposit;
 
-    // Transparent black background when deposit is in range
-    var inRangeBackground = new PIXI.Graphics();
-    inRangeBackground.beginFill(0x000000, 1);
-    // draw centered
-    inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
-    inRangeBackground.alpha = 0;
+    var inRangeBackground = new PIXI.Container();
 
     var graphics = createLogDepositGraphics(this.types);
 
@@ -94,7 +110,15 @@ export default class LogDeposit {
     this.stage.addChild(this.container);
 
     this.graphics = graphics;
+
+    var backgrounds = generateLogDepositBackgrounds();
     this.inRangeBackground = inRangeBackground;
+    this.inRangeBackground.addChild(backgrounds[0]);
+    this.inRangeBackground.addChild(backgrounds[1]);
+    this.inRangeBackground.addChild(backgrounds[2]);
+    this.inRangeBackground.children[0].visible = true;
+    this.inRangeBackground.children[1].visible = false;
+    this.inRangeBackground.children[2].visible = false;
     this.inRangeBackgroundState = 0;
   }
 
@@ -150,33 +174,26 @@ export default class LogDeposit {
 
   setCanBeUnloadedTo(value) {
     this._canBeUnloadedTo = value;
-    var settings = (new Settings()).log_deposit;
     // alter bg color if log can be picked up
     // can add
     if (this._canBeUnloadedTo === 1 && this.inRangeBackgroundState !== 1) {
-      this.inRangeBackground.beginFill(0xFFFFFF, 1);
-      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
-      this.inRangeBackground.alpha = 1;
-      this.inRangeBackground.beginFill(0x000000, 1);
-      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
-      this.inRangeBackground.alpha = 0.25;
+      this.inRangeBackground.children[0].visible = false;
+      this.inRangeBackground.children[1].visible = true;
+      this.inRangeBackground.children[2].visible = false;
       this.inRangeBackgroundState = 1;
     }
     // can't add or empty
     else if (this._canBeUnloadedTo === 2 && this.inRangeBackgroundState !== 2) {
-      this.inRangeBackground.beginFill(0x000000, 1);
-      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
-      this.inRangeBackground.alpha = 1;
-      this.inRangeBackground.beginFill(0xFF2222, 1);
-      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
-      this.inRangeBackground.alpha = 0.5;
+      this.inRangeBackground.children[0].visible = false;
+      this.inRangeBackground.children[1].visible = false;
+      this.inRangeBackground.children[2].visible = true;
       this.inRangeBackgroundState = 2;
     }
     // default
     else if(!this._canBeUnloadedTo) {
-      this.inRangeBackground.beginFill(0x000000, 1);
-      this.inRangeBackground.drawRect(-settings.Width/2.0, -settings.Height/2, settings.Width, settings.Height);
-      this.inRangeBackground.alpha = 0;
+      this.inRangeBackground.children[0].visible = true;
+      this.inRangeBackground.children[1].visible = false;
+      this.inRangeBackground.children[2].visible = false;
       this.inRangeBackgroundState = 0;
     }
   }
