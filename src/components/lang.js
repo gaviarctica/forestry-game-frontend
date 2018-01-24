@@ -21,7 +21,14 @@ export const LANG = {
         no: "No",
         weather: "Weather",
         foggy: "Foggy",
-        clear: "Clear"
+        clear: "Clear",
+        show: "Show",
+        search: "Search",
+        defaultLevels: "Default levels",
+        myLevels: "My levels",
+        messages: {
+          noLevelsFound: "No levels were found"
+        }
       },
       profileTab: {
         profile: "Profile",
@@ -186,7 +193,14 @@ export const LANG = {
         no: "Ei",
         weather: "Sää",
         foggy: "Sumuinen",
-        clear: "Selkeä"
+        clear: "Selkeä",
+        show: "Näytä",
+        search: "Haku",
+        defaultLevels: "Oletustasot",
+        myLevels: "Omat tasot",
+        messages: {
+          noLevelsFound: "Haulla ei löytynyt tasoja"
+        }
       },
       profileTab: {
         profile: "Profiili",

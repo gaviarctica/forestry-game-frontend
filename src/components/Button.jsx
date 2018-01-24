@@ -26,6 +26,14 @@ export default function Button(props) {
       }
       break;
 
+    case 'mapmenu-show-type-button':
+    case 'mapmenu-show-type-button-selected':
+      buttonClass = buttonClass + ' mapmenu-show-type-button';
+      if (props.buttonType === 'mapmenu-show-type-button-selected') {
+        buttonClass = buttonClass + ' primary';
+      }
+      break;
+
     case 'close-or-delete':
       buttonClass = buttonClass + ' delete-button';
       break;
