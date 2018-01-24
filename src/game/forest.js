@@ -39,7 +39,7 @@ export default class Forest {
 		for (var i = 0; i < this.mapdata.routes.length; i++) {
 			for (var j = 0; j < this.mapdata.routes[i].to.length; j++) {
 				var start = {x:this.mapdata.routes[i].x,y:this.mapdata.routes[i].y};
-				var end = {x:this.mapdata.routes[this.mapdata.routes[i].to[j]-1].x,y:this.mapdata.routes[this.mapdata.routes[i].to[j]-1].y};
+				var end = {x:this.mapdata.routes[this.mapdata.routes[i].to[j]].x,y:this.mapdata.routes[this.mapdata.routes[i].to[j]].y};
 				this.obstacles.push({type:'route', startpoint:start, endpoint:end});
 			}
 			this.updateMinMax(this.mapdata.routes[i]);
