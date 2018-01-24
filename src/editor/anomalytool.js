@@ -87,9 +87,10 @@ export default class AnomalyTool extends ITool {
 
   getOneWayRoadPointerSprite() {
     if(this.one_way_road_pointer_sprite === null) {
-      this.one_way_road_pointer_sprite = new PIXI.Sprite.fromImage('/static/one_dir_arrow.png');
+      this.one_way_road_pointer_sprite = new PIXI.Sprite.fromImage('/static/road_oneway.png');
       this.one_way_road_pointer_sprite.anchor.set(0.5, 0.5);
       this.one_way_road_pointer_sprite.scale.set(this.settings.ONE_DIR_ARROW_SPRITE_SCALE);
+      this.one_way_road_pointer_sprite.rotation = -Math.PI / 2;
     }
 
     return this.one_way_road_pointer_sprite;
