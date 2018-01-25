@@ -39,7 +39,10 @@ export default class Forest {
 		for (var i = 0; i < this.mapdata.routes.length; i++) {
 			for (var j = 0; j < this.mapdata.routes[i].to.length; j++) {
 				var start = {x:this.mapdata.routes[i].x,y:this.mapdata.routes[i].y};
-				var end = {x:this.mapdata.routes[this.mapdata.routes[i].to[j]].x,y:this.mapdata.routes[this.mapdata.routes[i].to[j]].y};
+				var end = {
+					x: this.mapdata.routes[this.findNodeIndexByID(this.mapdata.routes[i].to[j])].x,
+					y: this.mapdata.routes[this.findNodeIndexByID(this.mapdata.routes[i].to[j])].y
+				};
 				this.obstacles.push({type:'route', startpoint:start, endpoint:end});
 			}
 			this.updateMinMax(this.mapdata.routes[i]);
@@ -138,5 +141,13 @@ export default class Forest {
 		this.sprite.position.x = x;
 		this.sprite.position.y = y;
 		this.tree_container.addChild(this.sprite);
+	}
+
+	findNodeIndexByID(ID) {
+		for (let i = 0; i < this.mapdata.routes.length; i++) {
+			if (this.mapdata.routes[i].route_node === ID) {
+				return i;
+			}			
+		}
 	}
 }
