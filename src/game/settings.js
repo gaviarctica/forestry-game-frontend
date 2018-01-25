@@ -101,6 +101,10 @@ export default class Settings {
       FRAMERATE_COUNTER : false
     }
 
+    this.editor = {
+      MAPNAME_MAX_LENGTH : 25
+    }
+
   }
 
 
