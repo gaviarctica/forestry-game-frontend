@@ -13,9 +13,11 @@ export default class FloatingDialog extends Component {
   handleInputChange(e) {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({
-      [name]: value
-    });
+    if (value.length <= this.props.maxLength) {
+      this.setState({
+        [name]: value
+      });
+    }
   }
 
   render() {
