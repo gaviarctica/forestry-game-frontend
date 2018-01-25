@@ -39,8 +39,10 @@ export default class Stats {
     this.timer = setInterval(function(){self.counterUp()}, 1000);
     this.settings = (new Settings()).stats;
     this.map_settings = (new Settings()).map;
+    this.truck_settings = (new Settings()).truck;
     this.prod_settings = (new Settings()).productivity;
     this.controls = controls;
+    this.logLoad = 0;
   }
 
   stopCounter() {
@@ -52,6 +54,7 @@ export default class Stats {
     this.actionDone = false;
 
     this.report.time += 1;
+    this.report.idling += 1;
     this.updateUI({
       time: this.report.time
     });
@@ -65,6 +68,7 @@ export default class Stats {
   }
 
   updateLogs(logUpdate, logCount, action) {
+    this.logLoad = logCount;
     var formattedLogUpdate = {
       logs: [
         ['', '', '', '', ''],
@@ -73,7 +77,6 @@ export default class Stats {
         ['', '', '', '', ''],
       ]
     };
-
     var logUpdateX = logUpdate.getFormattedLogUpdate();
     logUpdateX.forEach((column, i) => {
       column.forEach((slot, j) => {
@@ -85,7 +88,7 @@ export default class Stats {
 
     if (action === "unload") {
       this.report.logs_deposited += 1;
-      if (logCount === 0) {
+      if (this.logLoad === 0) {
         this.report.loads_transported += 1;
       }
     }
@@ -123,8 +126,8 @@ export default class Stats {
         }
       }
 
-      // Calculate time according to truck speed and distance moved
-      this.report.time = this.report.time + (distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS)/this.settings.AVG_VELOCITY;
+      // Calculate time according to truck default velocity. Should not be affected by load or reverse.    
+      this.report.time = this.report.time + this.truck_settings.VELOCITY/this.map_settings.PIXELS_TO_METERS/this.settings.AVG_VELOCITY;
 
       // Update the distance moved
       var dist = distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS;

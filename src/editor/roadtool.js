@@ -108,7 +108,7 @@ export default class RoadTool extends ITool {
         // this.stage.children[index2] = this.roadStartSprite;
         // this.stage.swapChildren(this.roadStartSprite, this.pointerContainer);
 
-        if (this.snappedToNodeId > 0) {
+        if (this.snappedToNodeId >= 0) {
           this.previousNodeId = this.snappedToNodeId;
         }
 

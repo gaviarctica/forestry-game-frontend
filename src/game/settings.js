@@ -15,7 +15,7 @@ export default class Settings {
 
     this.truck = {
       // can be lower with reverse
-      MIN_VELOCITY : 1.0,
+      MIN_VELOCITY : 2.0,
       REVERSE_VELOCITY_FACTOR : 0.5,
       // default velocity
       VELOCITY : 5.0,
@@ -99,6 +99,10 @@ export default class Settings {
 
     this.debug = {
       FRAMERATE_COUNTER : false
+    }
+
+    this.editor = {
+      MAPNAME_MAX_LENGTH : 25
     }
 
   }

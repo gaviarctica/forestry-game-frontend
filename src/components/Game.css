@@ -41,6 +41,13 @@ html {
   z-index: 10;
 }
 
+#game-info-logs {
+  position: fixed;
+  top: 320px;
+  left: 20px;
+  z-index: 10;
+}
+
 #logs-remaining {
   width: 100%;
   display: flex;
@@ -254,4 +261,10 @@ html {
 
 #game-end-menu > * {
   padding: 10px;
+}
+
+@media only screen and (max-height: 705px) {
+  #game-info-logs {
+    top: 99px;
+  }
 }

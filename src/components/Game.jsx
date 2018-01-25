@@ -207,22 +207,24 @@ export default class Game extends Component {
           <GameStat
             header={LANG[this.props.lang].game.cost}
             value={this.state.cost + ' €'} />
-          <GameStat
-            header={LANG[this.props.lang].game.logsRemaining}
-            content={
-              <div id="logs-remaining">
-                {Object.keys(this.state.logsRemainingOnGround).map(key => {
-                  return (
-                    <div
-                      key={key}
-                      className={'logs-remaining-count log-type-' + key + (this.state.logsRemainingOnGround[key] === 0 || this.state.hideLogType[key] ? ' disabled' : '')}
-                      onClick={() => this.handleLogsRemainingClick(key)} >
-                      {this.state.logsRemainingOnGround[key]}
-                    </div>
-                  );
-                })}
-              </div>
-            } />
+        </div>
+        <div id="game-info-logs">
+        <GameStat
+          header={LANG[this.props.lang].game.logsRemaining}
+          content={
+            <div id="logs-remaining">
+              {Object.keys(this.state.logsRemainingOnGround).map(key => {
+                return (
+                  <div
+                    key={key}
+                    className={'logs-remaining-count log-type-' + key + (this.state.logsRemainingOnGround[key] === 0 || this.state.hideLogType[key] ? ' disabled' : '')}
+                    onClick={() => this.handleLogsRemainingClick(key)} >
+                    {this.state.logsRemainingOnGround[key]}
+                  </div>
+                );
+              })}
+            </div>
+          } />
         </div>
         <div id="log-load-container">
           <div id="log-load">

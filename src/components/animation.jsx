@@ -40,3 +40,43 @@ export const TranslateLeft = ({ children, ...props }) => (
     {children}
   </CSSTransition>
 );
+
+export const TranslateLeftReport = ({ children, ...props }) => (
+  <CSSTransition
+    {...props}
+    timeout={700}
+    classNames="translate-left-report"
+  >
+    {children}
+  </CSSTransition>
+);
+
+export const TranslateRightReport = ({ children, ...props }) => (
+  <CSSTransition
+    {...props}
+    timeout={700}
+    classNames="translate-right-report"
+  >
+    {children}
+  </CSSTransition>
+);
+
+export const TranslateLeftProfile = ({ children, ...props }) => (
+  <CSSTransition
+    {...props}
+    timeout={700}
+    classNames="translate-left-profile"
+  >
+    {children}
+  </CSSTransition>
+);
+
+export const TranslateRightProfile = ({ children, ...props }) => (
+  <CSSTransition
+    {...props}
+    timeout={700}
+    classNames="translate-right-profile"
+  >
+    {children}
+  </CSSTransition>
+);

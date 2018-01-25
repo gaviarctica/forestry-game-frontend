@@ -330,7 +330,7 @@ export default class Truck {
   // returns boolean if the log was picked up
   pickLog(log) {
     if(this.logContainer.addLog(log, this.sprite)) {
-      this.stats.updateLogs(this.logContainer, undefined, "pickup");
+      this.stats.updateLogs(this.logContainer, this.logContainer.getLogCount(), "pickup");
       this.logsRemaining[log.type] -= 1;
       this.stats.updateUI({
         logsRemainingOnGround: this.logsRemaining

@@ -98,6 +98,7 @@ export default class MainMenu extends Component {
         self.setState({
           formMsg: message
         });
+        self.props.notify(LANG[self.props.lang].mainMenu.loginSignupForm.messages[message[0]]);
       } else {
         self.handleFormSuccess(username, email);
       }
@@ -113,6 +114,7 @@ export default class MainMenu extends Component {
         self.setState({
           formMsg: message
         });
+        self.props.notify(LANG[self.props.lang].mainMenu.loginSignupForm.messages[message[0]]);
       } else {
         self.handleFormSuccess(un, em);
       }
@@ -138,9 +140,10 @@ export default class MainMenu extends Component {
         view = (
           <MapMenu
             switchView={this.props.switchView}
-            loggedIn={this.state.loggedIn}
+            loggedIn={this.props.loggedIn}
             username={this.state.username}
-            lang={this.props.lang} />
+            lang={this.props.lang}
+            notify={this.props.notify} />
         );
         break;
       case 'profile':
@@ -249,10 +252,12 @@ export default class MainMenu extends Component {
             </TranslateLeft>
         </div>
 
-          <FadeInFadeOut in={this.state.tabSwitchAnimation}>
-            <div id="active-view-area">
-              {view}
-            </div>            
+          <FadeInFadeOut in={this.state.appearAnimation}>
+            <FadeInFadeOut in={this.state.tabSwitchAnimation}>
+              <div id="active-view-area">
+                {view}
+              </div>
+            </FadeInFadeOut>
           </FadeInFadeOut>
 
       </div>

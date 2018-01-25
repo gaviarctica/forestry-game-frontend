@@ -20,23 +20,43 @@
   height: 95%;
 }
 
-#left, #right {
+#map-image-container, #right, #left {
   display: inline-block;
   height: 100%;
 }
 
-#left {
-  width: calc(100% - 250px - 15px);
+#map-image-container {
+  width: calc(100% - 250px - 250px - 15px - 15px);
   box-shadow: var(--menu-shadow);
   position: relative;
   background-color: #438b38; /* color of in-game grass */
+  transition: background-color 350ms ease;
+}
+
+.foggy-image-container {
+  background-color: #7F7F7F !important;
+}
+
+.foggy-image {
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -o-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+}
+
+#left, #right {
+  width: 250px;
+  vertical-align: top;
+  position: relative;
+}
+
+#left {
+  margin-right: 15px;
 }
 
 #right {
   margin-left: 15px;
-  width: 250px;
-  vertical-align: top;
-  position: relative;
 }
 
 #fading-content {
@@ -55,8 +75,9 @@
 #bottom-row {
   box-sizing: border-box;
   height: 5%;
-  width: calc(100% - 250px - 15px);
-  max-width: calc(100% - 265px);
+  width: calc(100% - 250px - 15px - 250px - 15px);
+  max-width: calc(100% - 265px - 265px);
+  margin-left: 265px;
   float: left;
   text-align: center;
   color: var(--jd-gray);
@@ -65,7 +86,7 @@
   font-size: 1.1em;
 }
 
-#left .Button {
+#map-image-container .Button {
   margin-bottom: var(--right-bottom-margin);
 }
 
@@ -75,15 +96,76 @@
   bottom: 0;
 }
 
-#map-info {
+#map-info, #map-menu-settings, #map-list {
   width: 100%;
-  max-height: calc(100% - (var(--button-height) + var(--right-bottom-margin)));
   overflow-y: auto;
   background-color: var(--jd-gray);
-  margin-bottom: var(--right-bottom-margin);
   padding: 7px;
   box-sizing: border-box;
   box-shadow: var(--menu-shadow);
+}
+
+#map-info {  
+  max-height: calc(100% - (var(--button-height) + var(--right-bottom-margin)));
+  margin-bottom: var(--right-bottom-margin);
+}
+
+#map-menu-settings {
+  margin-bottom: 15px;
+}
+
+#map-list {
+  max-height: calc(100% - 200px - 15px);
+}
+
+.section-map {
+  transition: background-color 150ms ease;
+  border-radius: 5px;
+}
+
+.section-map.selected {
+  background-color: var(--jd-yellow);
+}
+
+.section-map:hover {
+  cursor: pointer;
+  background-color: var(--jd-green);
+}
+
+.section-mapname {
+  font-size: 1.1em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+
+.section-mapinfo {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+}
+
+.section-map-date {
+  float: right;
+}
+
+.menu-search-input {
+  -webkit-appearance: none;
+  outline: none;
+  border: none;
+  background-color: var(--jd-gray);
+  width: 100%;
+  border: #CECFCF solid 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 1em;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.menu-search-input:focus {
+  border-color: var(--jd-yellow);
 }
 
 .section {
@@ -215,10 +297,14 @@
   padding-top: 20px;
   padding-bottom: 20px;
 
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+
   /* Gradient background */
-  background: rgba(10, 10, 10, 0.6); /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* Standard syntax */
+  background: rgba(10, 10, 10, 0.4); /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0)); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0)); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0)); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0)); /* Standard syntax */
 }

@@ -21,14 +21,23 @@ export const LANG = {
         no: "No",
         weather: "Weather",
         foggy: "Foggy",
-        clear: "Clear"
+        clear: "Clear",
+        show: "Show",
+        search: "Search",
+        defaultLevels: "Default levels",
+        myLevels: "My levels",
+        messages: {
+          noLevelsFound: "No levels were found"
+        }
       },
       profileTab: {
         profile: "Profile",
         noScoresFound: "You don't have any scores yet!",
+        timestamp: "Time",
         cost: "Cost",
-        map: "Map",
-        info: "Info"
+        map: "Level",
+        info: "Info",
+        search: "Search levels.."
       },
       loginSignupForm: {
         username: "username",
@@ -156,12 +165,12 @@ export const LANG = {
       no: "No"
     },
     logs: {
-      type1: "Type 1",
-      type2: "Type 2",
-      type3: "Type 3",
-      type4: "Type 4",
-      type5: "Type 5",
-      type6: "Type 6",
+      type1: "Birch sawlog",
+      type2: "Pine sawlog",
+      type3: "Spruce sawlog",
+      type4: "Birch pulp",
+      type5: "Pine pulp",
+      type6: "Spruce pulp",
     }
   },
   fi: {
@@ -186,14 +195,23 @@ export const LANG = {
         no: "Ei",
         weather: "Sää",
         foggy: "Sumuinen",
-        clear: "Selkeä"
+        clear: "Selkeä",
+        show: "Näytä",
+        search: "Haku",
+        defaultLevels: "Oletustasot",
+        myLevels: "Omat tasot",
+        messages: {
+          noLevelsFound: "Haulla ei löytynyt tasoja"
+        }
       },
       profileTab: {
         profile: "Profiili",
         noScoresFound: "Sinulla ei ole vielä tuloksia!",
+        timestamp: "Aika",
         cost: "Kulut",
-        map: "Kartta",
-        info: "Tiedot"
+        map: "Taso",
+        info: "Tiedot",
+        search: "Etsi tasoja.."
       },
       loginSignupForm: {
         username: "käyttäjänimi",
@@ -320,12 +338,12 @@ export const LANG = {
       no: "Ei"
     },
     logs: {
-      type1: "Tyyppi 1",
-      type2: "Tyyppi 2",
-      type3: "Tyyppi 3",
-      type4: "Tyyppi 4",
-      type5: "Tyyppi 5",
-      type6: "Tyyppi 6",
+      type1: "Koivusahapuu",
+      type2: "Mäntysahapuu",
+      type3: "Kuusisahapuu",
+      type4: "Koivumassa",
+      type5: "Mäntymassa",
+      type6: "Kuusimassa",
     }
   }
 }

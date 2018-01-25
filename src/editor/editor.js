@@ -158,8 +158,6 @@ export default class EditorCanvas {
           self.pixiApp.stage.scale.y +=  0.05;
         }
       }
-
-
     }
     document.getElementById('canvas-editor').addEventListener("wheel", mouseWheelEvent, false);
     this.pixiApp.stage.position.x += this.pixiApp.renderer.width / 2;
