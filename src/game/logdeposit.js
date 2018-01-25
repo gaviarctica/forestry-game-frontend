@@ -158,7 +158,7 @@ export default class LogDeposit {
       log.removeFromParent();
       // add it to deposit container
       this.container.addChild(log.logSprite);
-      log.logSprite.position = new PIXI.Point(-this.settings.Width/2 + (this.numOfLogs * 5.5) + 2.5, 0);
+      log.logSprite.position = new PIXI.Point(-this.settings.Width/2 + ((this.numOfLogs * 5.5) + 2.5) % this.settings.Width, 0);
       log.logSprite.scale.set(this.settings.LOG_SPRITE_SCALE);
       ++this.numOfLogs;
 
