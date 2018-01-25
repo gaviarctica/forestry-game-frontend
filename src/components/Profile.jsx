@@ -179,7 +179,6 @@ export default class Profile extends Component {
             closing: true
           });
         }, 350);
-        
 	}
 
 	handleReportCloseClick() {
@@ -281,7 +280,7 @@ export default class Profile extends Component {
 		return (
 			<div className="Profile">
 				{leftContent}
-				{rightContent}
+				{rightContent}	
 			</div>
 		);
 	}
