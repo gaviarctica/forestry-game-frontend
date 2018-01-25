@@ -98,6 +98,7 @@ export default class MainMenu extends Component {
         self.setState({
           formMsg: message
         });
+        self.props.notify(LANG[self.props.lang].mainMenu.loginSignupForm.messages[message[0]]);
       } else {
         self.handleFormSuccess(username, email);
       }
@@ -113,6 +114,7 @@ export default class MainMenu extends Component {
         self.setState({
           formMsg: message
         });
+        self.props.notify(LANG[self.props.lang].mainMenu.loginSignupForm.messages[message[0]]);
       } else {
         self.handleFormSuccess(un, em);
       }

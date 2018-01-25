@@ -285,6 +285,10 @@
   padding-top: 20px;
   padding-bottom: 20px;
 
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+
   /* Gradient background */
   background: rgba(10, 10, 10, 0.6); /* For browsers that do not support gradients */
   background: -webkit-linear-gradient(rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0)); /* For Safari 5.1 to 6.0 */
