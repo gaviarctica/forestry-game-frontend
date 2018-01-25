@@ -341,7 +341,7 @@ export default class MapMenu extends Component {
 
               <div
                 id="map-image-container"
-                style={mapWeather === 'foggy' ? {backgroundColor: '#7F7F7F'} : {}} >
+                className={mapWeather === 'foggy' ? 'foggy-image-container' : ''} >
               {
                 this.state.loadingContent ? (
                   <Loader />
@@ -352,7 +352,11 @@ export default class MapMenu extends Component {
                     <div id="map-name">
                       {selMap.name}
                     </div>
-                    <div id="map-image" style={mapImage}></div>
+                    <div
+                      id="map-image"
+                      className={mapWeather === 'foggy' ? 'foggy-image' : ''}
+                      style={mapImage} >
+                    </div>
                   </div>
                 </FadeInFadeOut>
 
