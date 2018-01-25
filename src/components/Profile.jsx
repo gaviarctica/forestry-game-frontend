@@ -8,7 +8,7 @@ import Icon from 'react-icons-kit';
 import { user } from 'react-icons-kit/icomoon/user';
 import { mail } from 'react-icons-kit/icomoon/mail';
 import { secondsToDateFormat } from '../game/helpers';
-import { TranslateRight, TranslateLeftOut } from './animation';
+import { TranslateLeftReport, TranslateRightReport, TranslateLeftProfile, TranslateRightProfile } from './animation';
 
 function filterByMap() {
 	var input, filter, table, tr;
@@ -41,6 +41,17 @@ const Rows = (props) => {
 		backgroundColor: 'var(--jd-yellow)'
 	}
 
+	var selectedButtonStyle = {
+		height: '30px',
+		lineHeight: '30px',
+		width: '100%',
+		fontSize: '1em',
+		boxShadow: 'var(--menu-shadow-2)',
+		borderRadius: '5px',
+		backgroundColor: 'var(--jd-green)'
+	}
+
+
 	for (let i = 0; i < props.data.length; i++) {
 		var date = new Date(props.data[i].timestamp);
 		var d = date.getDate();
@@ -57,7 +68,7 @@ const Rows = (props) => {
 				    	<Button
 				    		text={LANG[props.lang].buttons.report}
 				    		id={props.data[i].id}
-				    		style={tableButtonStyle}
+				    		style={parseInt(props.openedReport) === props.data[i].id ? selectedButtonStyle : tableButtonStyle}
 				    		handleClick={props.handleButtonClick}/>
 				    </td>
 				  </tr>);
@@ -121,6 +132,7 @@ export default class Profile extends Component {
 	    	scores: undefined,
 			report: undefined,
 			openedReport: undefined,
+			openedReportId: undefined,
 			appearAnimation: false,
 			closing: false
 	    }
@@ -144,15 +156,14 @@ export default class Profile extends Component {
 
 	handleButtonClick(e) {
 
-		if (this.state.openedReport) {
-			this.state.openedReport.style['background-color'] = 'var(--jd-yellow)';
-			this.setState({
-				openedReport: undefined
-			})
-		}
+		// if (this.state.openedReport) {
+		// 	this.state.openedReport.style['background-color'] = 'var(--jd-yellow)';
+		// 	this.setState({
+		// 		openedReport: undefined
+		// 	})
+		// }
 
-		var id = e.target.getAttribute('id');
-		e.target.style['background-color'] = 'var(--jd-green)';
+		var id = e.target.getAttribute('id');	
 		var content;
 		for (let i = 0; i < this.state.scores.length; i++) {
 			if (Number(this.state.scores[i].id) === Number(id)) {
@@ -164,6 +175,7 @@ export default class Profile extends Component {
 			report: true,
 			content: content,
 			openedReport: e.target,
+			openedReportId: id,
 			appearAnimation: true,
 			closing: false
 	    });
@@ -174,6 +186,7 @@ export default class Profile extends Component {
             closing: true
           });
         }, 350);
+        
 	}
 
 	handleReportCloseClick() {
@@ -186,6 +199,7 @@ export default class Profile extends Component {
           self.setState({
           	report: false,
 			openedReport: undefined,
+			openedReportId: undefined,
             appearAnimation: false,
             closing: false
           });
@@ -193,73 +207,89 @@ export default class Profile extends Component {
 	}
 
 	render() {
+
 		var leftContent;
 		var rightContent;
+		var rc;
+		var lc;
+		var rows;
 		if (this.state.scores) {
-			leftContent = (<Rows
-						  	data={this.state.scores}
-						  	handleButtonClick={this.handleButtonClick.bind(this)}
-							lang={this.props.lang} />);
+			rows = (<Rows
+					  	data={this.state.scores}
+					  	handleButtonClick={this.handleButtonClick.bind(this)}
+						lang={this.props.lang}
+						openedReport = {this.state.openedReportId ? this.state.openedReportId : undefined}/>
+			);
 		} else {
-			leftContent = (
-				<p id="profile-no-scores">
-					{LANG[this.props.lang].mainMenu.profileTab.noScoresFound}
-				</p>
+			rows = (<p id="profile-no-scores">
+						{LANG[this.props.lang].mainMenu.profileTab.noScoresFound}
+					</p>
 			);
 		}
+
+		lc = (<div id="left-content">
+						<div id="profile-header">
+							<h1>{LANG[this.props.lang].mainMenu.profileTab.profile}</h1>
+						</div>
+						<hr></hr>
+						<div id="user-info">
+							<div id="user-info-username">
+								<Icon size={'1.3em'} icon={user} id="user-info-username-icon"/>
+								<h2 id="user-info-username-header">{this.props.username}</h2>
+							</div>
+							<div id="user-info-email">
+								<Icon size={'1.3em'} icon={mail} id="user-info-email-icon" />
+								<p id="user-info-email-paragraph">{this.props.email}</p>
+							</div>
+						</div>
+						<div id="profile-content">
+							{rows}
+						</div>
+					</div>
+		);
+
+		rc = (
+			<div id="right-content">
+				{
+	              this.state.report ? (
+	                getRightContentData(this)
+	              ) : ('')
+				}
+			</div>
+		);
 
 		if (!this.state.closing) {
 			rightContent = (
 
-				<TranslateRight in={this.state.appearAnimation}>
-				<div id="right-content">
-				{
-	              this.state.report ? (
-	                getRightContentData(this)
-	              ) : ('')
-				}
-				</div>
-				</TranslateRight>
+				<TranslateRightReport in={this.state.appearAnimation}>
+					{rc}
+				</TranslateRightReport>
 	    	);
+
+	    	leftContent = (
+				<TranslateLeftProfile in={this.state.appearAnimation}>
+					{lc}
+				</TranslateLeftProfile>
+			);
 		} else {
 			rightContent = (
 
-				<TranslateLeftOut in={this.state.appearAnimation}>
-				<div id="right-content">
-				{
-	              this.state.report ? (
-	                getRightContentData(this)
-	              ) : ('')
-				}
-				</div>
-				</TranslateLeftOut>
+				<TranslateLeftReport in={this.state.appearAnimation}>
+					{rc}
+				</TranslateLeftReport>
 	    	);
+
+	    	leftContent = (
+				<TranslateRightProfile in={this.state.appearAnimation}>
+					{lc}
+				</TranslateRightProfile>
+			);
 		}
 
 		return (
 			<div className="Profile">
-				<div id="left-content">
-					<div id="profile-header">
-						<h1>{LANG[this.props.lang].mainMenu.profileTab.profile}</h1>
-					</div>
-					<hr></hr>
-					<div id="user-info">
-						<div id="user-info-username">
-							<Icon size={'1.3em'} icon={user} id="user-info-username-icon"/>
-							<h2 id="user-info-username-header">{this.props.username}</h2>
-						</div>
-						<div id="user-info-email">
-							<Icon size={'1.3em'} icon={mail} id="user-info-email-icon" />
-							<p id="user-info-email-paragraph">{this.props.email}</p>
-						</div>
-					</div>
-					<div id="profile-content">
-						{leftContent}
-					</div>
-				</div>
-				
+				{leftContent}
 				{rightContent}
-				
 			</div>
 		);
 	}

@@ -27,19 +27,11 @@ export default function Report(props) {
   var date = new Date(props.enddate);
 
   if (props.close) {
-    var tableButtonStyle = {
-      height: '30px',
-      lineHeight: '30px',
-      fontSize: '1em',
-      width: '100px',
-      boxShadow: 'var(--menu-shadow-2)',
-      borderRadius: '5px',
-      backgroundColor: 'red'
-    }
+
     var dismiss = (<Button
                       id={'closeButton'}
+                      buttonType={'close-or-delete'}
                       text={LANG[props.lang].report.close}
-                      style={tableButtonStyle}
                       handleClick={props.close} />);
   }
 
