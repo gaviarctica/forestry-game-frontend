@@ -1,15 +1,19 @@
 #closeButton {
 	float: right;
 	position: -webkit-sticky;
-  position: sticky;
-  top: 0;
+	position: sticky;
+	top: 0;
+	width: 40px;
+	height: 40px;
+	font-size: 18px;
+	line-height: 40px !important;
 }
 
 #endgame-report {
 	min-width: 250px;
-  float: right;
-  max-height: 100vh;
-  overflow-y: scroll;
+	float: right;
+	max-height: 100vh;
+	overflow-y: scroll;
 }
 
 #endgame-report > * {
@@ -17,11 +21,11 @@
 }
 
 #endgame-report span, #report span {
-  float: right;
+	float: right;
 }
 
 #endgame-report h1, #endgame-report h2, #endgame-report h3 {
-  color: #eee;
+	color: #eee;
 }
 
 #right-content {
@@ -34,4 +38,8 @@
 	padding-right: 20px;
 	max-height: 60vh;
 	overflow-y: scroll;
+}
+
+#right-content:empty {
+	display: none;
 }

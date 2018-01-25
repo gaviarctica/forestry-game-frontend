@@ -1,5 +1,7 @@
 .Profile {
-	margin: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #left-content {
@@ -8,10 +10,9 @@
 	box-shadow: var(--menu-shadow);
 	display:inline-block;
 	margin: 20px;
-	vertical-align: top;
 	min-width: 500px;
 	max-height: 60vh;
-	overflow-y: auto;
+	overflow-y: scroll;
 }
 
 #left-content table {
