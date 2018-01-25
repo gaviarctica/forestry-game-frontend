@@ -1,5 +1,4 @@
 .Profile {
-	margin-bottom: auto;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -11,12 +10,19 @@
 	display:inline-block;
 	margin: 20px;
 	min-width: 500px;
+	max-width: 500px;
+	min-height: 250px;
+	max-height: 100%;
+	overflow-y: auto;
+}
+
+#profile-table-wrapper {
 	max-height: 60vh;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 #left-content table {
-	width: 500px;
+	width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
 }
@@ -43,6 +49,7 @@ ul {
 
 #profile-header {
 	text-align: center;
+	font-size: 2em;
 }
 
 #profile-score-info td {
@@ -55,6 +62,12 @@ td {
 
 thead tr {
 	background-color: var(--jd-gray) !important;
+}
+
+td {
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
 }
 
 tr:nth-child(even) {
@@ -76,8 +89,12 @@ tr:nth-child(odd) {
 }
 
 #user-info-username, #user-info-email {
-	display: block;
+	display: inline-block;
 	padding: 5px;
+}
+
+#user-info-username {
+	margin-right: 30px;
 }
 
 #user-info-username-header, #user-info-username-icon {
@@ -87,8 +104,8 @@ tr:nth-child(odd) {
 
 #user-info-username-icon, #user-info-email-icon {
 	vertical-align: middle;
-	height: var(--navbar-height);
-  	line-height: var(--navbar-height);
+	height: 24px;
+  	line-height: 24px;
 	margin: auto;
 }
 

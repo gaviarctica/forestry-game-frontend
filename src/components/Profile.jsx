@@ -61,7 +61,7 @@ const Rows = (props) => {
 		var mm = date.getMinutes();
 
 		rows.push(<tr key={props.data[i].id}>
-					<td>{hh}:{mm}<br/>{d}.{m}.{y}</td>
+					<td>{hh}:{mm<10?'0':''}{mm}<br/>{d}.{m}.{y}</td>
 				    <td>{props.data[i].m_score} €</td>
 				    <td>{props.data[i].level}</td>
 				    <td>
@@ -75,20 +75,22 @@ const Rows = (props) => {
 	}
 	
 	return (<div>
-			<input type="text" id="map-search" onKeyUp={filterByMap} placeholder="Search map.." />
-			<table id="profile-score-info">
-			  <thead>
-			  	<tr>
-			  		<th>{LANG[props.lang].mainMenu.profileTab.timestamp}</th>
-				    <th>{LANG[props.lang].mainMenu.profileTab.cost}</th>
-				    <th>{LANG[props.lang].mainMenu.profileTab.map}</th>
-				    <th style={{"width": "100px"}}>{LANG[props.lang].mainMenu.profileTab.info}</th>
-				</tr>
-			  </thead>
-			  <tbody>
-			  	{rows}
-			  </tbody>
-			</table>
+			<input type="text" id="map-search" onKeyUp={filterByMap} placeholder={LANG[props.lang].mainMenu.profileTab.search} />
+			<div id="profile-table-wrapper">
+				<table id="profile-score-info">
+				  <thead>
+				  	<tr>
+				  		<th>{LANG[props.lang].mainMenu.profileTab.timestamp}</th>
+					    <th>{LANG[props.lang].mainMenu.profileTab.cost}</th>
+					    <th>{LANG[props.lang].mainMenu.profileTab.map}</th>
+					    <th style={{"width": "100px"}}>{LANG[props.lang].mainMenu.profileTab.info}</th>
+					</tr>
+				  </thead>
+				  <tbody>
+				  	{rows}
+				  </tbody>
+				</table>
+			</div>
 	</div>);
 }
 
@@ -131,7 +133,6 @@ export default class Profile extends Component {
 	    this.state = {
 	    	scores: undefined,
 			report: undefined,
-			openedReport: undefined,
 			openedReportId: undefined,
 			appearAnimation: false,
 			closing: false
@@ -156,13 +157,6 @@ export default class Profile extends Component {
 
 	handleButtonClick(e) {
 
-		// if (this.state.openedReport) {
-		// 	this.state.openedReport.style['background-color'] = 'var(--jd-yellow)';
-		// 	this.setState({
-		// 		openedReport: undefined
-		// 	})
-		// }
-
 		var id = e.target.getAttribute('id');	
 		var content;
 		for (let i = 0; i < this.state.scores.length; i++) {
@@ -174,7 +168,6 @@ export default class Profile extends Component {
 	    this.setState({
 			report: true,
 			content: content,
-			openedReport: e.target,
 			openedReportId: id,
 			appearAnimation: true,
 			closing: false
@@ -190,7 +183,6 @@ export default class Profile extends Component {
 	}
 
 	handleReportCloseClick() {
-		this.state.openedReport.style['background-color'] = 'var(--jd-yellow)';
 		this.setState({
 			appearAnimation: true
 	    });
@@ -198,7 +190,6 @@ export default class Profile extends Component {
 	    setTimeout(function() {
           self.setState({
           	report: false,
-			openedReport: undefined,
 			openedReportId: undefined,
             appearAnimation: false,
             closing: false
@@ -229,19 +220,20 @@ export default class Profile extends Component {
 
 		lc = (<div id="left-content">
 						<div id="profile-header">
-							<h1>{LANG[this.props.lang].mainMenu.profileTab.profile}</h1>
+							{LANG[this.props.lang].mainMenu.profileTab.profile}
 						</div>
-						<hr></hr>
 						<div id="user-info">
 							<div id="user-info-username">
-								<Icon size={'1.3em'} icon={user} id="user-info-username-icon"/>
-								<h2 id="user-info-username-header">{this.props.username}</h2>
+								<Icon size={16} icon={user} id="user-info-username-icon"/>
+								<span id="user-info-username-header">{this.props.username}</span>
 							</div>
 							<div id="user-info-email">
-								<Icon size={'1.3em'} icon={mail} id="user-info-email-icon" />
-								<p id="user-info-email-paragraph">{this.props.email}</p>
+								<Icon size={16} icon={mail} id="user-info-email-icon" />
+								<span id="user-info-email-paragraph">{this.props.email}</span>
 							</div>
 						</div>
+						<hr></hr>
+						
 						<div id="profile-content">
 							{rows}
 						</div>
