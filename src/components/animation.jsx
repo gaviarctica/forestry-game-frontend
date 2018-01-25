@@ -76,6 +76,7 @@ export const TranslateRightProfile = ({ children, ...props }) => (
     {...props}
     timeout={700}
     classNames="translate-right-profile"
+
   >
     {children}
   </CSSTransition>
