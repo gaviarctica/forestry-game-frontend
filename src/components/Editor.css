@@ -173,25 +173,6 @@ html {
   position: fixed;
 }
 
-.editor-maplist-button {
-  height: 30px !important;
-  line-height: 30px !important;
-  width: 225px !important;
-  box-sizing: border-box;
-  margin-bottom: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  text-align: left;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  border-radius: 3px;
-}
-
-.editor-maplist-button:last-child {
-  margin-bottom: 0;
-}
-
 #editor-mapmenu-image {
   width: 250px;
   height: 250px;

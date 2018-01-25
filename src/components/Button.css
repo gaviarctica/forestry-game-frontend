@@ -103,3 +103,38 @@
 .delete-button:hover.inactive {
   background-color: #D62727 !important;
 }
+
+.editor-maplist-button {
+  height: 30px !important;
+  line-height: 30px !important;
+  width: 225px !important;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: left;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 3px;
+}
+
+.editor-maplist-button:last-child {
+  margin-bottom: 0;
+}
+
+.mapmenu-show-type-button {
+  height: 30px;
+  line-height: 30px;
+  width: auto;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  margin-left: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: left;
+  border-radius: 3px;
+  box-shadow: none;
+  border: 1px solid #CECFCF;
+  font-size: 1em;
+}

@@ -138,9 +138,10 @@ export default class MainMenu extends Component {
         view = (
           <MapMenu
             switchView={this.props.switchView}
-            loggedIn={this.state.loggedIn}
+            loggedIn={this.props.loggedIn}
             username={this.state.username}
-            lang={this.props.lang} />
+            lang={this.props.lang}
+            notify={this.props.notify} />
         );
         break;
       case 'profile':
@@ -249,10 +250,12 @@ export default class MainMenu extends Component {
             </TranslateLeft>
         </div>
 
-          <FadeInFadeOut in={this.state.tabSwitchAnimation}>
-            <div id="active-view-area">
-              {view}
-            </div>            
+          <FadeInFadeOut in={this.state.appearAnimation}>
+            <FadeInFadeOut in={this.state.tabSwitchAnimation}>
+              <div id="active-view-area">
+                {view}
+              </div>
+            </FadeInFadeOut>
           </FadeInFadeOut>
 
       </div>
