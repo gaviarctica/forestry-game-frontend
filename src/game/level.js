@@ -3,7 +3,7 @@ import RouteNode from './routenode';
 import RouteSegment from './routesegment';
 import Log from './log';
 import LogDeposit from './logdeposit';
-import { endpointByStartPointDistanceAndAngle, distance } from './helpers';
+import { endpointByStartPointDistanceAndAngle, distance, distanceToSegment } from './helpers';
 import {LogType} from './logtypes';
 import {Key} from './controls';
 import Settings from './settings';
@@ -31,7 +31,7 @@ export default class Level {
     this.onewayRouteTexture = PIXI.Texture.fromImage('/static/road_oneway.png');
     this.onewayRouteTextureReverse = PIXI.Texture.fromImage('/static/road_oneway2.png');
     this.routeTransitionTexture = PIXI.Texture.fromImage('/static/road_transition.png');
-
+    this.startingPosition = {x: -1, y: -1};
     if (map) {
       this.parseRouteNodes();
       this.parseLogs();
@@ -40,19 +40,28 @@ export default class Level {
       this.generateRouteSegments();
       this.drawRoutes();
 
-      if (map.startseg) {
-        this.startingSegment = this.routeSegments[map.startseg];
+      if (map.startpoint) {
+        this.setStartingSegmentAndInterpFromPosition(map.startpoint);
       } else {
         this.startingSegment = this.routeSegments[0];
-      }
-
-      if (map.startinterp) {
-        this.startingInterpolation = map.startinterp;
-      } else {
         this.startingInterpolation = 0;
       }
     }
+  }
 
+  setStartingSegmentAndInterpFromPosition(pos) {
+    var closestDistance = 1000000;
+    var closestRouteSegment = null;
+    for (var routeSegment of this.routeSegments) {
+      var d = distanceToSegment(pos, routeSegment.startNode.getPos(), routeSegment.endNode.getPos());
+      if (d < closestDistance) {
+        closestRouteSegment = routeSegment;
+        closestDistance = d;
+      }
+    }
+    var routeStart = closestRouteSegment.startNode.getPos();
+    this.startingInterpolation = distance(routeStart, pos) / closestRouteSegment.getLength();
+    this.startingSegment = closestRouteSegment;
   }
 
   getStage() {
@@ -343,17 +352,18 @@ export default class Level {
     return this.routeSegments;
   }
 
-  setStartingSegment(segment, interp) {
-    this.startingSegment = segment;
-    this.startingInterpolation = interp;
+  setStartingPosition(pos) {
+    this.startingPosition = pos;
   }
 
   getStartingSegment() {
     return this.startingSegment;
   }
 
-  hasCustomStartingSegment() {
-    return this.startingInterpolation > 0 || this.startingSegment !== this.routeSegments[0];
+  hasCustomStartingPosition() {
+    // if starting position has changed from default inited value, 
+    // then assume we have custom starting position
+    return this.startingPosition.x != -1;
   }
 
   getStaringInterpolation() {
@@ -408,24 +418,13 @@ export default class Level {
   update(type = false, state = false) {
 
     // update of logs is done only after key presses
-    if(this.controls.wasKeyPressed(Key['1'])) {
-      this.updateLogVisibilityArray(0);
-      this.updateLogs();
-    } else if(this.controls.wasKeyPressed(Key['2'])) {
-      this.updateLogVisibilityArray(1);
-      this.updateLogs();
-    } else if(this.controls.wasKeyPressed(Key['3'])) {
-      this.updateLogVisibilityArray(2);
-      this.updateLogs();
-    } else if(this.controls.wasKeyPressed(Key['4'])) {
-      this.updateLogVisibilityArray(3);
-      this.updateLogs();
-    } else if(this.controls.wasKeyPressed(Key['5'])) {
-      this.updateLogVisibilityArray(4);
-      this.updateLogs();
-    } else if(this.controls.wasKeyPressed(Key['6'])) {
-      this.updateLogVisibilityArray(5);
-      this.updateLogs();
+    for (var i = 0; i < 6; ++i) {
+      var iStr = (i + 1).toString();
+      if(this.controls.wasKeyPressed(Key[iStr])) {
+        this.updateLogVisibilityArray(i);
+        this.updateLogs();
+        break;
+      }
     }
 
     // TODO: Might want to use state check at later date to make sure toggle
@@ -445,8 +444,6 @@ export default class Level {
         if(log.update(type)) break;
       }
     }
-
-
   }
 
   updateLogVisibilityArray(type) {
@@ -528,9 +525,7 @@ export default class Level {
     }
 
     return {
-      startpoint: this.getStartingSegment().getPositionAt(this.startingInterpolation),
-      startseg: startingSegmentIdx,
-      startinterp: this.startingInterpolation,
+      startpoint: this.startingPosition,
       routes: routes,
       logs: logs,
       logdeposits: deposits,
