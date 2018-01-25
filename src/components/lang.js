@@ -35,8 +35,9 @@ export const LANG = {
         noScoresFound: "You don't have any scores yet!",
         timestamp: "Time",
         cost: "Cost",
-        map: "Map",
-        info: "Info"
+        map: "Level",
+        info: "Info",
+        search: "Search levels.."
       },
       loginSignupForm: {
         username: "username",
@@ -208,8 +209,9 @@ export const LANG = {
         noScoresFound: "Sinulla ei ole vielä tuloksia!",
         timestamp: "Aika",
         cost: "Kulut",
-        map: "Kartta",
-        info: "Tiedot"
+        map: "Taso",
+        info: "Tiedot",
+        search: "Etsi tasoja.."
       },
       loginSignupForm: {
         username: "käyttäjänimi",
