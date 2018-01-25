@@ -33,18 +33,14 @@ export default class LoginSignupForm extends Component {
       this.setState({
         message: nextProps.message
       });
-
-      if (this.state.loading) {
-        this.setState({
-          loading: false
-        })
-      }
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if(this.state.message != undefined && this.state.message != prevState.message) {
-      this.state.message.map( msg => this.props.notify(LANG[this.props.lang].mainMenu.loginSignupForm.messages[msg]))
+      this.setState({
+        loading: false
+      });
     }
   }
 
@@ -60,14 +56,17 @@ export default class LoginSignupForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.handleSubmit(e.target.id, this.state.username, this.state.password, this.state.email);
+
+    if (!this.state.loading) {
+      this.props.handleSubmit(e.target.id, this.state.username, this.state.password, this.state.email);
+    }
+
     this.setState({
       loading: true
     })
   }
 
   render() {
-
     var buttonStyle = {
       margin: 'auto',
       width: 'var(--form-width)',
@@ -121,11 +120,7 @@ export default class LoginSignupForm extends Component {
       );
 
       loadingButton = (
-        <Button
-          id="button-sign-up"
-          text={LANG[this.props.lang].buttons.loadingLogIn}
-          buttonType="primary"
-          style={buttonStyle} />
+        <Loader loaderClass={'loginsignup'}/>
       );
     }
     
@@ -149,6 +144,7 @@ export default class LoginSignupForm extends Component {
               : ''
             } */}
 
+            <div>
             <form id={this.props.view + '-form'} onSubmit={this.handleSubmit.bind(this)}>
               <DjangoCSRFToken />
 
@@ -173,18 +169,17 @@ export default class LoginSignupForm extends Component {
               <input id="form-submit" type="submit" style={hiddenSubmit} />
 
             </form>
-
             {
               this.state.loading ?
-                <div>
-                  {loadingButton}
+                <div className='login-loader'>
+                  <Loader loaderClass={'loginsignup'}/>
                 </div>
-                : 
+                :
                 <div>
                   {formButton}
                 </div>
             }
-
+            </div>
           </div>
         </div>
     );

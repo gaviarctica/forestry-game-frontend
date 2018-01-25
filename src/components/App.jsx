@@ -67,18 +67,16 @@ export default class App extends Component {
     clearTimeout(this.timer);
   }
 
-  componentDidUpdate() {
-    this.timer = setTimeout(() => {
-      this.setState({
-        notification: ""
-      })
-    }, 4000)
-  }
-
   componentDidMount() {
     // Display first view enter animation
     this.setState({
       viewAnimation: true
+    });
+  }
+
+  hideNotificationBox() {
+    this.setState({
+      notification: ''
     });
   }
 
@@ -129,6 +127,12 @@ export default class App extends Component {
     this.setState({
       notification: message
     })
+
+    this.timer = setTimeout(() => {
+      this.setState({
+        notification: ""
+      })
+    }, 4000)
   }
 
   render() {
@@ -191,7 +195,10 @@ export default class App extends Component {
     }
     return (
       <div className="App">
-      <NotificationBox message={this.state.notification} />
+      <div onClick={this.hideNotificationBox.bind(this)}>
+        <NotificationBox message={this.state.notification} />
+      </div>
+      
       <FadeInFadeOut in={this.state.viewAnimation}>
         {view}
       </FadeInFadeOut>

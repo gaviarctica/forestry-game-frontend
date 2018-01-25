@@ -712,7 +712,8 @@ export default class Editor extends Component {
                 primaryText={LANG[this.props.lang].buttons.save}
                 secondaryText={LANG[this.props.lang].buttons.cancel}
                 handlePrimaryClick={this.handleSaveAsPrimaryClick.bind(this)}
-                handleSecondaryClick={this.handleSaveAsSecondaryClick.bind(this)} />
+                handleSecondaryClick={this.handleSaveAsSecondaryClick.bind(this)}
+                maxLength={this.settings.editor.MAPNAME_MAX_LENGTH} />
               :
               <FloatingMenu
                 id='editor-menu'

@@ -1,5 +1,6 @@
 .Profile {
-	margin: auto;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #left-content {
@@ -8,14 +9,30 @@
 	box-shadow: var(--menu-shadow);
 	display:inline-block;
 	margin: 20px;
-	vertical-align: top;
 	min-width: 500px;
+	max-width: 500px;
+	min-height: 250px;
+	max-height: 100%;
+	overflow-y: auto;
+}
+
+#profile-table-wrapper {
 	max-height: 60vh;
 	overflow-y: auto;
 }
 
 #left-content table {
 	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+#map-search {
+	width: 200px;
+	background: transparent;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
 
 ul {
@@ -32,6 +49,33 @@ ul {
 
 #profile-header {
 	text-align: center;
+	font-size: 2em;
+}
+
+#profile-score-info td {
+	padding: 5px;
+}
+
+td {
+	text-align: center;
+}
+
+thead tr {
+	background-color: var(--jd-gray) !important;
+}
+
+td {
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+tr:nth-child(even) {
+    background-color: #d1d2d2;
+}
+
+tr:nth-child(odd) {
+    background-color: #dbdcdc;
 }
 
 #profile-score-info td:nth-child(2){
@@ -45,8 +89,12 @@ ul {
 }
 
 #user-info-username, #user-info-email {
-	display: block;
+	display: inline-block;
 	padding: 5px;
+}
+
+#user-info-username {
+	margin-right: 30px;
 }
 
 #user-info-username-header, #user-info-username-icon {
@@ -56,8 +104,8 @@ ul {
 
 #user-info-username-icon, #user-info-email-icon {
 	vertical-align: middle;
-	height: var(--navbar-height);
-  	line-height: var(--navbar-height);
+	height: 24px;
+  	line-height: 24px;
 	margin: auto;
 }
 
