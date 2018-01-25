@@ -14,3 +14,7 @@
 .notification-box span {
   color: black;
 }
+
+.notification-box:hover {
+  cursor: pointer;
+}

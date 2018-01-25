@@ -58,3 +58,10 @@
   outline: none;
   border-color: var(--jd-yellow);
 }
+
+.login-loader {
+  height: 60px;
+  width: 80px;
+  margin: auto;
+  position: relative;
+}
