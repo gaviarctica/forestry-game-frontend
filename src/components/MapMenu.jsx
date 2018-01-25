@@ -295,16 +295,15 @@ export default class MapMenu extends Component {
                         buttonType={this.state.selectedLevelCategory === 'default' ? 'mapmenu-show-type-button-selected' : 'mapmenu-show-type-button'}
                         text={LANG[this.props.lang].mainMenu.playTab.defaultLevels}
                         handleClick={this.handleButtonClick.bind(this)} />
-                    </div>
+                    
                     {this.props.loggedIn ?
-                      <div>
                         <Button
                           id="button-show-user-maps"
                           buttonType={this.state.selectedLevelCategory === 'user' ? 'mapmenu-show-type-button-selected' : 'mapmenu-show-type-button'}
                           text={LANG[this.props.lang].mainMenu.playTab.myLevels}
                           handleClick={this.handleButtonClick.bind(this)} />
-                      </div>
-                    : ''}                    
+                    : ''}
+                    </div>
                   </div>
                   <div className="section">
                     <div className="section-header">{LANG[this.props.lang].mainMenu.playTab.search}</div>
