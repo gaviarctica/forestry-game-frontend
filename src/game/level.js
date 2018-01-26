@@ -261,18 +261,6 @@ export default class Level {
     for (let [id, startNode] of this.routeNodes) {
       var endNode = null;
       var segment = null;
-      // checking if there is multiple routes from this node
-      // if not we just use default settings
-
-      /** REMOVED SUPPORT FOR AUTOMATIC NEXT NODE **/
-      /** It was removed because there were some interesting problems with dublicate segments **/
-      // if(!startNode.getPos().to && i < this.routeNodes.length-1) {
-      //   endNode = this.routeNodes[i+1];
-      //   segment = new RouteSegment(startNode, endNode);
-      //   this.routeNodes[i].addSegment(segment);
-      //   this.routeSegments.push(segment);
-      //
-      // } else
 
       // check if node has any waypoints and create segments between them
       if(Array.isArray(startNode.getTo())) {
@@ -291,31 +279,6 @@ export default class Level {
         }
       }
     }
-
-    // calculating segments for nodes
-    // for(i = 0; i < this.routeNodes.length; ++i) {
-    //   for(j = 0; j < this.routeSegments.length; ++j) {
-    //     if(this.routeNodes[i] === this.routeSegments[j].getPreviousNode() || this.routeNodes[i] === this.routeSegments[j].getNextNode())
-    //       this.routeNodes[i].addSegment(this.routeSegments[j]);
-    //   }
-    // }
-
-    // var previousSegment = null;
-    // for (var i = 0; i < this.map.routes.length; i++) {
-    //   for (var j = 0; j < this.map.routes[i].length - 1; j++) {
-    //     var startPos = this.map.routes[i][j];
-    //     var endPos = this.map.routes[i][j + 1];
-    //
-    //     var segment = new RouteSegment(startPos, endPos, null, previousSegment);
-    //     this.routeSegments.push(segment);
-    //     if (previousSegment !== null) {
-    //       previousSegment.setNext(segment);
-    //     }
-    //
-    //     previousSegment = segment;
-    //
-    //   }
-    // }
   }
 
   addLog(position, rotation, type) {
