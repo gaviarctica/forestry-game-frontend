@@ -125,7 +125,7 @@ export default class GameCanvas {
         mouseInput.isRightDown = true;
       }
 
-      if(Math.abs(loc_pos.x) > (2000) || Math.abs(loc_pos.y) > (2500)) {
+      if(Math.abs(loc_pos.x) > self.settings.map.MAX_CAMERA_DISTANCE[0] || Math.abs(loc_pos.y) > self.settings.map.MAX_CAMERA_DISTANCE[1]) {
         mouseInput.isRightDown = false;
         mouseInput.forceBack = true;
         return;
@@ -145,7 +145,7 @@ export default class GameCanvas {
       mouseInput.forceBack = false;
     };
 
-    this.game.stage.pointermove = function() {
+    this.game.stage.pointermove = function(e) {
 
       mouseInput.lastPosition = {x: mouseInput.position.x, y: mouseInput.position.y};
       mouseInput.position = {x: interaction.mouse.global.x, y: interaction.mouse.global.y};
@@ -157,9 +157,14 @@ export default class GameCanvas {
       }
 
       if(mouseInput.forceBack === true) {
+        var loc_pos = e.data.getLocalPosition(this);
+        if(Math.abs(loc_pos.x) < self.settings.map.MAX_CAMERA_DISTANCE[0] && Math.abs(loc_pos.y) < self.settings.map.MAX_CAMERA_DISTANCE[1]) {
+          mouseInput.forceBack = false;
+        }
+
         var vec = {
-          x: self.game.stage.pivot.x - mouseInput.lastPosition.x,
-          y:self.game.stage.pivot.y -   mouseInput.lastPosition.y
+          x: self.game.stage.pivot.x,
+          y: self.game.stage.pivot.y
         };
         var norm = Math.sqrt(vec.x*vec.x + vec.y*vec.y);
         var norm_vec = {x: vec.x/norm, y: vec.y / norm};

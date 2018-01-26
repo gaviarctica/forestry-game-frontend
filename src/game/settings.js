@@ -10,7 +10,9 @@ export default class Settings {
       INTERSECTION_SPRITE_ANCHOR : 0.5,
       INTERSECTION_SPRITE_SCALE : 0.1,
       // actions
-      MOUSE_WHEEL_SCALE : [0.05,0.05]
+      MOUSE_WHEEL_SCALE : [0.05,0.05],
+      // sizes
+      MAX_CAMERA_DISTANCE: [2000,2500]
     };
 
     this.truck = {
