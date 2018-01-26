@@ -115,19 +115,34 @@ export default class GameCanvas {
 
     var self = this;
 
-    this.game.stage.hitArea = new PIXI.Rectangle(-1000000, -1000000, 1000000000, 1000000000);
+    this.game.stage.hitArea = new PIXI.Rectangle(-5000, -5000, 10000, 10000);
 
     this.game.stage.interactive = true;
-    this.game.stage.pointerdown = function() {
+    this.game.stage.pointerdown = function(e) {
+      var loc_pos = e.data.getLocalPosition(this);
+
+      if (e.data.originalEvent.which === 2 || e.data.originalEvent.which === 3) {
+        mouseInput.isRightDown = true;
+      }
+
+      if(Math.abs(loc_pos.x) > (2000) || Math.abs(loc_pos.y) > (2500)) {
+        mouseInput.isRightDown = false;
+        mouseInput.forceBack = true;
+        return;
+      }
+
       // stopping camera updates when we want to control the camera manually
       truck.update(0,true);
+      mouseInput.forceBack = false;
       // mouseInput.isDown = true;
     };
     this.game.stage.pointerup = function() {
       mouseInput.isRightDown = false;
+      mouseInput.forceBack = false;
     };
     this.game.stage.pointerupoutside = function() {
       mouseInput.isRightDown = false;
+      mouseInput.forceBack = false;
     };
 
     this.game.stage.pointermove = function() {
@@ -136,23 +151,24 @@ export default class GameCanvas {
       mouseInput.position = {x: interaction.mouse.global.x, y: interaction.mouse.global.y};
       mouseInput.delta = {x: mouseInput.lastPosition.x - mouseInput.position.x, y: mouseInput.lastPosition.y - mouseInput.position.y};
 
-      if (mouseInput.isRightDown === true) {
+      if (mouseInput.isRightDown === true && mouseInput.forceBack !== true) {
         self.game.stage.pivot.x +=  mouseInput.delta.x / self.game.stage.scale.x;
         self.game.stage.pivot.y +=  mouseInput.delta.y / self.game.stage.scale.y;
       }
 
-
-    }
-
-    var mouseRightClickEvent = function(event) {
-      event.preventDefault();
-
-      if (event.which === 2 || event.which === 3) {
-        mouseInput.isRightDown = true;
+      if(mouseInput.forceBack === true) {
+        var vec = {
+          x: self.game.stage.pivot.x - mouseInput.lastPosition.x,
+          y:self.game.stage.pivot.y -   mouseInput.lastPosition.y
+        };
+        var norm = Math.sqrt(vec.x*vec.x + vec.y*vec.y);
+        var norm_vec = {x: vec.x/norm, y: vec.y / norm};
+        self.game.stage.pivot.x -=  5 * norm_vec.x / self.game.stage.scale.x;
+        self.game.stage.pivot.y -=  5 * norm_vec.y / self.game.stage.scale.y;
       }
-    }
 
-    document.getElementById('canvas-game').onmousedown = mouseRightClickEvent;
+
+    }
 
     var mouseWheelEvent = function(event) {
       var settings = self.settings.map;
