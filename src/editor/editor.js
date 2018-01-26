@@ -220,7 +220,7 @@ export default class EditorCanvas {
   isValidLevel()
   {
     // no truck position set
-    if (!this.level.hasCustomStartingSegment()) {
+    if (!this.level.hasCustomStartingPosition()) {
       return false;
     } 
 

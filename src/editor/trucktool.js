@@ -61,9 +61,7 @@ export default class TruckTool extends PlaceTool {
   }
 
   placeItem(position, angle) {
-    var routeStart = this.closestRouteSeg.startNode.getPos();
-    var interp = distance(routeStart, position) / this.closestRouteSeg.getLength();
-    this.level.setStartingSegment(this.closestRouteSeg, interp);
+    this.level.setStartingPosition(position);
 
     this.sprite.x = position.x;
     this.sprite.y = position.y;

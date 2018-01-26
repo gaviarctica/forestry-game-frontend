@@ -152,10 +152,18 @@ export default class RoadTool extends ITool {
     }
 
     // build segment between'em
-    this.level.getRouteNodes().get(startNodeId).to.push(endNodeId);
-    this.level.getRouteNodes().get(endNodeId).to.push(startNodeId);
+    this.connectNodeToNode(startNodeId, endNodeId);
+    this.connectNodeToNode(endNodeId, startNodeId);
 
     this.previousNodeId = endNodeId;
+  }
+
+  connectNodeToNode(startNodeId, endNodeId) {
+    var startNode = this.level.getRouteNodes().get(startNodeId);
+    // don't add duplicate if exist
+    if (startNode.to.indexOf(endNodeId) < 0) {
+      startNode.to.push(endNodeId);
+    }
   }
 
   // for drawing
