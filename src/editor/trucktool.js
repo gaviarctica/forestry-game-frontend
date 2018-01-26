@@ -32,6 +32,10 @@ export default class TruckTool extends PlaceTool {
 
   mouseMove(mouseInput) {
     super.mouseMove(mouseInput);
+    // fixing direction after super has screwed it up
+    if(this.truck_direction < 0) {
+      this.pointerContainer.rotation = (this.pointerContainer.rotation + Math.PI) % (Math.PI * 2);
+    }
 
     if (this.closestDistance < this.minDistanceFromRoad) {
       // do snapping to route
@@ -53,10 +57,6 @@ export default class TruckTool extends PlaceTool {
 
       this.pointerContainer.position.set(epos.x, epos.y);
       this.pointerPos = epos;
-
-      if(this.truck_direction < 0) {
-        this.pointerContainer.rotation = (this.pointerContainer.rotation + Math.PI) % (Math.PI * 2);
-      }
     }
   }
   mouseDown(mouseInput) {
@@ -82,6 +82,7 @@ export default class TruckTool extends PlaceTool {
 
   placeItem(position, angle) {
     this.level.setStartingPosition(position);
+    this.level.setTruckDirection(this.truck_direction);
 
     this.sprite.x = position.x;
     this.sprite.y = position.y;

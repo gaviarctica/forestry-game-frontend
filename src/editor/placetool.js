@@ -18,7 +18,7 @@ export default class PlaceTool extends ITool {
 
   mouseMove(mouseInput) {
     var epos = mouseInput.worldPosition;
-    
+
     // do a search for nearest node in snapping distance
     this.closestDistance = 10000;
     this.closestRouteSeg = null;
@@ -31,7 +31,7 @@ export default class PlaceTool extends ITool {
       }
     }
 
-    if (this.closestDistance < this.minDistanceFromRoad 
+    if (this.closestDistance < this.minDistanceFromRoad
      && this.closestDistance > this.maxDistanceFromRoad) {
       this.allowPlacement = true;
       this.pointerContainer.alpha = 1;
@@ -44,7 +44,7 @@ export default class PlaceTool extends ITool {
       var routeStart = this.closestRouteSeg.startNode.getPos();
       var routeEnd = this.closestRouteSeg.endNode.getPos();
       this.angle = Math.atan2(routeStart.y - routeEnd.y, routeStart.x - routeEnd.x) + Math.PI;
-      
+
       this.pointerContainer.rotation = this.angle;
     }
 
