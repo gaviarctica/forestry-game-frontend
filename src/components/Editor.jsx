@@ -25,7 +25,6 @@ export default class Editor extends Component {
       fogDensityIllegal: false,
       fogVisibility: 200,
       fogVisibilityIllegal: false,
-      ableToSave: false,
       userLevels: undefined,
       selectedUserLevel: undefined,
       loadedMapData: undefined,
@@ -102,28 +101,6 @@ export default class Editor extends Component {
     return false;
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // Check if able to save
-    if (this.statusChanged()) {
-      if (!this.state.ableToSave && this.inputsLegalToSave()) {
-        this.setState({
-          ableToSave: true
-        });
-        return;
-      }
-    } else if (this.state.ableToSave) {
-      this.setState({
-        ableToSave: false
-      });
-      return;
-    }
-    if (this.state.ableToSave && !this.inputsLegalToSave()) {
-      this.setState({
-        ableToSave: false
-      });
-    }
-  }
-
   loadUserLevels() {
     var self = this;
     API.getMyMapsInfo(function(err, maps) {
@@ -163,10 +140,14 @@ export default class Editor extends Component {
   }
 
   inputsLegalToSave() {
-    if (!this.state.fogDensityIllegal && !this.state.fogVisibilityIllegal) {
-      return true;
-    }
-    return false;
+    if (!this.editorCanvas.isValidLevel()) {
+      this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+      return false;
+    } else if (this.state.fogDensityIllegal || this.state.fogVisibilityIllegal) {
+      this.props.notify(LANG[this.props.lang].editor.messages.fogInvalid);
+      return false;
+    } 
+    return true;
   }
 
   handleCheckboxChange(e) {
@@ -230,8 +211,7 @@ export default class Editor extends Component {
       }));
     }
     if (clicked === 'button-save') {
-      if (!this.editorCanvas.isValidLevel()) {
-        this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+      if (!this.inputsLegalToSave()) {
         return;
       }
 
@@ -248,11 +228,6 @@ export default class Editor extends Component {
       }
     }
     if (clicked === 'button-save-as') {
-      if (!this.editorCanvas.isValidLevel()) {
-        this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
-        return;
-      }
-
       this.setState({
         saveAsMenuOpen: true
       });
@@ -371,8 +346,7 @@ export default class Editor extends Component {
   }
 
   handleSaveAsPrimaryClick(newMapName) {
-    if (!this.editorCanvas.isValidLevel()) {
-      this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
+    if (!this.inputsLegalToSave()) {
       return;
     }
 
@@ -456,13 +430,11 @@ export default class Editor extends Component {
         id="button-save"
         text={LANG[this.props.lang].buttons.save}
         buttonType='default'
-        inactive={!this.state.ableToSave}
         handleClick={this.handleButtonClick.bind(this)} />,
       <Button
         id="button-save-as"
         text={LANG[this.props.lang].buttons.saveAs}
         buttonType='default'
-        inactive={!this.state.ableToSave}
         handleClick={this.handleButtonClick.bind(this)} />,
       <Button
         id="button-load"

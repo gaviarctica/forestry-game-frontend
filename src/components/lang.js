@@ -134,7 +134,8 @@ export const LANG = {
         levelSaved: "Level saved",
         levelLoaded: "Level loaded",
         levelDeleted: "Level deleted",
-        levelInvalid: "Level doesn`t have truck or logs or there is not enough log deposits for different log types"
+        levelInvalid: "Level doesn`t have truck or logs or there is not enough log deposits for different log types",
+        fogInvalid: "Level fog visibility values are invalid"
       },
       confirmMessages: {
         deleteConfirm: "Are you sure you want to delete this level?",
@@ -308,7 +309,8 @@ export const LANG = {
         levelSaved: "Taso tallennettu",
         levelLoaded: "Taso ladattu",
         levelDeleted: "Taso poistettu",
-        levelInvalid: "Tasolla ei ole aloituspistettä tai puutavaraa tai siinä on liian vähän säilöntäalueita eri puutavaralajeille"
+        levelInvalid: "Tasolla ei ole aloituspistettä tai puutavaraa tai siinä on liian vähän säilöntäalueita eri puutavaralajeille",
+        fogInvalid: "Tason sumuasetuksen arvot ovat virheelliset"
       },
       confirmMessages: {
         deleteConfirm: "Tahdotko varmasti poistaa tämän tason?",
