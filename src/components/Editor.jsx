@@ -278,6 +278,7 @@ export default class Editor extends Component {
       if (err) throw err;
 
       let loadedMapData = response[0].mapdata;
+      self.editorCanvas.loadMapdata(loadedMapData);
       if (loadedMapData.hasOwnProperty('weather') &&
           loadedMapData.weather.hasOwnProperty('type') &&
           loadedMapData.weather.type === 'fog') {

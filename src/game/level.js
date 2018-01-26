@@ -41,6 +41,7 @@ export default class Level {
       this.drawRoutes();
 
       if (map.startpoint) {
+        this.startingPosition = map.startpoint;
         this.setStartingSegmentAndInterpFromPosition(map.startpoint);
       } else {
         this.startingSegment = this.routeSegments[0];
@@ -180,9 +181,12 @@ export default class Level {
   }
 
   parseRouteNodes() {
+    var maxId = 0;
     for (var i = 0; i < this.map.routes.length; ++i) {
       var routeNodeData = this.map.routes[i];
       var id = routeNodeData.route_node;
+      if (id > maxId)
+        maxId = id;
       var pos = {x: routeNodeData.x, y: routeNodeData.y };
       var to = routeNodeData.to;
       if(typeof routeNodeData['anomalies'] !== 'undefined') {
@@ -192,6 +196,8 @@ export default class Level {
         this.addRouteNode(id, pos, to);
       }
     }
+    // editor needs to know which is the id that should be added next
+    this.routeNodesNextId = maxId;
   }
 
   // used by editor
@@ -445,7 +451,7 @@ export default class Level {
     }
 
     // TODO: Might want to use state check at later date to make sure toggle
-    // does't brake. (Shouln't be possible brake it though.
+    // doesn't break. (Shouldn't be possible break it though.
     // As it reconstructs the state after every toggle)
     if(type !== false) {
       this.updateLogVisibilityArray(parseInt(type));

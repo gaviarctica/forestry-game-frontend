@@ -160,7 +160,7 @@ export default class EditorCanvas {
       if(!self.currentTool.mouseWheelEvent(event)) {
         if ((event.wheelDelta < -1 || event.deltaY > 1) && self.pixiApp.stage.scale.x > 0.5) {
           self.pixiApp.stage.scale.x -=  0.05;
-          self.pixiApp.stage.scale.y -=   0.05;
+          self.pixiApp.stage.scale.y -=  0.05;
         } else if ((event.wheelDelta > 1 || event.deltaY < -1) && self.pixiApp.stage.scale.x < 3.0) {
           self.pixiApp.stage.scale.x +=  0.05;
           self.pixiApp.stage.scale.y +=  0.05;
@@ -210,6 +210,37 @@ export default class EditorCanvas {
 
       this.currentTool.activate();
     }
+  }
+
+  loadMapdata(mapdata) {
+    // remvoe old level stage
+    if (this.currentTool != null) {
+      this.currentTool.deactivate();
+      this.currentTool = null;
+    }
+
+    this.pixiApp.stage.removeChild(this.level.getStage());
+
+    this.level = new Level(mapdata);
+    this.pixiApp.stage.addChild(this.level.getStage());
+    this.pixiApp.stage.addChild(this.truckSprite);
+  
+    var startingPosition = this.level.getStartingPosition();
+    var startingSegment = this.level.getStartingSegment();
+    var routeStart = startingSegment.getPreviousNode().getPos();
+    var routeEnd = startingSegment.getNextNode().getPos();
+    this.truckSprite.x = startingPosition.x;
+    this.truckSprite.y = startingPosition.y;
+
+    var rotationOffset = Math.PI / 2;
+    if (startingPosition.dir > 0) {
+      rotationOffset = -rotationOffset;
+    }
+
+    this.truckSprite.rotation = Math.atan2(routeStart.y - routeEnd.y, routeStart.x - routeEnd.x) + rotationOffset;
+
+    // recreate tools with the new level
+    this.createTools();
   }
 
   serializeLevel(fog) {
