@@ -49,6 +49,7 @@ export default class Level {
     }
   }
 
+  // private method
   setStartingSegmentAndInterpFromPosition(pos) {
     var closestDistance = 1000000;
     var closestRouteSegment = null;
@@ -380,6 +381,10 @@ export default class Level {
 
   getStaringInterpolation() {
     return this.startingInterpolation;
+  }
+
+  clearStartingPosition() {
+    this.startingPosition = {x: -1, y: -1, dir: 1};
   }
 
   getLogs() {

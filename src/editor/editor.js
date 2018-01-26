@@ -26,6 +26,12 @@ export default class EditorCanvas {
     this.ui = new UserInterface(updateUI);
     this.level = new Level();
 
+    // sprite which is shown on the map
+    this.truckSprite = PIXI.Sprite.fromImage('/static/truck.svg');
+    this.truckSprite.anchor.set(0.5, 0.5);
+    this.truckSprite.scale.set(0.1);
+    this.truckSprite.rotation += Math.PI / 2;
+
     this.currentTool = null;
     this.tools = [];
 
@@ -38,7 +44,7 @@ export default class EditorCanvas {
 
     this.currentKeyBoardFunctionDown = null;
     this.currentKeyBoardFunctionUp = null;
- }
+  }
 
   buildGrid() {
     var graphics = new PIXI.Graphics();
@@ -77,8 +83,8 @@ export default class EditorCanvas {
       this.tools['log_'+ i] = new LogTool(this.pixiApp.stage, this.level, i);
     }
     this.tools['deposit_free'] = new DepositTool(this.pixiApp.stage, this.level, undefined);
-    this.tools['truck'] = new TruckTool(this.pixiApp.stage, this.level);
-    this.tools['remove'] = new RemoveTool(this.pixiApp.stage, this.level);
+    this.tools['truck'] = new TruckTool(this.pixiApp.stage, this.level, this.truckSprite);
+    this.tools['remove'] = new RemoveTool(this.pixiApp.stage, this.level, this.truckSprite);
   }
 
   organizeDraws() {
@@ -227,7 +233,7 @@ export default class EditorCanvas {
     }
 
     // no logs
-    if (this.level.logs.length === 0) {
+    if (this.level.getLogs().length === 0) {
       return false;
     }
 

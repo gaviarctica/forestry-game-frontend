@@ -3,7 +3,7 @@ import {normalize, isLeft, distance, length} from '../game/helpers';
 import PlaceTool from './placetool';
 
 export default class TruckTool extends PlaceTool {
-  constructor(stage, level) {
+  constructor(stage, level, truckSprite) {
     super(stage, level);
 
     var pointerSprite = PIXI.Sprite.fromImage('/static/truck.svg');
@@ -12,11 +12,7 @@ export default class TruckTool extends PlaceTool {
     pointerSprite.rotation += Math.PI / 2;
     this.pointerContainer.addChild(pointerSprite);
 
-    // sprite which is shown on the map
-    this.sprite = PIXI.Sprite.fromImage('/static/truck.svg');
-    this.sprite.anchor.set(0.5, 0.5);
-    this.sprite.scale.set(0.1);
-    this.sprite.rotation += Math.PI / 2;
+    this.sprite = truckSprite;
 
     this.truck_direction = 1;
 

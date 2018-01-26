@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {length,distance} from '../game/helpers';
+import {length,distance,distanceToSegment} from '../game/helpers';
 import ITool from './itool';
 import Log from '../game/log';
 import LogDeposit from '../game/logdeposit';
@@ -8,7 +8,7 @@ import Settings from '../game/settings';
 
 
 export default class RemoveTool extends ITool {
-  constructor(stage, level) {
+  constructor(stage, level, truckSprite) {
     super(stage);
 
     this.level = level;
@@ -24,6 +24,9 @@ export default class RemoveTool extends ITool {
     pointer.moveTo(-10, 10);
     pointer.lineTo(10, -10);
 
+    // truck sprite reference, so we can remove it from the
+    // scene graph if we remove road where the truck lays
+    this.truckSprite = truckSprite;
 
     this.pointerContainer.addChild(pointer);
 
@@ -106,6 +109,7 @@ export default class RemoveTool extends ITool {
     } else if (this.targetNodeId !== null) {
       this.level.removeRouteNode(this.targetNodeId);
       this.level.refreshRoutes();
+      this.validateRoadSegmentNearTruck();
     } else if(this.snappedToSegment) {
       // if we are snapped to a segment we try to remove its anomalies
       // if there was not anomalies to remove then remove the segment itself
@@ -114,6 +118,7 @@ export default class RemoveTool extends ITool {
                                       this.snappedToSegment.endNode.id);
       }
       this.level.refreshRoutes();
+      this.validateRoadSegmentNearTruck();
     }
   }
 
@@ -148,5 +153,26 @@ export default class RemoveTool extends ITool {
     }
 
     return this.snappedToSegment;
+  }
+
+  validateRoadSegmentNearTruck()
+  {
+    var pos = { x: this.truckSprite.x, y: this.truckSprite.y };
+    // do a search for nearest node in snapping distance
+    var closestDistance = 10000;
+    var closestRouteSeg = null;
+    for (var routeSegment of this.level.getRouteSegments()) {
+      var d = distanceToSegment(pos, routeSegment.startNode.getPos(), routeSegment.endNode.getPos());
+
+      if (d < closestDistance) {
+        closestRouteSeg = routeSegment;
+        closestDistance = d;
+      }
+    }
+
+    if (closestDistance > 2) {
+      this.stage.removeChild(this.truckSprite);
+      this.level.clearStartingPosition();
+    }
   }
 }
