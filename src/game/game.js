@@ -82,7 +82,8 @@ export default class GameCanvas {
                            this.map.getLogs(),
                            this.map.getLogDeposits(),
                            this.stats,
-                           this.logsRemaining);
+                           this.logsRemaining,
+                           this.map.getStartingPosition().dir);
 
     this.game.stage.addChild(this.truck.getContainer());
 

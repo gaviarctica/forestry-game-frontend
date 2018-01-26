@@ -112,13 +112,15 @@ export default class EditorCanvas {
     this.pixiApp.stage.hitArea = new PIXI.Rectangle(-1000000, -1000000, 1000000000, 1000000000);
 
     this.pixiApp.stage.interactive = true;
-    this.pixiApp.stage.mousedown = function() {
+    this.pixiApp.stage.pointerdown = function() {
       mouseInput.isDown = true;
       mouseInput.pointerId = interaction.mouse.pointerId;
       if (self.currentTool)
         self.currentTool.mouseDown(mouseInput);
     };
-    this.pixiApp.stage.mouseup = function() {
+    this.pixiApp.stage.pointerup = function(e) {
+      // storing the event for recognition
+      mouseInput.event = e;
       mouseInput.isDown = false;
       mouseInput.pointerId = interaction.mouse.pointerId;
       if (self.currentTool)
@@ -222,7 +224,7 @@ export default class EditorCanvas {
     // no truck position set
     if (!this.level.hasCustomStartingPosition()) {
       return false;
-    } 
+    }
 
     // no logs
     if (this.level.logs.length === 0) {

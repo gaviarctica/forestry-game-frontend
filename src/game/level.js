@@ -31,7 +31,7 @@ export default class Level {
     this.onewayRouteTexture = PIXI.Texture.fromImage('/static/road_oneway.png');
     this.onewayRouteTextureReverse = PIXI.Texture.fromImage('/static/road_oneway2.png');
     this.routeTransitionTexture = PIXI.Texture.fromImage('/static/road_transition.png');
-    this.startingPosition = {x: -1, y: -1};
+    this.startingPosition = {x: -1, y: -1, dir: 1};
     if (map) {
       this.parseRouteNodes();
       this.parseLogs();
@@ -62,6 +62,9 @@ export default class Level {
     var routeStart = closestRouteSegment.startNode.getPos();
     this.startingInterpolation = distance(routeStart, pos) / closestRouteSegment.getLength();
     this.startingSegment = closestRouteSegment;
+
+    // manually setting truck direction
+    this.startingPosition.dir = pos.dir;
   }
 
   getStage() {
@@ -353,15 +356,24 @@ export default class Level {
   }
 
   setStartingPosition(pos) {
-    this.startingPosition = pos;
+    this.startingPosition.x = pos.x;
+    this.startingPosition.y = pos.y;
+  }
+
+  setTruckDirection(dir) {
+    this.startingPosition.dir = dir;
   }
 
   getStartingSegment() {
     return this.startingSegment;
   }
 
+  getStartingPosition() {
+    return this.startingPosition;
+  }
+
   hasCustomStartingPosition() {
-    // if starting position has changed from default inited value, 
+    // if starting position has changed from default inited value,
     // then assume we have custom starting position
     return this.startingPosition.x != -1;
   }

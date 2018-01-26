@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {normalize, isLeft, distance} from '../game/helpers';
+import {normalize, isLeft, distance, length} from '../game/helpers';
 import PlaceTool from './placetool';
 
 export default class TruckTool extends PlaceTool {
@@ -17,6 +17,8 @@ export default class TruckTool extends PlaceTool {
     this.sprite.anchor.set(0.5, 0.5);
     this.sprite.scale.set(0.1);
     this.sprite.rotation += Math.PI / 2;
+
+    this.truck_direction = 1;
 
     this.minDistanceFromRoad = 30;
     this.maxDistanceFromRoad = 0;
@@ -37,7 +39,7 @@ export default class TruckTool extends PlaceTool {
       var routeEnd = this.closestRouteSeg.endNode.getPos();
       var mouseWorld = mouseInput.worldPosition;
       var d = this.closestDistance;
-      
+
       // create perpendicular unit vector in relation to mousepos
       var perpV = {x: routeEnd.y - routeStart.y, y: -(routeEnd.x - routeStart.x)};
       perpV = normalize(perpV);
@@ -51,6 +53,10 @@ export default class TruckTool extends PlaceTool {
 
       this.pointerContainer.position.set(epos.x, epos.y);
       this.pointerPos = epos;
+
+      if(this.truck_direction < 0) {
+        this.pointerContainer.rotation = (this.pointerContainer.rotation + Math.PI) % (Math.PI * 2);
+      }
     }
   }
   mouseDown(mouseInput) {
@@ -58,6 +64,20 @@ export default class TruckTool extends PlaceTool {
   }
   mouseUp(mouseInput) {
     super.mouseUp(mouseInput);
+
+    // mouse moved aka moved the viewport so don't do the action
+    if (length(mouseInput.absDeltaDuringMouseDown) > this.minDistanceFromRoad)
+      return;
+
+    // console.log(mouseInput);
+    if(mouseInput.event.data.originalEvent.which === 3) {
+      this.swapTruckDirection();
+    }
+  }
+
+  swapTruckDirection() {
+    this.truck_direction *= -1;
+    this.pointerContainer.rotation = (this.pointerContainer.rotation + Math.PI) % (Math.PI * 2);
   }
 
   placeItem(position, angle) {

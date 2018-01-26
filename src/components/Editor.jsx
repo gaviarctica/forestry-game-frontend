@@ -343,7 +343,7 @@ export default class Editor extends Component {
           selectedUserLevel: undefined
         });
       }
-      
+
       self.loadUserLevels();
       self.props.notify(LANG[self.props.lang].editor.messages.levelDeleted);
     })
@@ -357,6 +357,7 @@ export default class Editor extends Component {
     };
     var mapData = this.editorCanvas.serializeLevel(fogInfo);
     var mapInfo = this.editorCanvas.levelInfo(fogInfo);
+
     var self = this;
     if (this.state.loadedMapID) {
       API.updateMap(this.state.loadedMapID, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err) {
@@ -374,7 +375,7 @@ export default class Editor extends Component {
       this.props.notify(LANG[this.props.lang].editor.messages.levelInvalid);
       return;
     }
-    
+
     var fogInfo = {
       enabled: this.state.fogEnabled,
       density: this.state.fogDensity,
@@ -382,6 +383,7 @@ export default class Editor extends Component {
     };
     var mapData = this.editorCanvas.serializeLevel(fogInfo);
     var mapInfo = this.editorCanvas.levelInfo(fogInfo);
+
     var self = this;
     API.addMap(newMapName, JSON.stringify(mapData), JSON.stringify(mapInfo), function(err, response) {
       if (err) throw err;
@@ -488,7 +490,7 @@ export default class Editor extends Component {
             id="button-editor-mapmenu-back"
             text={LANG[this.props.lang].buttons.back}
             buttonType='default'
-            handleClick={this.handleButtonClick.bind(this)} />          
+            handleClick={this.handleButtonClick.bind(this)} />
           <Button
             id="button-editor-mapmenu-load"
             text={LANG[this.props.lang].buttons.loadLevel}
@@ -523,7 +525,7 @@ export default class Editor extends Component {
   }
 
   levelDeleteYes() {
-    this.deleteSelectedMap();    
+    this.deleteSelectedMap();
     this.setState({
       levelDeleteConfirmOpen: false
     });
@@ -722,7 +724,7 @@ export default class Editor extends Component {
           : ''
         }
 
-        {this.state.levelDeleteConfirmOpen ? 
+        {this.state.levelDeleteConfirmOpen ?
           <ConfirmDialog
             id="delete-confirm-dialog"
             lang={this.props.lang}
@@ -730,7 +732,7 @@ export default class Editor extends Component {
             yesClicked={() => this.levelDeleteYes()}
             noClicked={() => this.levelDeleteNo()} />
         : ''}
-        {this.state.levelOverwriteConfirmOpen ? 
+        {this.state.levelOverwriteConfirmOpen ?
           <ConfirmDialog
             id="overwrite-confirm-dialog"
             lang={this.props.lang}

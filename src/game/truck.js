@@ -9,7 +9,7 @@ import Controls from './controls';
 
 export default class Truck {
 
-  constructor(stage, controls, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats, logsRemaining) {
+  constructor(stage, controls, startSegment, startInterp, logsOnLevel, depositsOnLevel, stats, logsRemaining, faceDirection = 1) {
 
     this.drawable_container = new PIXI.Container();
     // store the stage so we can control the camera when we need it
@@ -27,6 +27,8 @@ export default class Truck {
     this.sprite = PIXI.Sprite.fromImage('/static/truck.svg');
     this.sprite.anchor.set(this.settings.SPRITE_ANCHOR);
     this.sprite.scale.set(this.settings.SPRITE_SCALE);
+
+    this.face_direction = faceDirection;
 
     // 0.00 - 1.00, interpolation between route segment start and end
     this.pointDelta = startInterp;
@@ -49,7 +51,7 @@ export default class Truck {
     this.drawable_container.addChild(this.sprite);
     this.drawable_container.addChild(this.clawSprite);
 
-    this.previous_direction = -1;
+    this.previous_direction = -1 * this.face_direction;
     this.logsOnLevel = logsOnLevel;
     this.depositsOnLevel = depositsOnLevel;
     this.maxDistanceToDeposit = this.settings.MAX_DISTANCE_TO_DEPOSIT;
@@ -74,6 +76,14 @@ export default class Truck {
   // TODO: maybe keep up with the log count in pickLog, depositLog functions to avoid unnecessary for looping
   logCount() {
     return this.logContainer.getLogCount();
+  }
+
+  getPreviousDirection() {
+    return this.previous_direction;
+  }
+
+  switchPreviousDirection() {
+    this.previous_direction *= -1;
   }
 
   getSpeed(reverse = false) {
@@ -109,13 +119,14 @@ export default class Truck {
       this.forceCameraMovement = true;
 
       // when direction changes
-      if(this.previous_direction === -1) {
+      if(this.getPreviousDirection() === -this.face_direction) {
+        var temp_node = this.face_direction > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode()
         // experimental index suggestion
-        this.routeIndex = this.currentSegment.getNextNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
+        this.routeIndex = temp_node.getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
+        this.switchPreviousDirection();
       }
 
-      this.previous_direction = 1;
-      direction = 1;
+      direction = this.getPreviousDirection();
     }
 
     if(this.controls.isKeyDown(Key.Down) || this.controls.isKeyDown(Key.S)) {
@@ -123,13 +134,14 @@ export default class Truck {
       this.forceCameraMovement = true;
 
       // when direction changes
-      if(this.previous_direction === 1) {
+      if(this.getPreviousDirection() === this.face_direction) {
+        var temp_node = this.face_direction < 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode()
         // experimental index suggestion
-        this.routeIndex = this.currentSegment.getPreviousNode().getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
+        this.routeIndex = temp_node.getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
+        this.switchPreviousDirection();
       }
 
-      this.previous_direction = -1;
-      direction = -1;
+      direction = this.getPreviousDirection();
     }
 
     if (this.controls.wasKeyPressed(Key.Q)) {
@@ -152,25 +164,25 @@ export default class Truck {
     // Selecting route if arrow keys were pressed
     if(this.controls.wasKeyPressed(Key.Left) || this.controls.wasKeyPressed(Key.A)) {
       ++this.routeIndex;
-      var seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1) :
+      var seg = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1) :
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
       this.routeIndex = seg['index'];
     } else if(this.controls.wasKeyPressed(Key.Right) || this.controls.wasKeyPressed(Key.D)) {
       --this.routeIndex;
-      seg = this.previous_direction > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1) :
+      seg = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1) :
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1);
       this.routeIndex = seg['index'];
     }
 
     // Advance on route segment based on segment length
-    var delta_move = (direction * this.getSpeed( direction !== 1 ) * timeDelta) / this.currentSegment.getLength();
+    var delta_move = (direction * this.getSpeed( direction !== this.face_direction ) * timeDelta) / this.currentSegment.getLength();
 
     // checking road anomalies and act accordingly
     if(this.currentSegment.isRoadDead()) {
       this.pointDelta += delta_move * this.anomaly_settings.DEAD_ROAD_SPEED_FACTOR;
     } else if(this.currentSegment.getRoadWeightLimit() !== false && this.currentSegment.getRoadWeightLimit() < this.log_settings.Weight * this.logCount()) {
       this.pointDelta += delta_move * this.anomaly_settings.WEIGHT_LIMIT_EXCEED_SPEED_FACTOR;
-    } else if(!this.currentSegment.canDriveTo(this.sprite.rotation, this.previous_direction)) {
+    } else if(!this.currentSegment.canDriveTo(this.sprite.rotation, this.face_direction * this.getPreviousDirection())) {
       this.pointDelta += delta_move * this.anomaly_settings.ONE_DIR_ROAD_SPEED_FACTOR;
     } else {
       this.pointDelta += delta_move;
@@ -403,7 +415,11 @@ export default class Truck {
     this.sprite.x = point.x;
     this.sprite.y = point.y;
 
-    this.sprite.rotation = this.currentSegment.getRotation();
+    if(this.face_direction < 0) {
+      this.sprite.rotation = (this.currentSegment.getRotation() + Math.PI) % (2 * Math.PI);
+    } else {
+      this.sprite.rotation = this.currentSegment.getRotation();
+    }
 
     this.selectGraphic.clear();
     this.clawSprite.alpha = 0;
