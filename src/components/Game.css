@@ -248,7 +248,7 @@ html {
 }
 
 #game-end-container {
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: center;
 }
