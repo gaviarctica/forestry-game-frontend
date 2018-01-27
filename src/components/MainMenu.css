@@ -46,6 +46,35 @@
   display: flex;
 }
 
+#settings-menu {
+  background-color: rgba(0, 0, 0, 0.9);
+  border-radius: 5px;
+  box-shadow: var(--menu-shadow);
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  position: fixed;
+  right: 10%;
+  top: calc(10% + var(--navbar-height));
+  z-index: 10;
+  width: 180px;
+}
+
+.settings-header {
+  color: #AAA;
+  margin-left: 5px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+#settings-graphics {
+  margin-left: 20px;
+}
+
+#button-settings:hover {
+  cursor: pointer;
+  background-color: var(--jd-green) !important;
+}
+
 #menu-background {
   width: 100vw;
   height: 100vh;

@@ -21,7 +21,9 @@ export default class App extends Component {
       lang: 'en',
       viewAnimation: false,
       validationDone: false,
-      notification: ""
+      notification: "",
+      useLowQualityGraphics: false,
+      notificationAnimation: false
     }
   }
 
@@ -61,10 +63,6 @@ export default class App extends Component {
         });
       }
     });    
-  }
-
-  componentWillUpdate() {
-    clearTimeout(this.timer);
   }
 
   componentDidMount() {
@@ -124,15 +122,56 @@ export default class App extends Component {
   // Pass this in props as notify. Use by giving the function
   // a message as a parameter
   notify(message) {
-    this.setState({
-      notification: message
-    })
-
-    this.timer = setTimeout(() => {
+    if (this.state.notification === '') {
       this.setState({
-        notification: ""
+        notificationAnimation:true,
+        notification: message
+      });
+
+      this.animationTimer = setTimeout(() => {
+        this.setState({
+        notificationAnimation:false,
+        })
+      }, 3500);
+  
+      this.timer = setTimeout(() => {
+        this.setState({
+          notification: ""
+        })
+      }, 4000);
+    } else if (message !== this.state.notification) {
+      clearTimeout(this.timer);
+      clearTimeout(this.animationTimer);
+      this.setState({
+        notificationAnimation:true,
+        notification: message
       })
-    }, 4000)
+  
+      this.timer = setTimeout(() => {
+        this.setState({
+        notification: ""
+        })
+      }, 4000);
+
+      this.animationTimer = setTimeout(() => {
+        this.setState({
+        notificationAnimation:false,
+        })
+      }, 3500);
+    
+    }
+  }
+
+  changeGraphicsSetting(setting) {
+    if (setting === 'low') {
+      this.setState({
+        useLowQualityGraphics: true
+      })
+    } else if (setting === 'high') {
+      this.setState({
+        useLowQualityGraphics: false
+      })
+    }
   }
 
   render() {
@@ -150,6 +189,8 @@ export default class App extends Component {
             lang={this.state.lang}
             changeLanguage={this.changeLanguage.bind(this)} 
             notify={this.notify.bind(this)}
+            useLowQualityGraphics={this.state.useLowQualityGraphics}
+            changeGraphicsSetting={this.changeGraphicsSetting.bind(this)}
             />
         );
         break;
@@ -168,6 +209,7 @@ export default class App extends Component {
             viewData={this.state.viewData}
             loggedIn={this.state.loggedIn}
             username={username}
+            lowQuality={this.state.useLowQualityGraphics}
             lang={this.state.lang} />
         );
         break;
@@ -196,7 +238,9 @@ export default class App extends Component {
     return (
       <div className="App">
       <div onClick={this.hideNotificationBox.bind(this)}>
+      <FadeInFadeOut in={this.state.notificationAnimation}>
         <NotificationBox message={this.state.notification} />
+      </FadeInFadeOut>
       </div>
       
       <FadeInFadeOut in={this.state.viewAnimation}>

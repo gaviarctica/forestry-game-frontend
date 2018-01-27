@@ -207,7 +207,7 @@ export default class Truck {
       this.pointDelta = 0;
 
       if (this.currentSegment.getPreviousNode() !== null) {
-        this.pointDelta = 0.99;
+        this.pointDelta = 0.9999;
 
         var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite,1,this.sprite.rotation);
         this.routeIndex = selected_segment_data['index'];
@@ -221,7 +221,7 @@ export default class Truck {
         }
 
         if(temp_segment === this.currentSegment) {
-          this.pointDelta = 0.01;
+          this.pointDelta = 0.0001;
           this.currentSegment = temp_segment;
         } else {
           this.endOfSegment = false;
@@ -236,7 +236,7 @@ export default class Truck {
       this.pointDelta = 1;
 
       if (this.currentSegment.getNextNode() !== null) {
-        this.pointDelta = 0.01;
+        this.pointDelta = 0.0001;
 
         selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1, this.sprite.rotation);
         this.routeIndex = selected_segment_data['index'];
@@ -251,7 +251,7 @@ export default class Truck {
 
         if(temp_segment_2 === this.currentSegment) {
           this.endOfSegment = true;
-          this.pointDelta = 0.99;
+          this.pointDelta = 0.9999;
         }
         else {
           this.endOfSegment = false;

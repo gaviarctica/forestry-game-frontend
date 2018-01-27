@@ -8,6 +8,7 @@ import Loader from './Loader';
 import { API } from './api';
 import { LANG } from './lang';
 import { DateFormatToSeconds } from '../game/helpers';
+import { FadeInFadeOut } from './animation';
 
 export default class Game extends Component {
   constructor(props) {
@@ -35,7 +36,8 @@ export default class Game extends Component {
       mapdata: undefined,
       mapname: undefined,
       mapID: undefined,
-      loadingContent: true
+      loadingContent: true,
+      gameEndViewAnimation: false
     }
   }
 
@@ -46,6 +48,7 @@ export default class Game extends Component {
     if (update.gameEnd && !this.state.gameEndDate) {
       var d = new Date();
       this.setState({
+        gameEndViewAnimation: true,
         gameEndDate: d.toISOString()
       });
       API.postReport({
@@ -81,7 +84,7 @@ export default class Game extends Component {
       if (err) throw err;
 
       if (responseJson.length > 0) {
-        self.gameCanvas = new GameCanvas(responseJson[0].mapdata, self.updateUI.bind(self));
+        self.gameCanvas = new GameCanvas(responseJson[0].mapdata, self.updateUI.bind(self), self.props.lowQuality);
         self.setState({
           mapdata: responseJson[0].mapdata,
           mapname: responseJson[0].name,
@@ -148,6 +151,7 @@ export default class Game extends Component {
         }
         <div id="canvas-game"></div>
         {this.state.gameEnd == true &&
+        <FadeInFadeOut in={this.state.gameEndViewAnimation}>
         <div id="game-end">
           <div id="game-end-container">
             <div id="game-end-menu">
@@ -187,6 +191,7 @@ export default class Game extends Component {
             </div>
           </div>
         </div>
+        </FadeInFadeOut>
         }
         <Button
           id="button-quit"
