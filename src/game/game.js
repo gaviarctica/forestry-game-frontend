@@ -24,7 +24,7 @@ export default class GameCanvas {
     this.forest.buildGround();
     if (!useLowQuality) {
       this.forest.buildTrees();
-    }    
+    }
 
     document.getElementById('canvas-game').appendChild(game.view);
     game.view.addEventListener('contextmenu', (e) => {
@@ -123,8 +123,8 @@ export default class GameCanvas {
     };
 
     this.game.stage.hitArea = new PIXI.Rectangle(
-      -(map_size.width + this.settings.map.HITAREA_PADDING[0]),
-      -(map_size.height + this.settings.map.HITAREA_PADDING[1]),
+      -(-this.min_max.xMin + this.settings.map.HITAREA_PADDING[0]),
+      -(-this.min_max.yMin + this.settings.map.HITAREA_PADDING[1]),
       map_size.width + 2*this.settings.map.HITAREA_PADDING[0],
       map_size.height + 2*this.settings.map.HITAREA_PADDING[1]);
 
@@ -136,8 +136,17 @@ export default class GameCanvas {
         mouseInput.isRightDown = true;
       }
 
-      if(Math.abs(loc_pos.x) > (map_size.width/2 + self.settings.map.MAX_CAMERA_DISTANCE[0]) ||
-        Math.abs(loc_pos.y) > (map_size.height/2 + self.settings.map.MAX_CAMERA_DISTANCE[1])) {
+      var map_size = {
+        width: Math.abs(self.min_max.xMax) > Math.abs(self.min_max.xMin) ?
+          Math.abs(self.min_max.xMax) : Math.abs(self.min_max.xMin),
+        height: Math.abs(self.min_max.yMax) > Math.abs(self.min_max.yMin) ?
+            Math.abs(self.min_max.yMax) : Math.abs(self.min_max.yMin),
+      };
+
+      if(loc_pos.x < -(-self.min_max.xMin + self.settings.map.MAX_CAMERA_DISTANCE[0]) ||
+        loc_pos.y < -(-self.min_max.yMin + self.settings.map.MAX_CAMERA_DISTANCE[1]) ||
+        loc_pos.x > (self.min_max.xMax + self.settings.map.MAX_CAMERA_DISTANCE[0]) ||
+        loc_pos.y > (self.min_max.yMax + self.settings.map.MAX_CAMERA_DISTANCE[1])) {
         mouseInput.isRightDown = false;
         mouseInput.forceBack = true;
         return;
@@ -170,8 +179,8 @@ export default class GameCanvas {
 
       if(mouseInput.forceBack === true) {
         var loc_pos = e.data.getLocalPosition(this);
-        if(Math.abs(loc_pos.x) < (map_size.width/2 + self.settings.map.MAX_CAMERA_DISTANCE[0]) &&
-          Math.abs(loc_pos.y) < (map_size.height/2 + self.settings.map.MAX_CAMERA_DISTANCE[1])) {
+        if(Math.abs(loc_pos.x) < (-self.min_max.xMin + 2*self.settings.map.MAX_CAMERA_DISTANCE[0]) &&
+          Math.abs(loc_pos.y) < (-self.min_max.yMin + 2*self.settings.map.MAX_CAMERA_DISTANCE[1])) {
           mouseInput.forceBack = false;
         }
 
