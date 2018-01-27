@@ -159,7 +159,8 @@ export default class Level {
     }
 
     // Draw nodes
-    for(let [routeNode] of this.routeNodes) {
+    for(let [id, routeNode] of this.routeNodes) {
+      id = id - 0;
       var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
       intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
       intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
@@ -207,7 +208,8 @@ export default class Level {
   // used by editor
   removeRouteNode(removeId) {
     // remove connections if exists
-    for (let [node] of this.routeNodes) {
+    for (let [id, node] of this.routeNodes) {
+      id = id - 0;
       var index = node.to.indexOf(removeId);
       if (index > -1) {
         node.to.splice(index, 1);
@@ -257,10 +259,10 @@ export default class Level {
 
   generateRouteSegments() {
 
-    for (let [startNode] of this.routeNodes) {
+    for (let [id, startNode] of this.routeNodes) {
       var endNode = null;
       var segment = null;
-
+      id = id - 0;
       // check if node has any waypoints and create segments between them
       if(Array.isArray(startNode.getTo())) {
         for(var j = 0; j < startNode.getTo().length; ++j) {
@@ -523,7 +525,8 @@ export default class Level {
     }
 
     var anomalies = false;
-    for (let [node] of this.routeNodes) {
+    for (let [id, node] of this.routeNodes) {
+      id = id - 0;
       if(node.anomalies && node.anomalies.length === 1) {
         anomalies = true;
       }
