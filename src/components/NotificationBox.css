@@ -1,14 +1,14 @@
 .notification-box {
-  width: 20%;
+  max-width: 300px;
   text-align: center;
-  padding: 2vw;
-  margin: 1vw;
+  padding: 20px;
   z-index: 999;  
   position: fixed;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
   box-shadow: var(--menu-shadow);
   background-color: var(--jd-yellow);
+  border-radius: 3px;
 }
 
 .notification-box span {

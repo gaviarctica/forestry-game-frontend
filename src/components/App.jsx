@@ -64,10 +64,6 @@ export default class App extends Component {
     });    
   }
 
-  componentWillUpdate() {
-    clearTimeout(this.timer);
-  }
-
   componentDidMount() {
     // Display first view enter animation
     this.setState({
@@ -125,15 +121,28 @@ export default class App extends Component {
   // Pass this in props as notify. Use by giving the function
   // a message as a parameter
   notify(message) {
-    this.setState({
-      notification: message
-    })
-
-    this.timer = setTimeout(() => {
+    if (this.state.notification === '') {
       this.setState({
-        notification: ""
+        notification: message
+      });
+  
+      this.timer = setTimeout(() => {
+        this.setState({
+          notification: ""
+        })
+      }, 4000);
+    } else if (message !== this.state.notification) {
+      clearTimeout(this.timer);
+      this.setState({
+        notification: message
       })
-    }, 4000)
+  
+      this.timer = setTimeout(() => {
+        this.setState({
+          notification: ""
+        })
+      }, 4000);
+    }
   }
 
   changeGraphicsSetting(setting) {
