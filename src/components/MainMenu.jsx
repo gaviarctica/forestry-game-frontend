@@ -74,7 +74,8 @@ export default class MainMenu extends Component {
     // display view exit animation
     this.setState({
       tabSwitchAnimation: false,
-      activeTab: newTab
+      activeTab: newTab,
+      settingsOpen: false
     });
 
     // After exit animation, switch view and start new view enter animation
