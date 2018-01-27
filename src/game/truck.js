@@ -208,7 +208,7 @@ export default class Truck {
         }
 
         if(temp_segment === this.currentSegment) {
-          this.pointDelta = 0.01;
+          this.pointDelta = 0.0001;
           this.currentSegment = temp_segment;
         } else {
           this.endOfSegment = false;
@@ -238,7 +238,7 @@ export default class Truck {
 
         if(temp_segment_2 === this.currentSegment) {
           this.endOfSegment = true;
-          this.pointDelta = 0.99;
+          this.pointDelta = 0.999999;
         }
         else {
           this.endOfSegment = false;
