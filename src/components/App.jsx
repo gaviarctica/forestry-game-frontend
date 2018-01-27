@@ -22,7 +22,8 @@ export default class App extends Component {
       viewAnimation: false,
       validationDone: false,
       notification: "",
-      useLowQualityGraphics: false
+      useLowQualityGraphics: false,
+      notificationAnimation: false
     }
   }
 
@@ -123,8 +124,15 @@ export default class App extends Component {
   notify(message) {
     if (this.state.notification === '') {
       this.setState({
+        notificationAnimation:true,
         notification: message
       });
+
+      this.animationTimer = setTimeout(() => {
+        this.setState({
+        notificationAnimation:false,
+        })
+      }, 3500);
   
       this.timer = setTimeout(() => {
         this.setState({
@@ -133,15 +141,24 @@ export default class App extends Component {
       }, 4000);
     } else if (message !== this.state.notification) {
       clearTimeout(this.timer);
+      clearTimeout(this.animationTimer);
       this.setState({
+        notificationAnimation:true,
         notification: message
       })
   
       this.timer = setTimeout(() => {
         this.setState({
-          notification: ""
+        notification: ""
         })
       }, 4000);
+
+      this.animationTimer = setTimeout(() => {
+        this.setState({
+        notificationAnimation:false,
+        })
+      }, 3500);
+    
     }
   }
 
@@ -221,7 +238,9 @@ export default class App extends Component {
     return (
       <div className="App">
       <div onClick={this.hideNotificationBox.bind(this)}>
+      <FadeInFadeOut in={this.state.notificationAnimation}>
         <NotificationBox message={this.state.notification} />
+      </FadeInFadeOut>
       </div>
       
       <FadeInFadeOut in={this.state.viewAnimation}>
