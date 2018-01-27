@@ -260,7 +260,7 @@ export default class MapMenu extends Component {
       });
 
       var mapImage = {
-        backgroundImage: 'url(/levelimage/' + selMap.id + '.svg?t=' + (new Date()).getTime() + ')'
+        backgroundImage: 'url(/levelimage/' + selMap.id + '.svg)'
       };
 
       var mapWeather = '';
