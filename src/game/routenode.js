@@ -52,6 +52,7 @@ export default class RouteNode {
   }
 
   getSelectedSegment(current_segment, index, arrowSprite, dir = 1) {
+
     var slength = this.segments.length;
     index = index < 0 ? this.segments.length-1 : index;
     index = index % slength;
@@ -69,6 +70,7 @@ export default class RouteNode {
     }
 
     for(i = 0; i < this.segments.length; ++i) {
+
       if(this.segments[index] !== current_segment) {
         this.segments[index].setSelected();
         this.setArrowPos(arrowSprite, this.segments[index].getRotation(this));
@@ -78,8 +80,10 @@ export default class RouteNode {
       index = dir > 0 ? index + 1 : index - 1;
       index = index < 0 ? this.segments.length-1 : index;
       index = index % slength;
+
     }
 
+    this.setArrowPos(arrowSprite, this.segments[index].getRotation(this));
     return {'seg':current_segment, 'index':index};
   }
 

@@ -163,14 +163,27 @@ export default class Truck {
 
     // Selecting route if arrow keys were pressed
     if(this.controls.wasKeyPressed(Key.Left) || this.controls.wasKeyPressed(Key.A)) {
-      ++this.routeIndex;
-      var seg = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1) :
-        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
+      var dir =
+        (this.sprite.rotation + 2*Math.PI) % (Math.PI) > Math.PI/2 ?
+        -1 : 1;
+
+      dir *= this.getPreviousDirection();
+
+      this.routeIndex = this.routeIndex + dir;
+      var seg = this.getPreviousDirection() > 0 ?
+        this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir) :
+        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir);
       this.routeIndex = seg['index'];
     } else if(this.controls.wasKeyPressed(Key.Right) || this.controls.wasKeyPressed(Key.D)) {
-      --this.routeIndex;
-      seg = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1) :
-        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, -1);
+      var dir =
+        (this.sprite.rotation + 2*Math.PI) % (Math.PI) > Math.PI/2 ?
+        1 : -1;
+
+      dir *= this.getPreviousDirection();
+
+      this.routeIndex = this.routeIndex + dir;
+      seg = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir) :
+        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir);
       this.routeIndex = seg['index'];
     }
 
@@ -196,7 +209,7 @@ export default class Truck {
       if (this.currentSegment.getPreviousNode() !== null) {
         this.pointDelta = 0.99;
 
-        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite);
+        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite,1,this.sprite.rotation);
         this.routeIndex = selected_segment_data['index'];
 
         var temp_segment = selected_segment_data['seg'];
@@ -225,7 +238,7 @@ export default class Truck {
       if (this.currentSegment.getNextNode() !== null) {
         this.pointDelta = 0.01;
 
-        selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
+        selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1, this.sprite.rotation);
         this.routeIndex = selected_segment_data['index'];
 
         var temp_segment_2 = selected_segment_data['seg'];
