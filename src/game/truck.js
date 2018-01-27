@@ -160,9 +160,10 @@ export default class Truck {
       this.doLogAction = false;
     }
 
+    var dir;
     // Selecting route if arrow keys were pressed
     if(this.controls.wasKeyPressed(Key.Left) || this.controls.wasKeyPressed(Key.A)) {
-      var dir =
+      dir =
         (this.sprite.rotation + 2*Math.PI) % (Math.PI) > Math.PI/2 ?
         -1 : 1;
 
@@ -174,7 +175,7 @@ export default class Truck {
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir);
       this.routeIndex = seg['index'];
     } else if(this.controls.wasKeyPressed(Key.Right) || this.controls.wasKeyPressed(Key.D)) {
-      var dir =
+      dir =
         (this.sprite.rotation + 2*Math.PI) % (Math.PI) > Math.PI/2 ?
         1 : -1;
 
