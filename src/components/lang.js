@@ -6,7 +6,7 @@ export const LANG = {
       play: "Play",
       profile: "Profile",
       editor: "Editor",
-      tutorial: "Tutorial",
+      help: "Help",
       logOut: "Log out",
       logIn: "Log in",
       signUp: "Sign up"
@@ -181,7 +181,7 @@ export const LANG = {
       play: "Pelaa",
       profile: "Profiili",
       editor: "Editori",
-      tutorial: "Ohje",
+      help: "Ohje",
       logOut: "Kirjaudu ulos",
       logIn: "Kirjaudu sisään",
       signUp: "Rekisteröidy"
