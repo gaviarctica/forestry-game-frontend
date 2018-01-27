@@ -11,8 +11,9 @@ import Weather from './weather';
 import {secondsToDateFormat,calculateMinMax} from './helpers';
 
 export default class GameCanvas {
-  constructor(mapData, updateUI) {
-    var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x438b38, antialias: false});
+  constructor(mapData, updateUI, useLowQuality) {
+    var antialias = useLowQuality ? false : true;
+    var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x438b38, antialias: antialias});
     this.game = game;
 
     this.settings = new Settings();
@@ -23,7 +24,9 @@ export default class GameCanvas {
     this.game.stage.addChild(this.forest.getGroundContainer());
     this.game.stage.addChild(this.forest.getTreeContainer());
     this.forest.buildGround();
-    this.forest.buildTrees();
+    if (!useLowQuality) {
+      this.forest.buildTrees();
+    }    
 
     document.getElementById('canvas-game').appendChild(game.view);
     game.view.addEventListener('contextmenu', (e) => {

@@ -21,7 +21,8 @@ export default class App extends Component {
       lang: 'en',
       viewAnimation: false,
       validationDone: false,
-      notification: ""
+      notification: "",
+      useLowQualityGraphics: false
     }
   }
 
@@ -135,6 +136,18 @@ export default class App extends Component {
     }, 4000)
   }
 
+  changeGraphicsSetting(setting) {
+    if (setting === 'low') {
+      this.setState({
+        useLowQualityGraphics: true
+      })
+    } else if (setting === 'high') {
+      this.setState({
+        useLowQualityGraphics: false
+      })
+    }
+  }
+
   render() {
     var view;
     switch(this.state.currentView) {
@@ -150,6 +163,8 @@ export default class App extends Component {
             lang={this.state.lang}
             changeLanguage={this.changeLanguage.bind(this)} 
             notify={this.notify.bind(this)}
+            useLowQualityGraphics={this.state.useLowQualityGraphics}
+            changeGraphicsSetting={this.changeGraphicsSetting.bind(this)}
             />
         );
         break;
@@ -168,6 +183,7 @@ export default class App extends Component {
             viewData={this.state.viewData}
             loggedIn={this.state.loggedIn}
             username={username}
+            lowQuality={this.state.useLowQualityGraphics}
             lang={this.state.lang} />
         );
         break;
