@@ -33,6 +33,8 @@ export default class EditorCanvas {
     this.truckSprite.rotation += Math.PI / 2;
 
     this.currentTool = null;
+    this.currentToolName = null;
+    this.currentToolPlaceType = null;
     this.tools = [];
 
     this.createTools();
@@ -174,6 +176,9 @@ export default class EditorCanvas {
 
   selectTool(name, placeType) {
     var self = this;
+    this.currentToolName = name;
+    this.currentToolPlaceType = placeType;
+
     if (this.currentTool) {
       if(this.currentKeyBoardFunctionDown) {
         window.removeEventListener(
@@ -242,6 +247,9 @@ export default class EditorCanvas {
 
     this.truckSprite.rotation = Math.atan2(routeStart.y - routeEnd.y, routeStart.x - routeEnd.x) + rotationOffset;
 
+    if (this.currentToolName !== null) {
+      this.selectTool(this.currentToolName, this.currentToolPlaceType);
+    }
   }
 
   serializeLevel(fog) {
