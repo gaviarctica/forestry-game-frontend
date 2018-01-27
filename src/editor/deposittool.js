@@ -26,6 +26,14 @@ export default class DepositTool extends PlaceTool {
   mouseMove(mouseInput) {
     super.mouseMove(mouseInput);
 
+    // dont allow placement if mouse over another deposit
+    for (var deposit of this.level.getLogDeposits()) {
+      if (deposit.isHighlighted()) {
+        this.allowPlacement = false;
+        this.pointerContainer.alpha = 0.5;
+        return;
+      }
+    }
   }
   mouseDown(mouseInput) {
 

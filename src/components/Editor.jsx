@@ -453,7 +453,7 @@ export default class Editor extends Component {
 
   getLoadMenuContent() {
     let mapImage = this.state.selectedUserLevel ? {
-      backgroundImage: 'url(/levelimage/' + this.state.selectedUserLevel + '.svg)'
+      backgroundImage: 'url(/levelimage/' + this.state.selectedUserLevel + '.svg?t=' + (new Date()).getTime() + ')'
     } : {};
 
     return (
