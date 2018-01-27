@@ -35,6 +35,10 @@ export default class Controls {
   }
 
   handleKeyUp(event) {
+    if (event.keyCode > 254) {
+      return;
+    }
+
     var key = this.keys[event.keyCode];
     key.justPressed = false;
     key.justReleased = true;
@@ -42,6 +46,10 @@ export default class Controls {
   }
 
   handleKeyDown(event) {
+    if (event.keyCode > 254) {  
+      return;
+    }
+
     var key = this.keys[event.keyCode];
     if (!key.isDown)
       key.justPressed = true;
