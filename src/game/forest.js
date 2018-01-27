@@ -1,13 +1,15 @@
 import * as PIXI from 'pixi.js';
 import {lerp, distance, distanceToSegment} from './helpers';
+import Settings from './settings';
 
 export default class Forest {
 
-	constructor(stage, mapdata) {
+	constructor(stage, mapdata, min_max) {
 
 		this.stage = stage;
 		this.ground_container = new PIXI.Container();
 		this.tree_container = new PIXI.Container();
+		this.settings = new Settings();
 
 		this.mapdata = mapdata;
 		this.randomTrees = [
@@ -22,19 +24,22 @@ export default class Forest {
 		this.distanceToRoad = 60;
 		this.distanceToLog = 60;
 		this.distanceToLogDeposit = 100;
-		this.padding = 2000;
 		this.rockFrequency = 0.5;
 
-		this.xMin = this.yMin = this.xMax = this.yMax = 0;
+		// this.xMin = this.yMin = this.xMax = this.yMax = 0;
+		this.xMin = min_max.xMin;
+		this.yMin = min_max.yMin;
+		this.xMax = min_max.xMax;
+		this.yMax = min_max.yMax;
 
 		for (var i = 0; i < this.mapdata.logdeposits.length; i++) {
 			this.obstacles.push({type:'logdeposit', x:this.mapdata.logdeposits[i].x, y:this.mapdata.logdeposits[i].y});
-			this.updateMinMax(this.mapdata.logdeposits[i]);
+			// this.updateMinMax(this.mapdata.logdeposits[i]);
 
 		}
 		for (var i = 0; i < this.mapdata.logs.length; i++) {
 			this.obstacles.push({type:'log', x:this.mapdata.logs[i].x, y:this.mapdata.logs[i].y});
-			this.updateMinMax(this.mapdata.logs[i]);
+			// this.updateMinMax(this.mapdata.logs[i]);
 		}
 		for (var i = 0; i < this.mapdata.routes.length; i++) {
 			for (var j = 0; j < this.mapdata.routes[i].to.length; j++) {
@@ -45,19 +50,23 @@ export default class Forest {
 				};
 				this.obstacles.push({type:'route', startpoint:start, endpoint:end});
 			}
-			this.updateMinMax(this.mapdata.routes[i]);
+			// this.updateMinMax(this.mapdata.routes[i]);
 		}
 	}
 
 	buildGround() {
 		var texure = PIXI.Texture.fromImage('/static/ground.svg');
+		var map_size = {
+			width: this.xMax-this.xMin,
+			height: this.yMax-this.yMin
+		};
 		var tilingSprite = new PIXI.extras.TilingSprite(
 			texure,
-			10000,
-			10000
+			map_size.width + 2*this.settings.map.FOREST_PADDING[0],
+			map_size.height + 2*this.settings.map.FOREST_PADDING[1]
 		  );
-		tilingSprite.x = -5000;
-		tilingSprite.y = -5000;
+		tilingSprite.x = -(-this.xMin + this.settings.map.FOREST_PADDING[0]);
+		tilingSprite.y = -(-this.yMin + this.settings.map.FOREST_PADDING[1]);
 		tilingSprite.tileScale.set(0.05);
 		// clearing ground container
 		this.ground_container.removeChildren();
@@ -72,11 +81,11 @@ export default class Forest {
 	buildTrees() {
 		var inrange = false;
 		var inrange_rock = false;
-		var y = this.yMin - this.padding;
-		var x = this.xMin - this.padding;
-		while (y <= (this.yMax + this.padding)) {
-			x = this.xMin - this.padding;
-			while (x <= (this.xMax + this.padding)) {
+		var y = this.yMin - this.settings.map.FOREST_PADDING[1];
+		var x = this.xMin - this.settings.map.FOREST_PADDING[0];
+		while (y <= (this.yMax + this.settings.map.FOREST_PADDING[1])) {
+			x = this.xMin - this.settings.map.FOREST_PADDING[0];
+			while (x <= (this.xMax + this.settings.map.FOREST_PADDING[0])) {
 				inrange = false;
 				inrange_rock = false;
 				//Check that no logs, roads, logdeposits, etc in the way
@@ -147,7 +156,7 @@ export default class Forest {
 		for (let i = 0; i < this.mapdata.routes.length; i++) {
 			if (this.mapdata.routes[i].route_node === ID) {
 				return i;
-			}			
+			}
 		}
 	}
 }

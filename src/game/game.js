@@ -19,7 +19,7 @@ export default class GameCanvas {
 
     this.mapData = mapData;
     this.min_max = calculateMinMax(mapData);
-    this.forest = new Forest(this.game.stage, mapData);
+    this.forest = new Forest(this.game.stage, mapData, this.min_max);
     this.game.stage.addChild(this.forest.getGroundContainer());
     this.game.stage.addChild(this.forest.getTreeContainer());
     this.forest.buildGround();

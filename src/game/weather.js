@@ -25,8 +25,8 @@ export default class Weather {
       var fog_size = {width:min_max.xMax-min_max.xMin + 2*this.settings.map.FOG_PADDING[0],
         height:min_max.yMax-min_max.yMin + 2*this.settings.map.FOG_PADDING[1]};
       var fog_tiling_sprite = new PIXI.extras.TilingSprite(fog_texture,fog_size.width,fog_size.height);
-      fog_tiling_sprite.x = -fog_size.width/2;
-      fog_tiling_sprite.y = -fog_size.height/2;
+      fog_tiling_sprite.x = -(-min_max.xMin+this.settings.map.FOG_PADDING[0]);
+      fog_tiling_sprite.y = -(-min_max.yMin+this.settings.map.FOG_PADDING[1]);
       fog_tiling_sprite.tileScale.set(0.1);
       fog_tiling_sprite.alpha = attr.density;
       this.weather_container = new PIXI.Container();
