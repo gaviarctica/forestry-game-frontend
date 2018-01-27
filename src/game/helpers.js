@@ -85,3 +85,30 @@ export function DateFormatToSeconds(date) {
   var s = date.split(':');
   return (+s[0]) * 60 * 60 + (+s[1]) * 60 + (+s[2]);
 }
+
+export function calculateMinMax(mapData) {
+  var min_max = { xMin: 0, yMin: 0, xMax: 0, yMax: 0 };
+
+  for (var i = 0; i < mapData.logdeposits.length; i++) {
+    min_max = updateMinMax(min_max,mapData.logdeposits[i]);
+  }
+
+  for (var i = 0; i < mapData.logs.length; i++) {
+    min_max = updateMinMax(min_max,mapData.logs[i]);
+  }
+
+  for (var i = 0; i < mapData.routes.length; i++) {
+    min_max = updateMinMax(min_max,mapData.routes[i]);
+  }
+
+  return min_max;
+}
+
+export function updateMinMax(min_max, point) {
+		if (point.x < min_max.xMin) min_max.xMin = point.x;
+		if (point.y < min_max.yMin) min_max.yMin = point.y;
+		if (point.x > min_max.xMax) min_max.xMax = point.x;
+		if (point.y > min_max.yMax) min_max.yMax = point.y;
+
+    return min_max;
+	}

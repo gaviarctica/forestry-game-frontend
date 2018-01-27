@@ -3,7 +3,7 @@ import {distance} from './helpers';
 import Settings from './settings';
 
 export default class Weather {
-  constructor(stage, forest, level, truck, game, attr) {
+  constructor(stage, forest, level, truck, game, attr, min_max) {
     // game is needed for viewport
     this.game = game;
 
@@ -14,15 +14,19 @@ export default class Weather {
 
     this.weather_type = false;
 
+    this.settings = new Settings();
+
     // checking fog weather type
     if(typeof attr != 'undefined' && attr.type === 'fog') {
       this.stage.children = [];
 
       this.visible_distance = attr.visibility;
       var fog_texture = PIXI.Texture.fromImage('/static/fog.png');
-      var fog_tiling_sprite = new PIXI.extras.TilingSprite(fog_texture, 5000, 5000);
-      fog_tiling_sprite.x = -2500;
-      fog_tiling_sprite.y = -2500;
+      var fog_size = {width:min_max.xMax-min_max.xMin + 2*this.settings.map.FOG_PADDING[0],
+        height:min_max.yMax-min_max.yMin + 2*this.settings.map.FOG_PADDING[1]};
+      var fog_tiling_sprite = new PIXI.extras.TilingSprite(fog_texture,fog_size.width,fog_size.height);
+      fog_tiling_sprite.x = -fog_size.width/2;
+      fog_tiling_sprite.y = -fog_size.height/2;
       fog_tiling_sprite.tileScale.set(0.1);
       fog_tiling_sprite.alpha = attr.density;
       this.weather_container = new PIXI.Container();
