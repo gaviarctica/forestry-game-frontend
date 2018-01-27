@@ -93,11 +93,11 @@ export function calculateMinMax(mapData) {
     min_max = updateMinMax(min_max,mapData.logdeposits[i]);
   }
 
-  for (var i = 0; i < mapData.logs.length; i++) {
+  for (i = 0; i < mapData.logs.length; i++) {
     min_max = updateMinMax(min_max,mapData.logs[i]);
   }
 
-  for (var i = 0; i < mapData.routes.length; i++) {
+  for (i = 0; i < mapData.routes.length; i++) {
     min_max = updateMinMax(min_max,mapData.routes[i]);
   }
 

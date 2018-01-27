@@ -5,8 +5,6 @@ import './api';
 import DjangoCSRFToken from 'django-react-csrftoken'
 import { LANG } from './lang';
 import Loader from './Loader';
-import NotificationBox from './NotificationBox'
-
 
 export default class LoginSignupForm extends Component {
   constructor(props) {
@@ -37,7 +35,7 @@ export default class LoginSignupForm extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(this.state.message != undefined && this.state.message != prevState.message) {
+    if(this.state.message !== undefined && this.state.message !== prevState.message) {
       this.setState({
         loading: false
       });
@@ -79,7 +77,6 @@ export default class LoginSignupForm extends Component {
 
     var emailField;
     var formButton;
-    var loadingButton;
     if (this.props.view === 'signup') {
       emailField = (
         <input 
@@ -100,14 +97,6 @@ export default class LoginSignupForm extends Component {
           handleClick={() => document.getElementById('form-submit').click()} />
       );
 
-      loadingButton = (
-        <Button
-          id="button-sign-up"
-          text={LANG[this.props.lang].buttons.loadingSignUp}
-          buttonType="primary"
-          style={buttonStyle} />
-      );
-
     } else {
 
       formButton = (
@@ -117,10 +106,6 @@ export default class LoginSignupForm extends Component {
           buttonType="primary"
           style={buttonStyle}
           handleClick={() => document.getElementById('form-submit').click()} />
-      );
-
-      loadingButton = (
-        <Loader loaderClass={'loginsignup'}/>
       );
     }
     

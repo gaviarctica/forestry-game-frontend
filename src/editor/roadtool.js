@@ -70,8 +70,6 @@ export default class RoadTool extends ITool {
 
       var angle = Math.atan2(epos.y - spos.y, epos.x - spos.x) + Math.PI/2;
       var currentPos = {x: spos.x, y: spos.y};
-      var roadSprite;
-      var distanceToEnd = 0;
       var height = distance(spos, epos);
       this.tilingRoad.rotation = angle + Math.PI;
       this.tilingRoad.x = currentPos.x;
@@ -96,17 +94,6 @@ export default class RoadTool extends ITool {
         this.roadStartSprite.position.set(this.startPoint.x, this.startPoint.y);
         this.draw_container.addChild(this.tilingRoad);
         this.draw_container.addChild(this.roadStartSprite);
-        // this.road_container.addChild(this.tilingRoad);
-        // this.road_container.addChild(this.roadStartSprite);
-        // this.stage.addChild(this.tilingRoad);
-        // this.stage.addChild(this.roadStartSprite);
-        // .. make the 'pointer' to draw on top
-        // doing swap manually
-        // var index1 = this.road_container.children.indexOf(this.roadStartSprite);
-        // var index2 = this.stage.children.indexOf(this.pointerContainer);
-        // this.road_container.children[index1] = this.pointerContainer;
-        // this.stage.children[index2] = this.roadStartSprite;
-        // this.stage.swapChildren(this.roadStartSprite, this.pointerContainer);
 
         if (this.snappedToNodeId >= 0) {
           this.previousNodeId = this.snappedToNodeId;
@@ -120,10 +107,6 @@ export default class RoadTool extends ITool {
         if (distance(this.startPoint, this.endPoint) < (this.snappingDistance + 1)) {
           this.state = ToolState.Idle;
           this.draw_container.removeChildren();
-          // this.road_container.removeChild(this.tilingRoad);
-          // this.road_container.removeChild(this.roadStartSprite);
-          // this.stage.removeChild(this.tilingRoad);
-          // this.stage.removeChild(this.roadStartSprite);
           this.previousNodeId = -1;
         } else {
           this.addRouteSegment(this.previousNodeId, this.snappedToNodeId);
@@ -133,6 +116,9 @@ export default class RoadTool extends ITool {
 
         this.level.refreshRoutes();
 
+        break;
+
+      default:
         break;
     }
   }

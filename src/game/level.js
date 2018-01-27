@@ -3,8 +3,7 @@ import RouteNode from './routenode';
 import RouteSegment from './routesegment';
 import Log from './log';
 import LogDeposit from './logdeposit';
-import { endpointByStartPointDistanceAndAngle, distance, distanceToSegment } from './helpers';
-import {LogType} from './logtypes';
+import { distance, distanceToSegment } from './helpers';
 import {Key} from './controls';
 import Settings from './settings';
 
@@ -160,7 +159,7 @@ export default class Level {
     }
 
     // Draw nodes
-    for(let [id, routeNode] of this.routeNodes) {
+    for(let [routeNode] of this.routeNodes) {
       var intersectionSprite = new PIXI.Sprite.fromImage('./static/road_intersection.png');
       intersectionSprite.anchor.set(this.settings.INTERSECTION_SPRITE_ANCHOR, this.settings.INTERSECTION_SPRITE_ANCHOR);
       intersectionSprite.scale.set(this.settings.INTERSECTION_SPRITE_SCALE);
@@ -208,7 +207,7 @@ export default class Level {
   // used by editor
   removeRouteNode(removeId) {
     // remove connections if exists
-    for (let [id, node] of this.routeNodes) {
+    for (let [node] of this.routeNodes) {
       var index = node.to.indexOf(removeId);
       if (index > -1) {
         node.to.splice(index, 1);
@@ -258,7 +257,7 @@ export default class Level {
 
   generateRouteSegments() {
 
-    for (let [id, startNode] of this.routeNodes) {
+    for (let [startNode] of this.routeNodes) {
       var endNode = null;
       var segment = null;
 
@@ -345,7 +344,7 @@ export default class Level {
   hasCustomStartingPosition() {
     // if starting position has changed from default inited value,
     // then assume we have custom starting position
-    return this.startingPosition.x != -1;
+    return this.startingPosition.x !== -1;
   }
 
   getStaringInterpolation() {
@@ -417,7 +416,7 @@ export default class Level {
     // doesn't break. (Shouldn't be possible break it though.
     // As it reconstructs the state after every toggle)
     if(type !== false) {
-      this.updateLogVisibilityArray(parseInt(type));
+      this.updateLogVisibilityArray(parseInt(type, 10));
       this.updateLogs();
     }
 
@@ -458,7 +457,7 @@ export default class Level {
       for(let logvis of this.log_toggle_visibility) {
         uiUpdate[[prop]] = true;
 
-        if(logvis === parseInt(prop)) {
+        if(logvis === parseInt(prop, 10)) {
           uiUpdate[[prop]] = false;
           break;
         }
@@ -495,14 +494,6 @@ export default class Level {
       deposits.push({x: pos.x, y: pos.y, rot: deposit.getRotation(), type: deposit.types[0]});
     }
 
-    var startingSegmentIdx = 0;
-    for (var i = 0; i < this.routeSegments.length; ++i) {
-      if (this.routeSegments[i] === this.startingSegment) {
-        startingSegmentIdx = i;
-        break;
-      }
-    }
-
     var weather = {}
     if (fog.enabled) {
       weather.type = 'fog';
@@ -532,7 +523,7 @@ export default class Level {
     }
 
     var anomalies = false;
-    for (let [id, node] of this.routeNodes) {
+    for (let [node] of this.routeNodes) {
       if(node.anomalies && node.anomalies.length === 1) {
         anomalies = true;
       }

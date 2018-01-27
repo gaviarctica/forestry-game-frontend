@@ -125,13 +125,15 @@ export default class Editor extends Component {
     let hasMax = e.target.max !== "";
     let hasMin = e.target.min !== "";
     let hasBoth = hasMax && hasMin;
-    if (hasBoth && Number(value) >= Number(e.target.min) && Number(value) <= Number(e.target.max) ||
-        !hasBoth && hasMin && Number(value) >= Number(e.target.min) ||
-        !hasBoth && hasMax && Number(value) <= Number(e.target.max) ||
-        !hasMin && !hasMax) {
-      var illegal = false;
+    let v1 = hasBoth && Number(value) >= Number(e.target.min) && Number(value) <= Number(e.target.max);
+    let v2 = !hasBoth && hasMin && Number(value) >= Number(e.target.min);
+    let v3 = !hasBoth && hasMax && Number(value) <= Number(e.target.max);
+    let v4 = !hasMin && !hasMax;
+    var illegal;
+    if (v1 || v2 || v3 || v4) {
+      illegal = false;
     } else {
-      var illegal = true;
+      illegal = true;
     }
     this.setState({
       [name]: value,
@@ -161,8 +163,7 @@ export default class Editor extends Component {
   handleButtonClick(e) {
     var clicked = e.target.getAttribute('id');
     var clickedClass = e.target.getAttribute('class');
-    var self = this;
-
+    
     if (clicked === 'button-quit-editor') {
       this.editorCanvas.destroy();
       this.props.switchView('mainmenu');
@@ -342,7 +343,7 @@ export default class Editor extends Component {
         self.postSaveOperations(mapData);
       });
     } else {
-      throw 'No loaded map ID known';
+      throw new Error('No loaded map ID known');
     }
   }
 

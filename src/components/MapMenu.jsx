@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from './Button';
 import './MapMenu.css';
-import { TranslateRight, TranslateLeft, FadeInFadeOut } from './animation';
+import { FadeInFadeOut } from './animation';
 import './animation.css';
 import Loader from './Loader';
 import { API } from './api';
@@ -44,7 +44,6 @@ export default class MapMenu extends Component {
 
   handleButtonClick(e) {
     var clicked = e.target.getAttribute('id');
-    var self = this;
 
     if (clicked === 'button-start-game') {
       this.props.switchView('gameplayview', {
@@ -249,7 +248,7 @@ export default class MapMenu extends Component {
           pileTypes.push(
             <div className="section-list-item" key={key}>
               <div className="section-list-item-name">
-                {LANG[this.props.lang].logs['type' + (parseInt(key)+1)]}
+                {LANG[this.props.lang].logs['type' + (parseInt(key, 10)+1)]}
               </div>
               <div className={'section-list-item-value value-type-' + key}>
                 {selMap.mapinfo.pileTypes[key]}

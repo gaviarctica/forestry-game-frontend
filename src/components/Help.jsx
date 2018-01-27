@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import Button from './Button';
 import './Help.css';
 
 export default class Help extends Component {
-	constructor(props) {
-	    super(props);
-    }
 
 	render() {
 		return (

@@ -68,7 +68,7 @@ const Rows = (props) => {
 				    	<Button
 				    		text={LANG[props.lang].buttons.report}
 				    		id={props.data[i].id}
-				    		style={parseInt(props.openedReport) === props.data[i].id ? selectedButtonStyle : tableButtonStyle}
+				    		style={parseInt(props.openedReport, 10) === props.data[i].id ? selectedButtonStyle : tableButtonStyle}
 				    		handleClick={props.handleButtonClick}/>
 				    </td>
 				  </tr>);

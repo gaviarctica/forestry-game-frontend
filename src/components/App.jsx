@@ -11,7 +11,6 @@ import NotificationBox from './NotificationBox'
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.timer;
     this.state = {
       currentView: '',
       viewData: undefined,
@@ -214,19 +213,12 @@ export default class App extends Component {
         );
         break;
       case 'editorview':
-        var username = "";
-        if (this.state.loggedIn) {
-          username = this.state.username;
-        } else {
-          var rndNumber = Math.floor(Math.random() * 999999) + 1;
-          username = 'guest' + rndNumber.toString();
-        }
         view = (
           <Editor 
             switchView={this.switchView.bind(this)}
             viewData={this.state.viewData}
             loggedIn={this.state.loggedIn}
-            username={username}
+            username={this.state.username}
             lang={this.state.lang}
             notify={this.notify.bind(this)} />
         );

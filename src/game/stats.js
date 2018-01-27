@@ -1,6 +1,5 @@
 import {distance, hasMoved} from './helpers';
 import Settings from './settings';
-import Controls from './controls';
 import {Key} from './controls';
 
 export default class Stats {
@@ -117,7 +116,7 @@ export default class Stats {
       // Add 3 seconds to time if truck starts moving
       let movedOld = this.moved;
       this.moved = true;
-      if(this.moved != movedOld) {
+      if(this.moved !== movedOld) {
         this.startTime = this.time;
         if( this.stopTime === 0 || Math.abs(this.startTime - this.stopTime) >= 5 ) {
           this.report.time += this.settings.FULL_START_STOP_TIME;
@@ -156,7 +155,7 @@ export default class Stats {
       // Add 3 seconds to time if truck stops moving
       let movedOld = this.moved;
       this.moved = false;
-      if(this.moved != movedOld) {
+      if(this.moved !== movedOld) {
         this.stopTime = this.time;
         if( Math.abs(this.startTime - this.stopTime) >= 5 ) {
           this.report.time += this.settings.FULL_START_STOP_TIME;

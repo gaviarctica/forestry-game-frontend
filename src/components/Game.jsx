@@ -150,7 +150,7 @@ export default class Game extends Component {
           ) : ('')
         }
         <div id="canvas-game"></div>
-        {this.state.gameEnd == true &&
+        {this.state.gameEnd === true &&
         <FadeInFadeOut in={this.state.gameEndViewAnimation}>
         <div id="game-end">
           <div id="game-end-container">

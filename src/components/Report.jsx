@@ -36,7 +36,7 @@ export default function Report(props) {
   }
 
   return (
-    <div id={props.type == "endgame_report" ? "endgame-report" : "report"}>
+    <div id={props.type === "endgame_report" ? "endgame-report" : "report"}>
       {dismiss}
       <h1>{LANG[props.lang].report.report}</h1> 
       <div id="report-header">
@@ -94,7 +94,7 @@ export default function Report(props) {
           <h3>{LANG[props.lang].report.logsCollected}:</h3>
           <ul>
             {Object.keys(props.logs).map(function(key) {
-              return <li key={key}>{LANG[props.lang].logs['type'+(parseInt(key)+1)]}: <span>{props.logs[key]}</span></li>
+              return <li key={key}>{LANG[props.lang].logs['type'+(parseInt(key,10)+1)]}: <span>{props.logs[key]}</span></li>
             })}
           </ul>
           <hr/>

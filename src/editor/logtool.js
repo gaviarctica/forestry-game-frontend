@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import {length, distance, distanceToSegment} from '../game/helpers';
 import PlaceTool from './placetool';
 
 export default class LogTool extends PlaceTool {
