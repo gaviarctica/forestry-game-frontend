@@ -84,7 +84,7 @@ export default class Game extends Component {
       if (err) throw err;
 
       if (responseJson.length > 0) {
-        self.gameCanvas = new GameCanvas(responseJson[0].mapdata, self.updateUI.bind(self));
+        self.gameCanvas = new GameCanvas(responseJson[0].mapdata, self.updateUI.bind(self), self.props.lowQuality);
         self.setState({
           mapdata: responseJson[0].mapdata,
           mapname: responseJson[0].name,

@@ -4,12 +4,13 @@ import LangSelection from './LangSelection';
 import LoginSignupForm from './LoginSignupForm';
 import MapMenu from './MapMenu';
 import Profile from './Profile';
+import Help from './Help'
 import './MainMenu.css';
 import { FadeInFadeOut, TranslateDown, TranslateRight, TranslateLeft } from './animation';
 import './animation.css';
 import { API } from './api';
 import { LANG } from './lang';
-import { ic_videogame_asset, ic_account_box, ic_extension, ic_lightbulb_outline, ic_exit_to_app, ic_person_add } from 'react-icons-kit/md';
+import { ic_videogame_asset, ic_account_box, ic_extension, ic_lightbulb_outline, ic_exit_to_app, ic_person_add, ic_settings } from 'react-icons-kit/md';
 
 export default class MainMenu extends Component {
   constructor(props) {
@@ -21,7 +22,8 @@ export default class MainMenu extends Component {
       formMsg: undefined,
       activeTab: 'play',
       activeView: 'play',
-      profilePage: false
+      profilePage: false,
+      settingsOpen: false
     }
   }
 
@@ -49,13 +51,23 @@ export default class MainMenu extends Component {
       this.switchTab('profile');
     } else if (clicked === 'button-login' && this.state.activeTab !== 'login') {
       this.switchTab('login');
+    } else if (clicked === 'button-help' && this.state.activeTab !== 'help') {
+      this.switchTab('help');
     } else if (clicked === 'button-signup' && this.state.activeTab !== 'signup') {
       this.switchTab('signup');
     } else if (clicked === 'button-logout') {
       API.logout(function() {
         self.props.setLoggedOut();
       });
-    } 
+    } else if (clicked === 'button-settings') {
+      this.setState(prevState => ({
+        settingsOpen: !prevState.settingsOpen
+      }));
+    } else if (clicked === 'button-quality-low') {
+      this.props.changeGraphicsSetting('low');
+    } else if (clicked === 'button-quality-high') {
+      this.props.changeGraphicsSetting('high');
+    }
   }
 
   switchTab(newTab) {
@@ -133,6 +145,14 @@ export default class MainMenu extends Component {
     }  
   }
 
+  handleCheckboxChange(e) {
+    const name = e.target.name;
+    const checked = e.target.checked;
+    this.setState({
+      [name]: checked
+    });
+  }
+
   render() {
     var view;
     switch (this.state.activeView) {
@@ -151,6 +171,13 @@ export default class MainMenu extends Component {
           <Profile
             username={this.props.username}
             email={this.props.email}
+            lang={this.props.lang} />
+        );
+        break;
+
+      case 'help':
+        view = (
+          <Help
             lang={this.props.lang} />
         );
         break;
@@ -201,11 +228,11 @@ export default class MainMenu extends Component {
                    icon={ic_extension}
                    buttonType={this.state.activeTab === 'editor' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
-      tutorial : <Button
-                   id="button-tutorial"
-                   text={LANG[this.props.lang].navbar.tutorial}
+      help     : <Button
+                   id="button-help"
+                   text={LANG[this.props.lang].navbar.help}
                    icon={ic_lightbulb_outline}
-                   buttonType={this.state.activeTab === 'tutorial' ? 'navbar-tab-active' : 'navbar-tab'}
+                   buttonType={this.state.activeTab === 'help' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
       logout   : <Button
                    id="button-logout"
@@ -224,6 +251,12 @@ export default class MainMenu extends Component {
                    text={LANG[this.props.lang].navbar.signUp}
                    icon={ic_person_add}
                    buttonType={this.state.activeTab === 'signup' ? 'navbar-tab-active' : 'navbar-tab'}
+                   handleClick={this.handleButtonClick.bind(this)} />,
+      settings : <Button
+                   id="button-settings"
+                   text={LANG[this.props.lang].navbar.settings}
+                   icon={ic_settings}
+                   buttonType={this.state.settingsOpen ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />
     }
 
@@ -241,24 +274,49 @@ export default class MainMenu extends Component {
             </TranslateRight>          
             <TranslateLeft in={this.state.appearAnimation}>
             <div id="navbar-right">
-              {tabs.tutorial}
+              {tabs.help}
               {this.props.loggedIn ? tabs.logout : ''}
               {!this.props.loggedIn ? tabs.login : ''}
               {!this.props.loggedIn ? tabs.signup : ''}
-              <LangSelection
-                lang={this.props.lang}
-                changeLanguage={this.props.changeLanguage} />
+              {tabs.settings}
             </div>
             </TranslateLeft>
         </div>
 
-          <FadeInFadeOut in={this.state.appearAnimation}>
-            <FadeInFadeOut in={this.state.tabSwitchAnimation}>
-              <div id="active-view-area">
-                {view}
-              </div>
-            </FadeInFadeOut>
+        {this.state.settingsOpen ?
+          <div
+            id="settings-menu" >
+            <div className="settings-header">
+              {LANG[this.props.lang].mainMenu.settings.language}
+            </div>
+            <LangSelection
+                  lang={this.props.lang}
+                  changeLanguage={this.props.changeLanguage} />
+            <div className="settings-header">
+              {LANG[this.props.lang].mainMenu.settings.graphics}
+            </div>
+            <div id="settings-graphics">
+              <Button
+                id="button-quality-low"
+                buttonType={this.props.useLowQualityGraphics ? 'graphics-button-selected' : 'graphics-button'}
+                text={LANG[this.props.lang].mainMenu.settings.low}
+                handleClick={this.handleButtonClick.bind(this)} />
+              <Button
+                id="button-quality-high"
+                buttonType={!this.props.useLowQualityGraphics ? 'graphics-button-selected' : 'graphics-button'}
+                text={LANG[this.props.lang].mainMenu.settings.high}
+                handleClick={this.handleButtonClick.bind(this)} />
+            </div>
+          </div>
+        : ''}
+
+        <FadeInFadeOut in={this.state.appearAnimation}>
+          <FadeInFadeOut in={this.state.tabSwitchAnimation}>
+            <div id="active-view-area">
+              {view}
+            </div>
           </FadeInFadeOut>
+        </FadeInFadeOut>
 
       </div>
     );

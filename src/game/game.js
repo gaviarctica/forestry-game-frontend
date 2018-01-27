@@ -8,21 +8,25 @@ import {Key} from './controls';
 import {LogType} from './logtypes';
 import Controls from './controls';
 import Weather from './weather';
-import {secondsToDateFormat} from './helpers';
+import {secondsToDateFormat,calculateMinMax} from './helpers';
 
 export default class GameCanvas {
-  constructor(mapData, updateUI) {
-    var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x438b38, antialias: true});
+  constructor(mapData, updateUI, useLowQuality) {
+    var antialias = useLowQuality ? false : true;
+    var game = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: 0x438b38, antialias: antialias});
     this.game = game;
 
     this.settings = new Settings();
 
     this.mapData = mapData;
-    this.forest = new Forest(this.game.stage, mapData);
+    this.min_max = calculateMinMax(mapData);
+    this.forest = new Forest(this.game.stage, mapData, this.min_max);
     this.game.stage.addChild(this.forest.getGroundContainer());
     this.game.stage.addChild(this.forest.getTreeContainer());
     this.forest.buildGround();
-    this.forest.buildTrees();
+    if (!useLowQuality) {
+      this.forest.buildTrees();
+    }    
 
     document.getElementById('canvas-game').appendChild(game.view);
     game.view.addEventListener('contextmenu', (e) => {
@@ -87,7 +91,7 @@ export default class GameCanvas {
 
     this.game.stage.addChild(this.truck.getContainer());
 
-    this.weather = new Weather(this.game.stage, this.forest, this.map.getStage(), this.truck, game, this.mapData.weather);
+    this.weather = new Weather(this.game.stage, this.forest, this.map.getStage(), this.truck, game, this.mapData.weather,this.min_max);
 
     this.setupCameraControl(this.truck);
     this.update = this.update.bind(this);
@@ -115,7 +119,16 @@ export default class GameCanvas {
 
     var self = this;
 
-    this.game.stage.hitArea = new PIXI.Rectangle(-5000, -5000, 10000, 10000);
+    var map_size = {
+      width: this.min_max.xMax-this.min_max.xMin,
+      height: this.min_max.yMax-this.min_max.yMin
+    };
+
+    this.game.stage.hitArea = new PIXI.Rectangle(
+      -(map_size.width + this.settings.map.HITAREA_PADDING[0]),
+      -(map_size.height + this.settings.map.HITAREA_PADDING[1]),
+      map_size.width + 2*this.settings.map.HITAREA_PADDING[0],
+      map_size.height + 2*this.settings.map.HITAREA_PADDING[1]);
 
     this.game.stage.interactive = true;
     this.game.stage.pointerdown = function(e) {
@@ -125,7 +138,8 @@ export default class GameCanvas {
         mouseInput.isRightDown = true;
       }
 
-      if(Math.abs(loc_pos.x) > self.settings.map.MAX_CAMERA_DISTANCE[0] || Math.abs(loc_pos.y) > self.settings.map.MAX_CAMERA_DISTANCE[1]) {
+      if(Math.abs(loc_pos.x) > (map_size.width/2 + self.settings.map.MAX_CAMERA_DISTANCE[0]) ||
+        Math.abs(loc_pos.y) > (map_size.height/2 + self.settings.map.MAX_CAMERA_DISTANCE[1])) {
         mouseInput.isRightDown = false;
         mouseInput.forceBack = true;
         return;
@@ -158,7 +172,8 @@ export default class GameCanvas {
 
       if(mouseInput.forceBack === true) {
         var loc_pos = e.data.getLocalPosition(this);
-        if(Math.abs(loc_pos.x) < self.settings.map.MAX_CAMERA_DISTANCE[0] && Math.abs(loc_pos.y) < self.settings.map.MAX_CAMERA_DISTANCE[1]) {
+        if(Math.abs(loc_pos.x) < (map_size.width/2 + self.settings.map.MAX_CAMERA_DISTANCE[0]) &&
+          Math.abs(loc_pos.y) < (map_size.height/2 + self.settings.map.MAX_CAMERA_DISTANCE[1])) {
           mouseInput.forceBack = false;
         }
 
