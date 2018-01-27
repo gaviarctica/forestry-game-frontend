@@ -209,7 +209,7 @@ export default class Truck {
       if (this.currentSegment.getPreviousNode() !== null) {
         this.pointDelta = 0.9999;
 
-        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite,1,this.sprite.rotation);
+        var selected_segment_data = this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite,1);
         this.routeIndex = selected_segment_data['index'];
 
         var temp_segment = selected_segment_data['seg'];
@@ -238,7 +238,7 @@ export default class Truck {
       if (this.currentSegment.getNextNode() !== null) {
         this.pointDelta = 0.0001;
 
-        selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1, this.sprite.rotation);
+        selected_segment_data = this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, 1);
         this.routeIndex = selected_segment_data['index'];
 
         var temp_segment_2 = selected_segment_data['seg'];
