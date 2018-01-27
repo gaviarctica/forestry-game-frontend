@@ -48,7 +48,7 @@
 	display: none;
 }
 
-p {
+.Report p {
 	text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: hidden;
