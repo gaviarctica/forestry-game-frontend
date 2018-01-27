@@ -1,0 +1,35 @@
+.Help {
+	margin-left: auto;
+	margin-right: auto;
+	background-color: var(--jd-gray);
+	color: rgba(10, 10, 10, 0.9);
+	box-shadow: var(--menu-shadow);
+	display: inline-block;
+	min-width: 700px;
+	max-width: 700px;
+	min-height: 250px;
+	max-height: 100%;
+	overflow-y: auto;
+}
+
+.help-content, .help-license {
+	padding: 15px;
+	text-align: center;
+}
+
+.Help p {
+	text-align: left;
+}
+
+#help-content-gameplay, #help-content-editor {
+	font-size: 1em;	
+}
+
+#help-content-gameplay-title, #help-content-editor-title, #help-license-title {
+	font-size: 2em;
+}
+
+.Help .h2 {
+	font-size: 1.2em;
+	float: left;
+}

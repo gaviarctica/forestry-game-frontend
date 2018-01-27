@@ -4,6 +4,7 @@ import LangSelection from './LangSelection';
 import LoginSignupForm from './LoginSignupForm';
 import MapMenu from './MapMenu';
 import Profile from './Profile';
+import Help from './Help'
 import './MainMenu.css';
 import { FadeInFadeOut, TranslateDown, TranslateRight, TranslateLeft } from './animation';
 import './animation.css';
@@ -50,6 +51,8 @@ export default class MainMenu extends Component {
       this.switchTab('profile');
     } else if (clicked === 'button-login' && this.state.activeTab !== 'login') {
       this.switchTab('login');
+    } else if (clicked === 'button-help' && this.state.activeTab !== 'help') {
+      this.switchTab('help');
     } else if (clicked === 'button-signup' && this.state.activeTab !== 'signup') {
       this.switchTab('signup');
     } else if (clicked === 'button-logout') {
@@ -172,6 +175,13 @@ export default class MainMenu extends Component {
         );
         break;
 
+      case 'help':
+        view = (
+          <Help
+            lang={this.props.lang} />
+        );
+        break;
+
       case 'login':
         view = (
           <LoginSignupForm
@@ -218,11 +228,11 @@ export default class MainMenu extends Component {
                    icon={ic_extension}
                    buttonType={this.state.activeTab === 'editor' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
-      tutorial : <Button
-                   id="button-tutorial"
-                   text={LANG[this.props.lang].navbar.tutorial}
+      help     : <Button
+                   id="button-help"
+                   text={LANG[this.props.lang].navbar.help}
                    icon={ic_lightbulb_outline}
-                   buttonType={this.state.activeTab === 'tutorial' ? 'navbar-tab-active' : 'navbar-tab'}
+                   buttonType={this.state.activeTab === 'help' ? 'navbar-tab-active' : 'navbar-tab'}
                    handleClick={this.handleButtonClick.bind(this)} />,
       logout   : <Button
                    id="button-logout"
@@ -264,7 +274,7 @@ export default class MainMenu extends Component {
             </TranslateRight>          
             <TranslateLeft in={this.state.appearAnimation}>
             <div id="navbar-right">
-              {tabs.tutorial}
+              {tabs.help}
               {this.props.loggedIn ? tabs.logout : ''}
               {!this.props.loggedIn ? tabs.login : ''}
               {!this.props.loggedIn ? tabs.signup : ''}
