@@ -34,6 +34,14 @@ export default function Button(props) {
       }
       break;
 
+    case 'graphics-button':
+    case 'graphics-button-selected':
+      buttonClass = buttonClass + ' graphics-button';
+      if (props.buttonType === 'graphics-button-selected') {
+        buttonClass = buttonClass + ' primary';
+      }
+      break;
+
     case 'close-or-delete':
       buttonClass = buttonClass + ' delete-button';
       break;

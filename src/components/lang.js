@@ -9,9 +9,16 @@ export const LANG = {
       tutorial: "Tutorial",
       logOut: "Log out",
       logIn: "Log in",
-      signUp: "Sign up"
+      signUp: "Sign up",
+      settings: "Settings"
     },
     mainMenu: {
+      settings: {
+        language: "Language",
+        graphics: "Graphics",
+        high: "High",
+        low: "Low"
+      },
       playTab: {
         pileTypesAndAmounts: "Pile Types and Amounts",
         routeLength: "Route Length",
@@ -184,9 +191,16 @@ export const LANG = {
       tutorial: "Ohje",
       logOut: "Kirjaudu ulos",
       logIn: "Kirjaudu sisään",
-      signUp: "Rekisteröidy"
+      signUp: "Rekisteröidy",
+      settings: "Asetukset"
     },
     mainMenu: {
+      settings: {
+        language: "Kieli",
+        graphics: "Grafiikka",
+        high: "Korkea",
+        low: "Matala"
+      },
       playTab: {
         pileTypesAndAmounts: "Puutyypit ja lukumäärät",
         routeLength: "Tien pituus",

@@ -1,7 +1,7 @@
 .LangSelection {
   display: inline-block;
   padding-left: 20px;
-  height: var(--navbar-height);
+  height: 20px;
 }
 
 .LangSelection:hover {
@@ -13,8 +13,8 @@
 }
 
 .lang-sel-flag {
-  width: 50px;
-  height: var(--navbar-height);
+  width: 30px;
+  height: 20px;
   box-shadow: var(--menu-shadow);
   background-position: center;
   background-size: cover;
@@ -22,11 +22,10 @@
 
 .lang-sel-text {
   color: var(--jd-gray);
-  height: var(--navbar-height);
-  line-height: var(--navbar-height);
+  height: 20px;
+  line-height: 20px;
   vertical-align: top;
   padding-left: 5px;
-  font-size: var(--navbar-font-size);
-  text-shadow: var(--menu-shadow);
+  font-size: 1.1em;
   width: 4em;
 }
