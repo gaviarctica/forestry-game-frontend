@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {normalize, isLeft, distance, length} from '../game/helpers';
+import {normalize, isLeft, length} from '../game/helpers';
 import PlaceTool from './placetool';
 
 export default class TruckTool extends PlaceTool {

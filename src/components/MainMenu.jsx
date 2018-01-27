@@ -6,7 +6,7 @@ import MapMenu from './MapMenu';
 import Profile from './Profile';
 import Help from './Help'
 import './MainMenu.css';
-import { FadeInFadeOut, TranslateDown, TranslateRight, TranslateLeft } from './animation';
+import { FadeInFadeOut, TranslateRight, TranslateLeft } from './animation';
 import './animation.css';
 import { API } from './api';
 import { LANG } from './lang';

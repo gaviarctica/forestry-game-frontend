@@ -61,9 +61,9 @@ export default function Button(props) {
       style={props.style}
       onClick={props.inactive ? '' : props.handleClick} >
 
-    {props.icon ? <Icon size={'1.3em'} icon={props.icon} className="navbar-icon"/> : ''}
+    {props.icon ? <Icon size={24} icon={props.icon} className="navbar-icon"/> : ''}
 
-    {props.buttonType == 'close-or-delete' ? 'x' : props.text}
+    {props.buttonType === 'close-or-delete' ? 'x' : props.text}
     
     </div>
   );

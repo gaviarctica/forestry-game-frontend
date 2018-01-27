@@ -254,13 +254,11 @@ html {
 }
 
 #game-end-menu {
-  margin-right: 200px;
+  margin-right: 100px;
   display: inline-block;
   color: #eee;
-}
-
-#game-end-menu > * {
-  padding: 10px;
+  width: 300px;
+  box-sizing: border-box;
 }
 
 @media only screen and (max-height: 705px) {

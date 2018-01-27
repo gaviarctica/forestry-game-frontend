@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {lerp, distance, distanceToSegment} from './helpers';
+import {distance, distanceToSegment} from './helpers';
 import Settings from './settings';
 
 export default class Forest {
@@ -37,11 +37,10 @@ export default class Forest {
 			// this.updateMinMax(this.mapdata.logdeposits[i]);
 
 		}
-		for (var i = 0; i < this.mapdata.logs.length; i++) {
+		for (i = 0; i < this.mapdata.logs.length; i++) {
 			this.obstacles.push({type:'log', x:this.mapdata.logs[i].x, y:this.mapdata.logs[i].y});
-			// this.updateMinMax(this.mapdata.logs[i]);
 		}
-		for (var i = 0; i < this.mapdata.routes.length; i++) {
+		for (i = 0; i < this.mapdata.routes.length; i++) {
 			for (var j = 0; j < this.mapdata.routes[i].to.length; j++) {
 				var start = {x:this.mapdata.routes[i].x,y:this.mapdata.routes[i].y};
 				var end = {

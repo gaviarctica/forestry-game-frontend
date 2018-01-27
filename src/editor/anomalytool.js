@@ -45,11 +45,11 @@ export default class AnomalyTool extends ITool {
     this.dying_road_pointer_sprite = null;
     this.one_way_road_pointer_sprite = null;
 
-    if(this.type == AnomalyType[0].type) {
+    if(this.type === AnomalyType[0].type) {
       this.current_pointer_sprite = this.getWeightLimitPointerSprite();
-    } else if( this.type == AnomalyType[1].type ) {
+    } else if( this.type === AnomalyType[1].type ) {
       this.current_pointer_sprite = this.getDyingRoadPointerSprite();
-    } else if( this.type == AnomalyType[2].type ) {
+    } else if( this.type === AnomalyType[2].type ) {
       this.current_pointer_sprite = this.getOneWayRoadPointerSprite();
     }
 
@@ -169,24 +169,28 @@ export default class AnomalyTool extends ITool {
 
   mouseUp(mouseInput) {
     // mouse moved aka moved the viewport so don't do the action
+
+    var node_data;
+    var anomaly_row;
+
     if (length(mouseInput.absDeltaDuringMouseDown) > 20)
       return;
 
     if(this.snappedToSegment !== null) {
       // weight limit
       if(this.type === AnomalyType[0].type) {
-        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[0].name);
+        node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[0].name);
 
         this.snappedToSegment.weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit;
 
       } else if(this.type === AnomalyType[1].type) {
-        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[1].name);
+        node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[1].name);
 
         this.snappedToSegment.dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road;
       } else if(this.type === AnomalyType[2].type) {
-        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[2].name);
+        node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[2].name);
         if(node_data.node === this.snappedToSegment.startNode) {
-          var anomaly_row = { to:node_data.node.getId(),[AnomalyType[2].name]:1 };
+          anomaly_row = { to:node_data.node.getId(),[AnomalyType[2].name]:1 };
           this.snappedToSegment.endNode.anomalies.push(anomaly_row);
           if(node_data.node.anomalies.length > 1) {
             node_data.node.anomalies.splice(node_data.anomaly_index, 1);
@@ -195,7 +199,7 @@ export default class AnomalyTool extends ITool {
           }
         }
         else if (node_data.node === this.snappedToSegment.endNode) {
-          var anomaly_row = { to:this.snappedToSegment.endNode.getId(),[AnomalyType[2].name]:1 };
+          anomaly_row = { to:this.snappedToSegment.endNode.getId(),[AnomalyType[2].name]:1 };
           this.snappedToSegment.startNode.anomalies.push(anomaly_row);
 
           if(node_data.node.anomalies.length > 1) {
@@ -226,10 +230,13 @@ export default class AnomalyTool extends ITool {
 
   mouseWheelEvent(event) {
 
+    var node_data;
+    var absval;
+
     if(this.snappedToSegment) {
       // weight limit update
       if(this.type === AnomalyType[0].type) {
-        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[0].name);
+        node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[0].name);
 
           if(!node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] &&
           node_data.node.anomalies[node_data.anomaly_index][AnomalyType[0].name] !== 0) return false;
@@ -238,7 +245,7 @@ export default class AnomalyTool extends ITool {
           node_data.node.anomalies[node_data.anomaly_index].weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit + this.log_settings.Weight;
           this.snappedToSegment.weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit;
         } else if(node_data.node.anomalies[node_data.anomaly_index].weight_limit > 0){
-          var absval = node_data.node.anomalies[node_data.anomaly_index].weight_limit - this.log_settings.Weight;
+          absval = node_data.node.anomalies[node_data.anomaly_index].weight_limit - this.log_settings.Weight;
           absval = absval < 0 ? 0 : absval;
           node_data.node.anomalies[node_data.anomaly_index].weight_limit = absval;
           this.snappedToSegment.weight_limit = node_data.node.anomalies[node_data.anomaly_index].weight_limit;
@@ -247,7 +254,7 @@ export default class AnomalyTool extends ITool {
       }
       // dead road update
       else if(this.type === AnomalyType[1].type) {
-        var node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[1].name);
+        node_data = this.updateAnomalyInfo(this.snappedToSegment, AnomalyType[1].name);
 
         if(!node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] &&
         node_data.node.anomalies[node_data.anomaly_index][AnomalyType[1].name] !== 0) return false;
@@ -256,7 +263,7 @@ export default class AnomalyTool extends ITool {
           node_data.node.anomalies[node_data.anomaly_index].dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road + 1;
           this.snappedToSegment.dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road;
         } else if(node_data.node.anomalies[node_data.anomaly_index].dying_road > 0){
-          var absval = node_data.node.anomalies[node_data.anomaly_index].dying_road - 1;
+          absval = node_data.node.anomalies[node_data.anomaly_index].dying_road - 1;
           absval = absval < 0 ? 0 : absval;
           node_data.node.anomalies[node_data.anomaly_index].dying_road = absval;
           this.snappedToSegment.dying_road = node_data.node.anomalies[node_data.anomaly_index].dying_road;
@@ -298,7 +305,7 @@ export default class AnomalyTool extends ITool {
       var enode = nodeHasAnomalyTo(self.snappedToSegment.endNode,self.snappedToSegment.startNode);
       var node_data = snode.node ? snode : enode;
       if(node_data.node) {
-        var number = parseInt(event.key);
+        var number = parseInt(event.key, 10);
         if(number || number === 0) {
           // adding number
           if(self.type === AnomalyType[0].type &&

@@ -4,8 +4,6 @@ import Level from './level';
 import Stats from './stats';
 import Forest from './forest';
 import Settings from './settings';
-import {Key} from './controls';
-import {LogType} from './logtypes';
 import Controls from './controls';
 import Weather from './weather';
 import {secondsToDateFormat,calculateMinMax} from './helpers';

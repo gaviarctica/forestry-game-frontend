@@ -1,14 +1,14 @@
-import * as PIXI from 'pixi.js';
 import PlaceTool from './placetool';
 import {createLogDepositGraphics} from '../game/logdeposit';
 
 export default class DepositTool extends PlaceTool {
   constructor(stage, level, type) {
     super(stage, level);
+    var pointerGraphics;
     if (type !== undefined) {
-      var pointerGraphics = createLogDepositGraphics([type]);
+      pointerGraphics = createLogDepositGraphics([type]);
     } else {
-      var pointerGraphics = createLogDepositGraphics();      
+      pointerGraphics = createLogDepositGraphics();      
     }
 
     this.pointerContainer.addChild(pointerGraphics);

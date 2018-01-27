@@ -1,11 +1,10 @@
 import * as PIXI from 'pixi.js';
-import {lerp, distance} from './helpers';
+import {distance} from './helpers';
 import Log from './log';
 import LogDeposit from './logdeposit';
 import LogContainer from './logcontainer';
 import Settings from './settings';
 import {Key} from './controls';
-import Controls from './controls';
 
 export default class Truck {
 
@@ -112,7 +111,7 @@ export default class Truck {
 
   move(timeDelta) {
     var direction = 0;
-
+    var temp_node;
 
     if(this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.W)) {
       // when we start moving we force the camera to center again
@@ -120,7 +119,7 @@ export default class Truck {
 
       // when direction changes
       if(this.getPreviousDirection() === -this.face_direction) {
-        var temp_node = this.face_direction > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode()
+        temp_node = this.face_direction > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode()
         // experimental index suggestion
         this.routeIndex = temp_node.getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
         this.switchPreviousDirection();
@@ -135,7 +134,7 @@ export default class Truck {
 
       // when direction changes
       if(this.getPreviousDirection() === this.face_direction) {
-        var temp_node = this.face_direction < 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode()
+        temp_node = this.face_direction < 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode()
         // experimental index suggestion
         this.routeIndex = temp_node.getSuggestedSegment(this.currentSegment, this.arrowSprite)['index'];
         this.switchPreviousDirection();
@@ -161,9 +160,10 @@ export default class Truck {
       this.doLogAction = false;
     }
 
+    var dir;
     // Selecting route if arrow keys were pressed
     if(this.controls.wasKeyPressed(Key.Left) || this.controls.wasKeyPressed(Key.A)) {
-      var dir =
+      dir =
         (this.sprite.rotation + 2*Math.PI) % (Math.PI) > Math.PI/2 ?
         -1 : 1;
 
@@ -175,7 +175,7 @@ export default class Truck {
         this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir);
       this.routeIndex = seg['index'];
     } else if(this.controls.wasKeyPressed(Key.Right) || this.controls.wasKeyPressed(Key.D)) {
-      var dir =
+      dir =
         (this.sprite.rotation + 2*Math.PI) % (Math.PI) > Math.PI/2 ?
         1 : -1;
 
@@ -215,7 +215,7 @@ export default class Truck {
         var temp_segment = selected_segment_data['seg'];
 
         if(this.currentSegment.startNode !== temp_segment.endNode && this.currentSegment.startNode.getSegments().length > 1) {
-          var temp_node = temp_segment.startNode;
+          temp_node = temp_segment.startNode;
           temp_segment.startNode = temp_segment.endNode;
           temp_segment.endNode = temp_node;
         }

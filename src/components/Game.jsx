@@ -51,30 +51,32 @@ export default class Game extends Component {
         gameEndViewAnimation: true,
         gameEndDate: d.toISOString()
       });
-      API.postReport({
-        distance: this.state.distance,
-        time: Math.round(this.state.rawtime),
-        fuel: this.state.fuel,
-        logs: JSON.stringify(this.parseLogs(this.state.mapdata.logs)),
-        enddate: this.state.gameEndDate,
-        id: this.state.mapID,
-        driving_unloaded_time: DateFormatToSeconds(this.state.driving_unloaded_time),
-        driving_loaded_time: DateFormatToSeconds(this.state.driving_loaded_time),
-        loading_and_unloading: DateFormatToSeconds(this.state.loading_and_unloading),
-        idling: DateFormatToSeconds(this.state.idling),
-        driving_forward: this.state.driving_forward,
-        reverse: this.state.reverse,
-        driving_unloaded_distance: this.state.driving_unloaded_distance,
-        driving_loaded_distance: this.state.driving_loaded_distance,
-        fuel_cost: this.state.fuel_cost,
-        worker_salary: this.state.worker_salary,
-        loads_transported: this.state.loads_transported,
-        logs_deposited: this.state.logs_deposited,
-        total_volume: this.state.total_volume,
-        productivity: this.state.productivity
-      }, function(err) {
-        if (err) throw err;
-      })
+      if (this.props.loggedIn) {
+        API.postReport({
+          distance: this.state.distance,
+          time: Math.round(this.state.rawtime),
+          fuel: this.state.fuel,
+          logs: JSON.stringify(this.parseLogs(this.state.mapdata.logs)),
+          enddate: this.state.gameEndDate,
+          id: this.state.mapID,
+          driving_unloaded_time: DateFormatToSeconds(this.state.driving_unloaded_time),
+          driving_loaded_time: DateFormatToSeconds(this.state.driving_loaded_time),
+          loading_and_unloading: DateFormatToSeconds(this.state.loading_and_unloading),
+          idling: DateFormatToSeconds(this.state.idling),
+          driving_forward: this.state.driving_forward,
+          reverse: this.state.reverse,
+          driving_unloaded_distance: this.state.driving_unloaded_distance,
+          driving_loaded_distance: this.state.driving_loaded_distance,
+          fuel_cost: this.state.fuel_cost,
+          worker_salary: this.state.worker_salary,
+          loads_transported: this.state.loads_transported,
+          logs_deposited: this.state.logs_deposited,
+          total_volume: this.state.total_volume,
+          productivity: this.state.productivity
+        }, function(err) {
+          if (err) throw err;
+        });
+      }
     }
   }
 
@@ -150,7 +152,7 @@ export default class Game extends Component {
           ) : ('')
         }
         <div id="canvas-game"></div>
-        {this.state.gameEnd == true &&
+        {this.state.gameEnd === true &&
         <FadeInFadeOut in={this.state.gameEndViewAnimation}>
         <div id="game-end">
           <div id="game-end-container">

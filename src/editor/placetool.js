@@ -1,6 +1,5 @@
 import ITool from './itool';
-import * as PIXI from 'pixi.js';
-import {length, distance, distanceToSegment} from '../game/helpers';
+import {length, distanceToSegment} from '../game/helpers';
 
 // base class for log, deposit, truck tools
 export default class PlaceTool extends ITool {

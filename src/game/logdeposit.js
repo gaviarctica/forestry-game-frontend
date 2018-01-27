@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import {LogType} from './logtypes'
 import Settings from './settings'
 
 const depositSpriteByType = {
@@ -12,12 +11,13 @@ const depositSpriteByType = {
 }
 
 export function createLogDepositGraphics(types = []) {
-  var depositContainer = new PIXI.Container();
+
+  var depositSprite;
 
   if (types.length > 0) {
-  var depositSprite = PIXI.Sprite.fromImage(depositSpriteByType[types[0]]);
+    depositSprite = PIXI.Sprite.fromImage(depositSpriteByType[types[0]]);
   } else {
-    var depositSprite = PIXI.Sprite.fromImage('/static/deposit_empty.svg');
+    depositSprite = PIXI.Sprite.fromImage('/static/deposit_empty.svg');
   }
   depositSprite.scale.set(0.1);
   depositSprite.anchor.set(0.5);
@@ -98,8 +98,6 @@ export default class LogDeposit {
     this.container.pointerout = function() {
       this.owner.setHighlighted(false);
     }
-
-    var settings = (new Settings()).log_deposit;
 
     var inRangeBackground = new PIXI.Container();
 

@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import {distance} from './helpers';
 import Settings from './settings';
 
 export default class Weather {
@@ -17,7 +16,7 @@ export default class Weather {
     this.settings = new Settings();
 
     // checking fog weather type
-    if(typeof attr != 'undefined' && attr.type === 'fog') {
+    if(typeof attr !== 'undefined' && attr.type === 'fog') {
       this.stage.children = [];
 
       this.visible_distance = attr.visibility;
