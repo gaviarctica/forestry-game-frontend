@@ -10,7 +10,7 @@
 }
 
 #endgame-report {
-	min-width: 300px;
+	min-width: 350px;
 	float: right;
 	height: 90vh;
 	overflow-y: auto;
@@ -28,7 +28,7 @@
 #right-content {
 	display:inline-block;
 	background-color: var(--jd-gray);
-	width: 300px;
+	width: 320px;
 	margin: 20px;
 	vertical-align: top;
 	padding-left: 20px;
