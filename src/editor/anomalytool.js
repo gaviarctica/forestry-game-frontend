@@ -76,7 +76,7 @@ export default class AnomalyTool extends ITool {
 
   getDyingRoadPointerSprite() {
     if(this.dying_road_pointer_sprite === null) {
-      this.dying_road_pointer_sprite = new PIXI.Text( 0 + 'm',this.settings.DYING_ROAD_TEXT_FONT);
+      this.dying_road_pointer_sprite = new PIXI.Text( 0,this.settings.DYING_ROAD_TEXT_FONT);
 
       this.dying_road_pointer_sprite.anchor.set(0.5);
       this.dying_road_pointer_sprite.scale.set(this.settings.DYING_ROAD_TEXT_SCALE);
@@ -213,7 +213,7 @@ export default class AnomalyTool extends ITool {
       if(this.type === AnomalyType[0].type)
         this.snappedToSegment.weight_limit_text.text = node_data.node.anomalies[node_data.anomaly_index].weight_limit + 'kg';
       else if(this.type === AnomalyType[1].type)
-        this.snappedToSegment.dying_road_text.text = node_data.node.anomalies[node_data.anomaly_index].dying_road + 'm';
+        this.snappedToSegment.dying_road_text.text = node_data.node.anomalies[node_data.anomaly_index].dying_road;
 
         // refreshing routes to keep ui look responsive
         this.calculateSnappedSegment(this.currentMousePosition);
@@ -273,7 +273,7 @@ export default class AnomalyTool extends ITool {
       if(this.type === AnomalyType[0].type)
         this.snappedToSegment.weight_limit_text.text = node_data.node.anomalies[node_data.anomaly_index].weight_limit + 'kg';
       else if(this.type === AnomalyType[1].type)
-        this.snappedToSegment.dying_road_text.text = node_data.node.anomalies[node_data.anomaly_index].dying_road + 'm';
+        this.snappedToSegment.dying_road_text.text = node_data.node.anomalies[node_data.anomaly_index].dying_road;
 
       // refreshing routes to keep ui look responsive
       this.calculateSnappedSegment(this.currentMousePosition);

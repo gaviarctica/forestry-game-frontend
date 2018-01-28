@@ -11,8 +11,8 @@ export default class RouteSegment {
     this.isSelected = false;
     this.length = distance(this.startNode.getPos(), this.endNode.getPos());
 
-    this.dying_road_text = new PIXI.Text( 0 + 'm',this.anomaly_settings.DYING_ROAD_TEXT_FONT);
-    this.weight_limit_text = new PIXI.Text( 0 + 'kg',this.anomaly_settings.WEIGHT_LIMIT_TEXT_FONT);
+    this.dying_road_text = new PIXI.Text( 0, this.anomaly_settings.DYING_ROAD_TEXT_FONT);
+    this.weight_limit_text = new PIXI.Text( 0 + 'kg', this.anomaly_settings.WEIGHT_LIMIT_TEXT_FONT);
 
     this.dying_road_text.anchor.set(0.5);
     this.dying_road_text.scale.set(this.anomaly_settings.DYING_ROAD_TEXT_SCALE);
@@ -56,7 +56,7 @@ export default class RouteSegment {
 
           // dying road
           if(typeof  startNode.anomalies[i]['dying_road'] !== 'undefined')
-            this.dying_road_text.text = startNode.anomalies[i].dying_road + 'm';
+            this.dying_road_text.text = startNode.anomalies[i].dying_road;
 
           // weight limit
           if(typeof  startNode.anomalies[i]['weight_limit'] !== 'undefined') {
@@ -79,7 +79,7 @@ export default class RouteSegment {
 
           // dying road
           if(typeof  endNode.anomalies[i]['dying_road'] !== 'undefined')
-            this.dying_road_text.text = endNode.anomalies[i].dying_road + 'm';
+            this.dying_road_text.text = endNode.anomalies[i].dying_road;
 
           // weight limit
           if(typeof  endNode.anomalies[i]['weight_limit'] !== 'undefined') {
@@ -173,7 +173,7 @@ export default class RouteSegment {
         if(this.road_is_dead) continue;
 
         this.anomalies[i].dying_road -= Math.abs(distance_moved);
-        this.dying_road_text.text = Math.round(this.anomalies[i].dying_road) + 'm';
+        this.dying_road_text.text = Math.round(this.anomalies[i].dying_road);
 
         if(this.anomalies[i].dying_road < 0) {
           this.road_is_dead = true;
