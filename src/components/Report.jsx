@@ -46,9 +46,9 @@ export default function Report(props) {
         </div>
         <div>
           <h2>{LANG[props.lang].report.stats}</h2>
-          <div className="report-stat">{LANG[props.lang].report.workingTime}:<span>{props.time}</span></div>
-          <div className="report-stat">{LANG[props.lang].report.distanceTravelled}:<span>{props.distance} m</span></div>
-          <div className="report-stat">{LANG[props.lang].report.fuelConsumed}:<span>{props.fuel} l</span></div>
+          <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].report.workingTime}:</div><div className="report-stat-value">{props.time}</div></div>
+          <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].report.distanceTravelled}:</div><div className="report-stat-value">{props.distance} m</div></div>
+          <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].report.fuelConsumed}:</div><div className="report-stat-value">{props.fuel} l</div></div>
 
           <div>
             <Button
@@ -67,38 +67,38 @@ export default function Report(props) {
 
           <div id="detailed-stats" style={{display: 'none'}}>
             <h3>{LANG[props.lang].detailedReport.time}</h3>
-            <div className="report-stat">{LANG[props.lang].detailedReport.workingTime}: <span>{props.time}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.drivingUnloadedTime}: <span>{props.driving_unloaded_time}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.drivingLoadedTime}: <span>{props.driving_loaded_time}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.loadingUnloadingTime}: <span>{props.loading_and_unloading}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.idling}: <span>{props.idling}</span></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.workingTime}:</div><div className="report-stat-value">{props.time}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.drivingUnloadedTime}:</div><div className="report-stat-value">{props.driving_unloaded_time}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.drivingLoadedTime}:</div><div className="report-stat-value">{props.driving_loaded_time}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.loadingUnloadingTime}:</div><div className="report-stat-value">{props.loading_and_unloading}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.idling}:</div><div className="report-stat-value">{props.idling}</div></div>
 
             <h3>{LANG[props.lang].detailedReport.distance}</h3>
-            <div className="report-stat">{LANG[props.lang].detailedReport.distanceTravelled}: <span>{props.distance}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.drivingForwardTime}: <span>{props.driving_forward}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.drivingBackwardTime}: <span>{props.reverse}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.drivingUnloadedDistance}: <span>{props.driving_unloaded_distance}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.drivingLoadedDistance}: <span>{props.driving_loaded_distance}</span></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.distanceTravelled}:</div><div className="report-stat-value">{props.distance}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.drivingForwardTime}:</div><div className="report-stat-value">{props.driving_forward}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.drivingBackwardTime}:</div><div className="report-stat-value">{props.reverse}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.drivingUnloadedDistance}:</div><div className="report-stat-value">{props.driving_unloaded_distance}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.drivingLoadedDistance}:</div><div className="report-stat-value">{props.driving_loaded_distance}</div></div>
 
             <h3>{LANG[props.lang].detailedReport.costTitle}</h3>
-            <div className="report-stat">{LANG[props.lang].detailedReport.fuelConsumed}: <span>{props.fuel}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.fuelCost}: <span>{props.fuel_cost}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.workerSalary}: <span>{props.worker_salary}</span></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.fuelConsumed}:</div><div className="report-stat-value">{props.fuel}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.fuelCost}:</div><div className="report-stat-value">{props.fuel_cost}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.workerSalary}:</div><div className="report-stat-value">{props.worker_salary}</div></div>
             
             <h3>{LANG[props.lang].detailedReport.productivityTitle}</h3>
-            <div className="report-stat">{LANG[props.lang].detailedReport.loadsTransported}: <span>{props.loads_transported}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.logsDeposited}: <span>{props.logs_deposited}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.totalVolume}: <span>{props.total_volume}</span></div>
-            <div className="report-stat">{LANG[props.lang].detailedReport.productivity}: <span>{props.productivity}</span></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.loadsTransported}:</div><div className="report-stat-value">{props.loads_transported}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.logsDeposited}:</div><div className="report-stat-value">{props.logs_deposited}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.totalVolume}:</div><div className="report-stat-value">{props.total_volume}</div></div>
+            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.productivity}:</div><div className="report-stat-value">{props.productivity}</div></div>
           </div>
           <h3>{LANG[props.lang].report.logsCollected}:</h3>
           <ul>
             {Object.keys(props.logs).map(function(key) {
-              return <li key={key}>{LANG[props.lang].logs['type'+(parseInt(key,10)+1)]}: <span>{props.logs[key]}</span></li>
+              return <li key={key}><div className="report-stat-header">{LANG[props.lang].logs['type'+(parseInt(key,10)+1)]}:</div><div className="report-stat-value">{props.logs[key]}</div></li>
             })}
           </ul>
           <hr/>
-          <div className="report-stat"><b>{LANG[props.lang].report.finalCost}:<span>{props.cost} €</span></b></div>
+          <div className="report-stat"><b><div className="report-stat-header">{LANG[props.lang].report.finalCost}:</div><div className="report-stat-value">{props.cost} €</div></b></div>
         </div>
       </div>
     </div>

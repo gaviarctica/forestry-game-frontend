@@ -17,10 +17,6 @@
 	padding-right: 15px;
 }
 
-#endgame-report span, #report span {
-	float: right;
-}
-
 #detailed-stats {
 	width: 100%;
 }
@@ -51,11 +47,23 @@
 	overflow-x: hidden;
 	margin-top: 10px;
 	margin-bottom: 10px;
+	vertical-align: bottom;
+	/* line-height: 100%; */
 }
 
-.report-stat span {
-	max-width: 120px;
+.report-stat-header {
+	display: inline-block;
+	width: 70%;
 	text-overflow: ellipsis;
     white-space: nowrap;
 	overflow-x: hidden;
+}
+
+.report-stat-value {
+	width: 30%;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+	overflow-x: hidden;
+	display: inline-block;
+	text-align: right;
 }
