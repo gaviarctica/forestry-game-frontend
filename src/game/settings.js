@@ -13,7 +13,7 @@ export default class Settings {
       MOUSE_WHEEL_SCALE : [0.05,0.05],
       // sizes
       MAX_CAMERA_DISTANCE: [2000, 2000],
-      FOG_PADDING: [2000, 2000],
+      FOG_PADDING: [2200, 2200],
       HITAREA_PADDING:[5000, 5000],
       FOREST_PADDING: [2000, 2000]
     };

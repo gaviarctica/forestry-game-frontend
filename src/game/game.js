@@ -136,22 +136,6 @@ export default class GameCanvas {
         mouseInput.isRightDown = true;
       }
 
-      var map_size = {
-        width: Math.abs(self.min_max.xMax) > Math.abs(self.min_max.xMin) ?
-          Math.abs(self.min_max.xMax) : Math.abs(self.min_max.xMin),
-        height: Math.abs(self.min_max.yMax) > Math.abs(self.min_max.yMin) ?
-            Math.abs(self.min_max.yMax) : Math.abs(self.min_max.yMin),
-      };
-
-      if(loc_pos.x < -(-self.min_max.xMin + self.settings.map.MAX_CAMERA_DISTANCE[0]) ||
-        loc_pos.y < -(-self.min_max.yMin + self.settings.map.MAX_CAMERA_DISTANCE[1]) ||
-        loc_pos.x > (self.min_max.xMax + self.settings.map.MAX_CAMERA_DISTANCE[0]) ||
-        loc_pos.y > (self.min_max.yMax + self.settings.map.MAX_CAMERA_DISTANCE[1])) {
-        mouseInput.isRightDown = false;
-        mouseInput.forceBack = true;
-        return;
-      }
-
       // stopping camera updates when we want to control the camera manually
       truck.update(0,true);
       mouseInput.forceBack = false;
@@ -172,28 +156,25 @@ export default class GameCanvas {
       mouseInput.position = {x: interaction.mouse.global.x, y: interaction.mouse.global.y};
       mouseInput.delta = {x: mouseInput.lastPosition.x - mouseInput.position.x, y: mouseInput.lastPosition.y - mouseInput.position.y};
 
-      if (mouseInput.isRightDown === true && mouseInput.forceBack !== true) {
+      var comparision = {
+        xMin: (-(-self.min_max.xMin + self.settings.map.MAX_CAMERA_DISTANCE[0])+(self.game.renderer.width/(2*self.game.stage.scale.x))),
+        yMin: (-(-self.min_max.yMin + self.settings.map.MAX_CAMERA_DISTANCE[1])+(self.game.renderer.height/(2*self.game.stage.scale.y))),
+        xMax: ((self.min_max.xMax + self.settings.map.MAX_CAMERA_DISTANCE[0])-(self.game.renderer.width/(2*self.game.stage.scale.x))),
+        yMax: ((self.min_max.yMax + self.settings.map.MAX_CAMERA_DISTANCE[1])-(self.game.renderer.height/(2*self.game.stage.scale.y)))
+      };
+
+      if( comparision.xMin > self.game.stage.pivot.x ) {
+        self.game.stage.pivot.x = comparision.xMin+0.00001;
+      } else if(comparision.yMin > self.game.stage.pivot.y) {
+        self.game.stage.pivot.y = comparision.yMin+0.00001;
+      } else if(comparision.xMax < self.game.stage.pivot.x) {
+        self.game.stage.pivot.x = comparision.xMax-0.00001;
+      } else if(comparision.yMax < self.game.stage.pivot.y) {
+        self.game.stage.pivot.y = comparision.yMax-0.00001;
+      } else if (mouseInput.isRightDown === true && mouseInput.forceBack !== true) {
         self.game.stage.pivot.x +=  mouseInput.delta.x / self.game.stage.scale.x;
         self.game.stage.pivot.y +=  mouseInput.delta.y / self.game.stage.scale.y;
       }
-
-      if(mouseInput.forceBack === true) {
-        var loc_pos = e.data.getLocalPosition(this);
-        if(Math.abs(loc_pos.x) < (-self.min_max.xMin + 2*self.settings.map.MAX_CAMERA_DISTANCE[0]) &&
-          Math.abs(loc_pos.y) < (-self.min_max.yMin + 2*self.settings.map.MAX_CAMERA_DISTANCE[1])) {
-          mouseInput.forceBack = false;
-        }
-
-        var vec = {
-          x: self.game.stage.pivot.x,
-          y: self.game.stage.pivot.y
-        };
-        var norm = Math.sqrt(vec.x*vec.x + vec.y*vec.y);
-        var norm_vec = {x: vec.x/norm, y: vec.y / norm};
-        self.game.stage.pivot.x -=  5 * norm_vec.x / self.game.stage.scale.x;
-        self.game.stage.pivot.y -=  5 * norm_vec.y / self.game.stage.scale.y;
-      }
-
 
     }
 
