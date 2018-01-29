@@ -59,7 +59,7 @@ export default class PlaceTool extends ITool {
     if (length(mouseInput.absDeltaDuringMouseDown) > 20)
       return;
 
-    if (this.allowPlacement) {
+    if (this.allowPlacement && mouseInput.event.data.originalEvent.which === 1) {
       this.placeItem(this.pointerPos, this.angle);
     }
   }
