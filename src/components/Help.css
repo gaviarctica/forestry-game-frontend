@@ -5,8 +5,8 @@
 	color: rgba(10, 10, 10, 0.9);
 	box-shadow: var(--menu-shadow);
 	display: inline-block;
-	min-width: 700px;
-	max-width: 700px;
+	min-width: 800px;
+	max-width: 800px;
 	min-height: 250px;
 	max-height: 100%;
 	overflow-y: auto;
@@ -21,15 +21,32 @@
 	text-align: left;
 }
 
-#help-content-gameplay, #help-content-editor {
-	font-size: 1em;	
-}
-
-#help-content-gameplay-title, #help-content-editor-title, #help-license-title {
+.Help .h1 {
 	font-size: 2em;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .Help .h2 {
+	font-size: 1.5em;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.Help .primary-hr {
+	border-top: 3px dashed;
+}
+
+.Help .road-conditions {
+	margin-bottom: 40px;
+}
+
+.Help .menu {
+	color: var(--jd-green);
+	width: 200px;
+	height: 30px;
 	font-size: 1.2em;
-	float: left;
+	margin-bottom: 5px;
+	border-color: var(--jd-green);
+	background-color: var(--jd-gray);
 }
