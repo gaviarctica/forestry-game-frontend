@@ -74,8 +74,7 @@ const Rows = (props) => {
 				  </tr>);
 	}
 	
-	return (<div>
-			<input type="text" id="map-search" onKeyUp={filterByMap} placeholder={LANG[props.lang].mainMenu.profileTab.search} />
+	return (
 			<div id="profile-table-wrapper">
 				<table id="profile-score-info">
 				  <thead>
@@ -91,7 +90,7 @@ const Rows = (props) => {
 				  </tbody>
 				</table>
 			</div>
-	</div>);
+	);
 }
 
 function getRightContentData(t) {
@@ -217,26 +216,29 @@ export default class Profile extends Component {
 			);
 		}
 
-		lc = (<div id="left-content">
-						<div id="profile-header">
-							{LANG[this.props.lang].mainMenu.profileTab.profile}
+		lc = (
+			<div id="left-content">
+				<div id="profile-top">
+					<div id="profile-header">
+						{LANG[this.props.lang].mainMenu.profileTab.profile}
+					</div>
+					<div id="user-info">
+						<div id="user-info-username">
+							<Icon size={16} icon={user} id="user-info-username-icon"/>
+							<span id="user-info-username-header">{this.props.username}</span>
 						</div>
-						<div id="user-info">
-							<div id="user-info-username">
-								<Icon size={16} icon={user} id="user-info-username-icon"/>
-								<span id="user-info-username-header">{this.props.username}</span>
-							</div>
-							<div id="user-info-email">
-								<Icon size={16} icon={mail} id="user-info-email-icon" />
-								<span id="user-info-email-paragraph">{this.props.email}</span>
-							</div>
-						</div>
-						<hr></hr>
-						
-						<div id="profile-content">
-							{rows}
+						<div id="user-info-email">
+							<Icon size={16} icon={mail} id="user-info-email-icon" />
+							<span id="user-info-email-paragraph">{this.props.email}</span>
 						</div>
 					</div>
+					<hr></hr>
+					<input type="text" id="map-search" onKeyUp={filterByMap} placeholder={LANG[this.props.lang].mainMenu.profileTab.search} />
+				</div>
+				<div id="profile-content">
+					{rows}
+				</div>				
+			</div>
 		);
 
 		rc = (

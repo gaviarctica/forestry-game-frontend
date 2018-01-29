@@ -1,6 +1,7 @@
 .Profile {
 	margin-left: auto;
 	margin-right: auto;
+	max-height: 100%;
 }
 
 #left-content {
@@ -12,13 +13,8 @@
 	min-width: 500px;
 	max-width: 500px;
 	min-height: 250px;
-	max-height: 100%;
-	overflow-y: auto;
-}
-
-#profile-table-wrapper {
-	max-height: 60vh;
-	overflow-y: auto;
+	height: 90%;
+	max-height: 600px;
 }
 
 #left-content table {
@@ -32,7 +28,8 @@
 	background: transparent;
     padding: 10px;
     border: 1px solid #ccc;
-    margin-bottom: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
 }
 
 ul {
@@ -41,6 +38,20 @@ ul {
 
 #right-content > h1 {
 	text-align: center;
+}
+
+#profile-table-wrapper {
+	overflow-y: auto;
+	max-height: 100%;
+}
+
+#profile-top {
+	height: 170px;
+}
+
+#profile-content {
+	box-sizing: border-box;
+	height: calc(100% - 170px);
 }
 
 #profile-header, #user-info, #profile-content {
