@@ -30,6 +30,8 @@ export default class MapMenu extends Component {
         self.setState({
           maps: responseJson
         });
+      } else {
+        self.props.notify(LANG[self.props.lang].mainMenu.playTab.messages.noOfficialLevels);
       }
     });
   }
@@ -272,51 +274,45 @@ export default class MapMenu extends Component {
       var selectedMapID = this.state.maps[this.state.selectedMapIndex].id;
     }
 
-    if (this.state.maps === undefined) {
-      return (
-        <div className="MapMenu">
-          <Loader />
-        </div>
-      );
-    } else {
-      return (
-        <div className="MapMenu">
-          <div id="map-menu">
-            <div id="top">
+    return (
+      <div className="MapMenu">
+        <div id="map-menu">
+          <div id="top">
 
-              <div id="left">
-                <div id="map-menu-settings">
-                  <div className="section">
-                    <div className="section-header">{LANG[this.props.lang].mainMenu.playTab.show}</div>
-                    <div>
+            <div id="left">
+              <div id="map-menu-settings">
+                <div className="section">
+                  <div className="section-header">{LANG[this.props.lang].mainMenu.playTab.show}</div>
+                  <div>
+                    <Button
+                      id="button-show-default-maps"
+                      buttonType={this.state.selectedLevelCategory === 'default' ? 'mapmenu-show-type-button-selected' : 'mapmenu-show-type-button'}
+                      text={LANG[this.props.lang].mainMenu.playTab.defaultLevels}
+                      handleClick={this.handleButtonClick.bind(this)} />
+                  
+                  {this.props.loggedIn ?
                       <Button
-                        id="button-show-default-maps"
-                        buttonType={this.state.selectedLevelCategory === 'default' ? 'mapmenu-show-type-button-selected' : 'mapmenu-show-type-button'}
-                        text={LANG[this.props.lang].mainMenu.playTab.defaultLevels}
+                        id="button-show-user-maps"
+                        buttonType={this.state.selectedLevelCategory === 'user' ? 'mapmenu-show-type-button-selected' : 'mapmenu-show-type-button'}
+                        text={LANG[this.props.lang].mainMenu.playTab.myLevels}
                         handleClick={this.handleButtonClick.bind(this)} />
-                    
-                    {this.props.loggedIn ?
-                        <Button
-                          id="button-show-user-maps"
-                          buttonType={this.state.selectedLevelCategory === 'user' ? 'mapmenu-show-type-button-selected' : 'mapmenu-show-type-button'}
-                          text={LANG[this.props.lang].mainMenu.playTab.myLevels}
-                          handleClick={this.handleButtonClick.bind(this)} />
-                    : ''}
-                    </div>
-                  </div>
-                  <div className="section">
-                    <div className="section-header">{LANG[this.props.lang].mainMenu.playTab.search}</div>
-                    <div>
-                      <input
-                        type="text"
-                        name="searchString"
-                        value={this.state.searchString}
-                        className="menu-search-input"
-                        onKeyPress={this.handleKeyPress.bind(this)}
-                        onChange={this.handleInputChange.bind(this)} />
-                    </div>
+                  : ''}
                   </div>
                 </div>
+                <div className="section">
+                  <div className="section-header">{LANG[this.props.lang].mainMenu.playTab.search}</div>
+                  <div>
+                    <input
+                      type="text"
+                      name="searchString"
+                      value={this.state.searchString}
+                      className="menu-search-input"
+                      onKeyPress={this.handleKeyPress.bind(this)}
+                      onChange={this.handleInputChange.bind(this)} />
+                  </div>
+                </div>
+              </div>
+              {this.state.maps ?
                 <div id="map-list">
                   {this.state.maps.map((map, index) => {
                     return (
@@ -335,8 +331,12 @@ export default class MapMenu extends Component {
                     )
                   })}
                 </div>
-              </div>
+              : ''}
+            </div>
 
+            {this.state.maps === undefined ?
+              <Loader />
+            :
               <div
                 id="map-image-container"
                 className={mapWeather === 'foggy' ? 'foggy-image-container' : ''} >
@@ -375,55 +375,56 @@ export default class MapMenu extends Component {
                 </div>
 
               </div>
-
+            }
+            {this.state.maps ?
               <div id="right">
 
-              <div id="map-info">
+                <div id="map-info">
 
-                <div className="section">
-                  <div className="section-header">
-                    {LANG[this.props.lang].mainMenu.playTab.pileTypesAndAmounts}
+                  <div className="section">
+                    <div className="section-header">
+                      {LANG[this.props.lang].mainMenu.playTab.pileTypesAndAmounts}
+                    </div>
+                    {pileTypes}
                   </div>
-                  {pileTypes}
+
+                  <div className="section">
+                    <div className="section-header">
+                    {LANG[this.props.lang].mainMenu.playTab.routeLength}
+                    </div>
+                    <div className="section-value">
+                      {selMap.mapinfo.routeLength + ' m'}
+                    </div>
+                  </div>
+
+                  <div className="section">
+                    <div className="section-header">
+                    {LANG[this.props.lang].mainMenu.playTab.storageAreaAmount}
+                    </div>
+                    <div className="section-value">
+                      {selMap.mapinfo.storageAreas}
+                    </div>
+                  </div>
+
+                  <div className="section">
+                    <div className="section-header">
+                    {LANG[this.props.lang].mainMenu.playTab.roadAnomalies}
+                    </div>
+                    <div className="section-value">
+                      {selMap.mapinfo.anomalies ? LANG[this.props.lang].mainMenu.playTab.yes : LANG[this.props.lang].mainMenu.playTab.no}
+                    </div>
+                  </div>
+
+                  <div className="section">
+                    <div className="section-header">
+                    {LANG[this.props.lang].mainMenu.playTab.weather}
+                    </div>
+                    <div className="section-value">
+                      {LANG[this.props.lang].mainMenu.playTab[mapWeather]}
+                    </div>
+                  </div>
+
                 </div>
-
-                <div className="section">
-                  <div className="section-header">
-                  {LANG[this.props.lang].mainMenu.playTab.routeLength}
-                  </div>
-                  <div className="section-value">
-                    {selMap.mapinfo.routeLength + ' m'}
-                  </div>
-                </div>
-
-                <div className="section">
-                  <div className="section-header">
-                  {LANG[this.props.lang].mainMenu.playTab.storageAreaAmount}
-                  </div>
-                  <div className="section-value">
-                    {selMap.mapinfo.storageAreas}
-                  </div>
-                </div>
-
-                <div className="section">
-                  <div className="section-header">
-                  {LANG[this.props.lang].mainMenu.playTab.roadAnomalies}
-                  </div>
-                  <div className="section-value">
-                    {selMap.mapinfo.anomalies ? LANG[this.props.lang].mainMenu.playTab.yes : LANG[this.props.lang].mainMenu.playTab.no}
-                  </div>
-                </div>
-
-                <div className="section">
-                  <div className="section-header">
-                  {LANG[this.props.lang].mainMenu.playTab.weather}
-                  </div>
-                  <div className="section-value">
-                    {LANG[this.props.lang].mainMenu.playTab[mapWeather]}
-                  </div>
-                </div>
-
-              </div>
 
                 <Button
                   id="button-start-game"
@@ -431,15 +432,17 @@ export default class MapMenu extends Component {
                   buttonType="primary"
                   handleClick={this.handleButtonClick.bind(this)} />
               </div>
+            : ''}
 
-            </div>
-
-              <div id="bottom-row">
-                {(this.state.selectedMapIndex + 1) + '/' + this.state.maps.length}
-              </div>
           </div>
+
+          {this.state.maps ?
+            <div id="bottom-row">
+              {(this.state.selectedMapIndex + 1) + '/' + this.state.maps.length}
+            </div>
+          : ''}
         </div>
-      );
-    }
+      </div>
+    );
   }
 }

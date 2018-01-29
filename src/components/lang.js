@@ -34,7 +34,8 @@ export const LANG = {
         defaultLevels: "Default levels",
         myLevels: "My levels",
         messages: {
-          noLevelsFound: "No levels were found"
+          noLevelsFound: "No levels were found",
+          noOfficialLevels: "No default levels have been set"
         }
       },
       profileTab: {
@@ -216,7 +217,8 @@ export const LANG = {
         defaultLevels: "Oletustasot",
         myLevels: "Omat tasot",
         messages: {
-          noLevelsFound: "Haulla ei löytynyt tasoja"
+          noLevelsFound: "Haulla ei löytynyt tasoja",
+          noOfficialLevels: "Yhtään oletustasoja ei ole määritetty"
         }
       },
       profileTab: {
