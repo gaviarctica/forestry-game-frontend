@@ -125,14 +125,14 @@ export default class Help extends Component {
 						<p>
 							{info}
 						</p>
-						<img src={this.state.currentCondImg}/>
+						<img alt="condition" src={this.state.currentCondImg}/>
 					</div>
 
 					<div className="h2">
 						<span>{LANG[this.props.lang].help.controls.controls}</span><br/>
 					</div>
 					<div id="controls">
-						<img src="static/controls.png"/>
+						<img alt="controls" src="static/controls.png"/>
 						<p>
 							{LANG[this.props.lang].help.controls.controls1}<br/>
 							{LANG[this.props.lang].help.controls.controls2}<br/>
@@ -160,7 +160,7 @@ export default class Help extends Component {
 					<p>
 						{tool}
 					</p>
-					<img src={this.state.currentEditorImg}/>
+					<img alt="editor-tool" src={this.state.currentEditorImg}/>
 					<hr className="primary-hr"></hr>
 				</div>
 				<div className="help-license">

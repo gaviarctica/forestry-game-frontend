@@ -188,9 +188,9 @@ export const LANG = {
                         in the most optimal way. The evaluation criteria depends on working time, driving distance, and overall cost. 
                         A game is completed when all the logs are unloaded to their respective unloading stations, and a report is produced
                         which includes statistics from the training session.`,
-        gameplaydescription: `A worksite can contain several types of logs. Each log weights 50kg regardless of the type. 
+        gameplaydescription: `A worksite can contain several types of logs. Each log weighs 50kg regardless of the type. 
                               A deposit will hold only 1 type of log. A deposit will be assigned a log type once a log is deposited to it.
-                              A deposit can be pre-assigned to contain only certain types of logs from the editor. Once logs have been deposited to a certain deposit,
+                              A deposit can be pre-assigned to contain only certain types of logs in the editor. Once logs have been deposited to a certain deposit,
                               the logs cannot be removed from it. The truck's speed will be affected by the amount of logs loaded in the truck, and 
                               reverse driving also affects the speed. Each log loading and unloading operation takes 15 seconds.`,
         conditions: "Conditions",
@@ -200,13 +200,13 @@ export const LANG = {
         onewayMenu: "One-way limit",
         fogMenu: "Fog",
         conditionsDescription: `There are a few road and weather conditions that the driver must take into account when working in a worksite.
-                                Check these conditions by selecting from a dropdown below.`,
+                                Check these conditions by selecting from the dropdown below.`,
         normalDescription: `A worksite with normal conditions. Clear weather and roads have no limits.`,
         dyingDescription: `This worksite contains a muddy road in the middle that can be crossed a maximum of 4 times.`,
         weightDescription: `This worksite contains a weight-limited road which shows the maximum load you can have in addition to the truck. 
-                            One log weights 50kg.`,
+                            One log weighs 50kg.`,
         onewayDescription: `This worksite contains a one-way road. The arrows represents the direction a truck can drive.`,
-        fogDescription: `This worksite contains is foggy which limits the visibility.`,
+        fogDescription: `This worksite is foggy which limits the visibility.`,
       },
       controls: {
         controls: "Controls",

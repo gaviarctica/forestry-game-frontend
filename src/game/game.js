@@ -130,7 +130,7 @@ export default class GameCanvas {
 
     this.game.stage.interactive = true;
     this.game.stage.pointerdown = function(e) {
-      var loc_pos = e.data.getLocalPosition(this);
+      // var loc_pos = e.data.getLocalPosition(this);
 
       if (e.data.originalEvent.which === 2 || e.data.originalEvent.which === 3) {
         mouseInput.isRightDown = true;
