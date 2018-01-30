@@ -4,7 +4,8 @@ import LangSelection from './LangSelection';
 import LoginSignupForm from './LoginSignupForm';
 import MapMenu from './MapMenu';
 import Profile from './Profile';
-import Help from './Help'
+import Help from './Help';
+import About from './About';
 import './MainMenu.css';
 import { FadeInFadeOut, TranslateRight, TranslateLeft } from './animation';
 import './animation.css';
@@ -67,6 +68,8 @@ export default class MainMenu extends Component {
       this.props.changeGraphicsSetting('low');
     } else if (clicked === 'button-quality-high') {
       this.props.changeGraphicsSetting('high');
+    } else if (clicked === 'about-link-span') {
+      this.switchTab('about');
     }
   }
 
@@ -205,6 +208,13 @@ export default class MainMenu extends Component {
         );
         break;
 
+      case 'about':
+        view = (
+          <About
+            lang={this.props.lang} />
+        );
+        break;
+
       default:
         view = 'You should never see this';
         break;
@@ -307,6 +317,15 @@ export default class MainMenu extends Component {
                 buttonType={!this.props.useLowQualityGraphics ? 'graphics-button-selected' : 'graphics-button'}
                 text={LANG[this.props.lang].mainMenu.settings.high}
                 handleClick={this.handleButtonClick.bind(this)} />
+            </div>
+            <div
+              className="settings-header"
+              id="about-link" >
+              <span
+                id="about-link-span"
+                onClick={this.handleButtonClick.bind(this)} >
+                {LANG[this.props.lang].mainMenu.settings.about}
+              </span>
             </div>
           </div>
         : ''}

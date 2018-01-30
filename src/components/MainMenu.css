@@ -50,7 +50,6 @@
   background-color: rgba(0, 0, 0, 0.9);
   border-radius: 5px;
   box-shadow: var(--menu-shadow);
-  padding-bottom: 10px;
   box-sizing: border-box;
   position: fixed;
   right: 10%;
@@ -68,6 +67,16 @@
 
 #settings-graphics {
   margin-left: 20px;
+}
+
+#about-link span:hover {
+  color: var(--jd-green);
+  transition: color 150ms ease;
+  cursor: pointer;
+}
+
+#about-link span {
+  transition: color 150ms ease;
 }
 
 #button-settings:hover {

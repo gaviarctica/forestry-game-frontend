@@ -161,12 +161,6 @@ export default class Help extends Component {
 						{tool}
 					</p>
 					<img alt="editor-tool" src={this.state.currentEditorImg}/>
-					<hr className="primary-hr"></hr>
-				</div>
-				<div className="help-license">
-					<div className="h1">
-						<span id="help-license-title">{LANG[this.props.lang].help.licenses.licenses}</span>
-					</div>
 				</div>
 			</div>
 		);

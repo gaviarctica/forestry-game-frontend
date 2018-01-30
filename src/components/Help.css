@@ -12,7 +12,7 @@
 	overflow-y: auto;
 }
 
-.help-content, .help-license {
+.help-content {
 	padding: 15px;
 	text-align: center;
 }

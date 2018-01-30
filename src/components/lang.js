@@ -17,7 +17,8 @@ export const LANG = {
         language: "Language",
         graphics: "Graphics",
         high: "High",
-        low: "Low"
+        low: "Low",
+        about: "About"
       },
       playTab: {
         pileTypesAndAmounts: "Pile Types and Amounts",
@@ -231,9 +232,6 @@ export const LANG = {
         deposittool: `Use deposit tool to place deposits in the working area.`,
         trucktool: `Use truck tool to put a truck to your desired starting point and position. Swap the orientation with mouse right click.`,
         removetool: `Use remove tool to remove objects from the working area.`,
-      },
-      licenses: {
-        licenses: "Licenses"
       }
     }
   },
@@ -255,7 +253,8 @@ export const LANG = {
         language: "Kieli",
         graphics: "Grafiikka",
         high: "Korkea",
-        low: "Matala"
+        low: "Matala",
+        about: "Tietoja"
       },
       playTab: {
         pileTypesAndAmounts: "Puutyypit ja lukumäärät",
@@ -466,9 +465,6 @@ export const LANG = {
         deposittool: `Säilötyökalulla asetetaan keräyspisteitä työskentelyalueelle.`,
         trucktool: `Metsäkonetyökalulla laitetaan työkone haluttuun aloituspisteeseen. Hiiren oikealla painikkeella käännetään metsäkone.`,
         removetool: `Poistotyökalulla voidaan poistaa objekteja työskentelyalueelta.`,
-      },
-      licenses: {
-        licenses: "Lisenssit"
       }
     }
   }
