@@ -160,25 +160,34 @@ export default class Truck {
       this.doLogAction = false;
     }
 
-    var dir;
+    // some variables to remove warnings
+    var tnode = null;
+    var sel_segment = null;
+    var wanted_dir;
+    var seg_1;
+    var seg_2;
+    var seg;
+    var is_negative_1;
+    var is_negative_2;
+
     // Selecting route if arrow keys were pressed
     if(this.controls.wasKeyPressed(Key.Left) || this.controls.wasKeyPressed(Key.A)) {
 
-      var tnode = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode();
+      tnode = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode();
 
       // selecting segment faceDirection
-      var sel_segment = tnode.getSegments()[this.routeIndex];
-      var wanted_dir = sel_segment.getRotation(tnode) - ((Math.PI*2) / (tnode.getSegments().length+1));
-      var seg_1 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex+1, this.arrowSprite, 1);
-      var seg_2 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex-1, this.arrowSprite, -1);
+      sel_segment = tnode.getSegments()[this.routeIndex];
+      wanted_dir = sel_segment.getRotation(tnode) - ((Math.PI*2) / (tnode.getSegments().length+1));
+      seg_1 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex+1, this.arrowSprite, 1);
+      seg_2 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex-1, this.arrowSprite, -1);
 
-      var seg = null;
+      seg = null;
 
       if(seg === null) {
-        var is_negative_1 = wanted_dir - seg_1['seg'].getRotation(tnode) < 0
-        var is_negative_2 = wanted_dir - seg_2['seg'].getRotation(tnode) < 0
+        is_negative_1 = wanted_dir - seg_1['seg'].getRotation(tnode) < 0
+        is_negative_2 = wanted_dir - seg_2['seg'].getRotation(tnode) < 0
 
-        if(is_negative_1 && !is_negative_2 || !is_negative_1 && is_negative_2 || !is_negative_1 && !is_negative_2) {
+        if((is_negative_1 && !is_negative_2) || (!is_negative_1 && is_negative_2) || (!is_negative_1 && !is_negative_2)) {
           seg = Math.abs(wanted_dir - seg_1['seg'].getRotation(tnode)) < Math.abs(wanted_dir - seg_2['seg'].getRotation(tnode)) ?
             seg_1 : seg_2;
         } else{
@@ -197,21 +206,21 @@ export default class Truck {
       this.routeIndex = seg['index'];
     } else if(this.controls.wasKeyPressed(Key.Right) || this.controls.wasKeyPressed(Key.D)) {
 
-      var tnode = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode();
+      tnode = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode();
 
       // selecting segment faceDirection
-      var sel_segment = tnode.getSegments()[this.routeIndex];
-      var wanted_dir = sel_segment.getRotation(tnode) + ((Math.PI*2) / (tnode.getSegments().length+1));
-      var seg_1 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex+1, this.arrowSprite, 1);
-      var seg_2 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex-1, this.arrowSprite, -1);
+      sel_segment = tnode.getSegments()[this.routeIndex];
+      wanted_dir = sel_segment.getRotation(tnode) + ((Math.PI*2) / (tnode.getSegments().length+1));
+      seg_1 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex+1, this.arrowSprite, 1);
+      seg_2 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex-1, this.arrowSprite, -1);
 
-      var seg = null;
+      seg = null;
 
       if(seg === null) {
-        var is_negative_1 = wanted_dir - seg_1['seg'].getRotation(tnode) < 0
-        var is_negative_2 = wanted_dir - seg_2['seg'].getRotation(tnode) < 0
+        is_negative_1 = wanted_dir - seg_1['seg'].getRotation(tnode) < 0
+        is_negative_2 = wanted_dir - seg_2['seg'].getRotation(tnode) < 0
 
-        if(is_negative_1 && !is_negative_2 || !is_negative_1 && is_negative_2 || is_negative_1 && is_negative_2) {
+        if((is_negative_1 && !is_negative_2) || (!is_negative_1 && is_negative_2) || (is_negative_1 && is_negative_2)) {
           seg = Math.abs(wanted_dir - seg_1['seg'].getRotation(tnode)) < Math.abs(wanted_dir - seg_2['seg'].getRotation(tnode)) ?
             seg_1 : seg_2;
         } else{
