@@ -82,7 +82,7 @@ export const LANG = {
     },
     report: {
       report: "Report",
-      map: "Map",
+      map: "Level",
       stats: "Stats",
       workingTime: "Working time",
       distanceTravelled: "Distance travelled",
@@ -226,7 +226,7 @@ export const LANG = {
         controls: "Controls",
         controls1: "1. Use Arrow keys or WASD-keys to control the truck.",
         controls2: "2. Use Q and E buttons to select log for picking or unloading station for unloading.",
-        controls3: "3. Use keys 1-6 to show/hide logs on map.",
+        controls3: "3. Use keys 1-6 to show/hide logs on level.",
         controls4: "4. Use Space to pick or unload a log.",
         controls5: "5. Alternatively use Mouse left click to pick or unload a log.",
         controls6: "6. Hold Mouse right button and drag to move camera.",
@@ -321,7 +321,7 @@ export const LANG = {
     },
     report: {
       report: "Raportti",
-      map: "Kartta",
+      map: "Taso",
       stats: "Tilastot",
       workingTime: "Työskentelyaika",
       distanceTravelled: "Matkustettu etäisyys",
