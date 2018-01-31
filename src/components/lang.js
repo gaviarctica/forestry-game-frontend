@@ -1,7 +1,20 @@
+// Edit this file to change texts in the UI.
+//
+// To add a new language, copy eg. the
+//   en: {
+//     ...(everything that's inside)...
+//   }
+// part to the end of the LANG object,
+// change the ID (eg. 'en' to 'se' for Swedish)
+// and translate the texts on the new language.
+// Also add the new language's ID to the file
+// LangSelection.jsx.
+
 export const LANG = {
-  en: {
-    langName: "English",
-    icon: "/static/flag-en.png",
+  // English
+  en: { // <-- Language ID
+    langName: "English", // The name that will be shown in UI
+    icon: "/static/flag-en.png", // Path to the flag image
     navbar: {
       play: "Play",
       profile: "Profile",
@@ -235,6 +248,9 @@ export const LANG = {
       }
     }
   },
+
+
+  // Finnish
   fi: {
     langName: "Suomi",
     icon: "/static/flag-fi.png",
@@ -467,5 +483,8 @@ export const LANG = {
         removetool: `Poistotyökalulla voidaan poistaa objekteja työskentelyalueelta.`,
       }
     }
-  }
+  },
+
+
+  // Add new languages here
 }

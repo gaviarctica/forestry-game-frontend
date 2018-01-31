@@ -3,13 +3,26 @@ import './LangSelection.css';
 import { LANG } from './lang';
 
 export default class LangSelection extends Component {
+  constructor(props) {
+    super(props);
+
+    // If adding a new language, add language ID here
+    this.languages = [
+      'en',
+      'fi'
+    ];
+  }
 
   toggleLang() {
-    if (this.props.lang === 'fi') {
-      this.props.changeLanguage('en');
-    } else if (this.props.lang === 'en') {
-      this.props.changeLanguage('fi');
+    // Cycle to the next language
+    var currentLangIndex = this.languages.indexOf(this.props.lang);
+    var nextLangIndex;
+    if (currentLangIndex === (this.languages.length - 1)) {
+      nextLangIndex = 0;
+    } else {
+      nextLangIndex = currentLangIndex + 1;
     }
+    this.props.changeLanguage(this.languages[nextLangIndex]);
   }
 
   render() {
