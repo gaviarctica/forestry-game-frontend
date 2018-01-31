@@ -81,7 +81,6 @@ export default function Report(props) {
             <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.drivingLoadedDistance}:</div><div className="report-stat-value">{props.driving_loaded_distance}</div></div>
 
             <h3>{LANG[props.lang].detailedReport.costTitle}</h3>
-            <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.fuelConsumed}:</div><div className="report-stat-value">{props.fuel}</div></div>
             <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.fuelCost}:</div><div className="report-stat-value">{props.fuel_cost}</div></div>
             <div className="report-stat"><div className="report-stat-header">{LANG[props.lang].detailedReport.workerSalary}:</div><div className="report-stat-value">{props.worker_salary}</div></div>
             

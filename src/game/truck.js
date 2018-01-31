@@ -66,6 +66,7 @@ export default class Truck {
 
     this.stats = stats;
     this.logsRemaining = logsRemaining;
+    this.moving = false;
   }
 
   getContainer() {
@@ -112,7 +113,7 @@ export default class Truck {
   move(timeDelta) {
     var direction = 0;
     var temp_node;
-
+    this.moving = false;
     if(this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.W)) {
       // when we start moving we force the camera to center again
       this.forceCameraMovement = true;
@@ -126,6 +127,7 @@ export default class Truck {
       }
 
       direction = this.getPreviousDirection();
+      this.moving = true;
     }
 
     if(this.controls.isKeyDown(Key.Down) || this.controls.isKeyDown(Key.S)) {
@@ -141,6 +143,7 @@ export default class Truck {
       }
 
       direction = this.getPreviousDirection();
+      this.moving = true;
     }
 
     if (this.controls.wasKeyPressed(Key.Q)) {
@@ -151,10 +154,9 @@ export default class Truck {
       this.selectNearbyItemAtDir(-1);
     }
 
-    if(this.controls.wasKeyPressed(Key.Space) &&
-        this.controls.isKeyUp(Key.Up) && this.controls.isKeyUp(Key.Down) &&
-        this.controls.isKeyUp(Key.W) && this.controls.isKeyUp(Key.S)
-      ) {
+    var pickAction = this.controls.wasKeyPressed(Key.Space);
+
+    if(pickAction && !this.moving) {
       this.doLogAction = true;
     } else {
       this.doLogAction = false;
@@ -347,7 +349,7 @@ export default class Truck {
         }
 
         // log close enough and it has been clicked, pick it to truck
-        if (log.isMarkedForPickUp() && log.isHighlighted()) {
+        if (log.isMarkedForPickUp() && log.isHighlighted() && !this.moving) {
           this.doLogAction = true;
         }
 
@@ -450,7 +452,7 @@ export default class Truck {
         }
 
         // deposit close enough and it has been clicked, unload available log
-        if (deposit.isMarkedForUnload()) {
+        if (deposit.isMarkedForUnload() && !this.moving) {
           this.doLogAction = true;
         }
 

@@ -111,7 +111,7 @@ export const LANG = {
       costTitle: "Cost (€)",
       fuelConsumed: "Fuel consumed",
       fuelCost: "Fuel cost",
-      workerSalary: "Worker salary",
+      workerSalary: "Worker pay",
 
       productivityTitle: "Productivity",
       loadsTransported: "Loads transported (pc.)",
