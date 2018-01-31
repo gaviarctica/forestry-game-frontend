@@ -23,6 +23,23 @@ export default class RouteNode {
     }
 
     this.segments.push(segment);
+    this.orderSegments();
+  }
+
+  // orders segments by rotation to make turning consistent
+  orderSegments() {
+    this.segments.sort(this.compareSegment);
+  }
+
+  compareSegment(a,b) {
+    var a_angle = (a.getRotation(this) + Math.PI*2) % (Math.PI*2);
+    var b_angle = (b.getRotation(this) + Math.PI*2) % (Math.PI*2);
+
+    if (a_angle < b_angle)
+      return -1;
+    if (a_angle > b_angle)
+      return 1;
+    return 0;
   }
 
   hasSegmentWithNodes(node1, node2) {
@@ -54,11 +71,11 @@ export default class RouteNode {
   getSelectedSegment(current_segment, index, arrowSprite, dir = 1) {
 
     var slength = this.segments.length;
-    index = index < 0 ? this.segments.length-1 : index;
+    index = index < 0 ? slength-1 : index;
     index = index % slength;
 
     // unselecting all the segments (to not accidentially select multiple segments)
-    for(var i = 0; i < this.segments.length; ++i) {
+    for(var i = 0; i < slength; ++i) {
       this.segments[i].setSelected(false);
       this.hideArrow(arrowSprite);
     }
@@ -69,7 +86,7 @@ export default class RouteNode {
       return {'seg':this.segments[index], 'index':index};
     }
 
-    for(i = 0; i < this.segments.length; ++i) {
+    for(i = 0; i < slength; ++i) {
 
       if(this.segments[index] !== current_segment) {
         this.segments[index].setSelected();
@@ -78,7 +95,7 @@ export default class RouteNode {
       }
 
       index = dir > 0 ? index + 1 : index - 1;
-      index = index < 0 ? this.segments.length-1 : index;
+      index = index < 0 ? slength-1 : index;
       index = index % slength;
 
     }

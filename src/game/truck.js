@@ -163,27 +163,68 @@ export default class Truck {
     var dir;
     // Selecting route if arrow keys were pressed
     if(this.controls.wasKeyPressed(Key.Left) || this.controls.wasKeyPressed(Key.A)) {
-      dir =
-        (this.sprite.rotation + 2*Math.PI) % (Math.PI) > Math.PI/2 ?
-        -1 : 1;
 
-      dir *= this.getPreviousDirection();
+      var tnode = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode();
 
-      this.routeIndex = this.routeIndex + dir;
-      var seg = this.getPreviousDirection() > 0 ?
-        this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir) :
-        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir);
+      // selecting segment faceDirection
+      var sel_segment = tnode.getSegments()[this.routeIndex];
+      var wanted_dir = sel_segment.getRotation(tnode) - ((Math.PI*2) / (tnode.getSegments().length+1));
+      var seg_1 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex+1, this.arrowSprite, 1);
+      var seg_2 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex-1, this.arrowSprite, -1);
+
+      var seg = null;
+
+      if(seg === null) {
+        var is_negative_1 = wanted_dir - seg_1['seg'].getRotation(tnode) < 0
+        var is_negative_2 = wanted_dir - seg_2['seg'].getRotation(tnode) < 0
+
+        if(is_negative_1 && !is_negative_2 || !is_negative_1 && is_negative_2 || !is_negative_1 && !is_negative_2) {
+          seg = Math.abs(wanted_dir - seg_1['seg'].getRotation(tnode)) < Math.abs(wanted_dir - seg_2['seg'].getRotation(tnode)) ?
+            seg_1 : seg_2;
+        } else{
+          seg = Math.abs(wanted_dir - seg_1['seg'].getRotation(tnode)) > Math.abs(wanted_dir - seg_2['seg'].getRotation(tnode)) ?
+            seg_1 : seg_2;
+        }
+      }
+
+      if(this.routeIndex === seg['index']) {
+        console.log("SEEEG: " + seg);
+        seg = tnode.getSelectedSegment(this.currentSegment, this.routeIndex-1, this.arrowSprite, -1);
+
+      }
+
+      tnode.getSelectedSegment(this.currentSegment, seg['index'], this.arrowSprite, 1);
       this.routeIndex = seg['index'];
     } else if(this.controls.wasKeyPressed(Key.Right) || this.controls.wasKeyPressed(Key.D)) {
-      dir =
-        (this.sprite.rotation + 2*Math.PI) % (Math.PI) > Math.PI/2 ?
-        1 : -1;
 
-      dir *= this.getPreviousDirection();
+      var tnode = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode() : this.currentSegment.getPreviousNode();
 
-      this.routeIndex = this.routeIndex + dir;
-      seg = this.getPreviousDirection() > 0 ? this.currentSegment.getNextNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir) :
-        this.currentSegment.getPreviousNode().getSelectedSegment(this.currentSegment, this.routeIndex, this.arrowSprite, dir);
+      // selecting segment faceDirection
+      var sel_segment = tnode.getSegments()[this.routeIndex];
+      var wanted_dir = sel_segment.getRotation(tnode) + ((Math.PI*2) / (tnode.getSegments().length+1));
+      var seg_1 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex+1, this.arrowSprite, 1);
+      var seg_2 = tnode.getSelectedSegment(this.currentSegment, this.routeIndex-1, this.arrowSprite, -1);
+
+      var seg = null;
+
+      if(seg === null) {
+        var is_negative_1 = wanted_dir - seg_1['seg'].getRotation(tnode) < 0
+        var is_negative_2 = wanted_dir - seg_2['seg'].getRotation(tnode) < 0
+
+        if(is_negative_1 && !is_negative_2 || !is_negative_1 && is_negative_2 || is_negative_1 && is_negative_2) {
+          seg = Math.abs(wanted_dir - seg_1['seg'].getRotation(tnode)) < Math.abs(wanted_dir - seg_2['seg'].getRotation(tnode)) ?
+            seg_1 : seg_2;
+        } else{
+          seg = Math.abs(wanted_dir - seg_1['seg'].getRotation(tnode)) > Math.abs(wanted_dir - seg_2['seg'].getRotation(tnode)) ?
+            seg_1 : seg_2;
+        }
+      }
+
+      if(this.routeIndex === seg['index']) {
+        seg = tnode.getSelectedSegment(this.currentSegment, this.routeIndex+1, this.arrowSprite, 1);
+      }
+
+      tnode.getSelectedSegment(this.currentSegment, seg['index'], this.arrowSprite, 1);
       this.routeIndex = seg['index'];
     }
 

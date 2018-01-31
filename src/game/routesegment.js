@@ -241,7 +241,7 @@ export default class RouteSegment {
         return true;
       }
     }
-    
+
     return false;
   }
 
