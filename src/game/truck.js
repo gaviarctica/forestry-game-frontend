@@ -106,7 +106,7 @@ export default class Truck {
     this.checkLogs();
     this.checkDeposits();
     this.draw();
-    this.stats.calculateMovement(this.currentSegment.getPositionAt(this.pointDelta), this.logContainer.getLogCount());
+    this.stats.calculateMovement(this.currentSegment.getPositionAt(this.pointDelta), this.logContainer.getLogCount(), timeDelta);
     this.stats.calculateFuel(this.logContainer.getLogCount());
   }
 

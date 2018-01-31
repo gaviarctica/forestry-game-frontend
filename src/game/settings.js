@@ -48,13 +48,12 @@ export default class Settings {
     this.stats = {
       FULL_START_STOP_TIME : 3,
       SHORT_START_STOP_TIME : 1,
-      // average velocity in m/s
-      AVG_VELOCITY : 3,
       LOG_DELAY : 15,
+      MOVING_TIME_FACTOR : 1/15,
       //Idle gas consumption factor
-      BASE_MILEAGE : 25,
+      BASE_MILEAGE : 20,
       //Moving gas consumption factor
-      MOVING_MILEAGE : 60,
+      MOVING_MILEAGE : 50,
       LOG_FACTOR : 1.0,
       SALARY : 20,
       HOUR : 3600,

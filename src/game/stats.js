@@ -8,10 +8,10 @@ export default class Stats {
     this.updateUI = updateUI;
     this.startTime = 0;
     this.stopTime = 0;
-    this.previousTime = 0;
+    this.idling = new Date();
+    this.previousTimeFuel = 0;
     this.moved = false;
     this.previousPoint = null;
-    this.actionDone = false;
     this.report = {
       'time': 0,
       'distanceMoved': 0,
@@ -50,11 +50,9 @@ export default class Stats {
   }
 
   counterUp() {
+    
+    
 
-    this.actionDone = false;
-
-    this.report.time += 1;
-    this.report.idling += 1;
     this.updateUI({
       time: secondsToDateFormat(this.report.time)
     });
@@ -62,7 +60,6 @@ export default class Stats {
 
   // Each time log is picked up increase time by 15 seconds
   addLogDelay() {
-    this.actionDone = true;
     this.report.time += this.settings.LOG_DELAY;
     this.report.loading_and_unloading += this.settings.LOG_DELAY;
   }
@@ -99,26 +96,25 @@ export default class Stats {
   calculateFuel(logsOnBoard, moving) {
 
     if (moving) {
-      this.report.fuelUsed = this.report.fuelUsed + (((this.settings.MOVING_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.timeDelta(this.report.time)) / this.settings.HOUR);
+      this.report.fuelUsed = this.report.fuelUsed + (((this.settings.MOVING_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.timeDeltaForFuel(this.report.time)) / this.settings.HOUR);
     } else {
-      this.report.fuelUsed = this.report.fuelUsed + (((this.settings.BASE_MILEAGE) * this.timeDelta(this.report.time)) / this.settings.HOUR);
+      this.report.fuelUsed = this.report.fuelUsed + (((this.settings.BASE_MILEAGE) * this.timeDeltaForFuel(this.report.time)) / this.settings.HOUR);
     }
     this.report.fuel_cost = this.report.fuelUsed * this.settings.DIESEL_PRICE;
   }
 
-  timeDelta(time) {
-    let timePassed = this.report.time - this.previousTime;
-    this.previousTime = time;
+  timeDeltaForFuel(time) {
+    let timePassed = this.report.time - this.previousTimeFuel;
+    this.previousTimeFuel = time;
     return timePassed;
   }
 
-  calculateMovement(point, logCount) {
+  calculateMovement(point, logCount, timedelta) {
     if(this.previousPoint === null) {
       this.previousPoint = point;
     }
 
     if( hasMoved(point, this.previousPoint) ) {
-      this.actionDone = true;
       // Add 3 seconds to time if truck starts moving
       let movedOld = this.moved;
       this.moved = true;
@@ -126,15 +122,23 @@ export default class Stats {
         this.startTime = this.time;
         if( this.stopTime === 0 || Math.abs(this.startTime - this.stopTime) >= 5 ) {
           this.report.time += this.settings.FULL_START_STOP_TIME;
+          if (logCount > 0) {
+            this.report.driving_loaded_time += this.settings.FULL_START_STOP_TIME;
+          } else {
+            this.report.driving_unloaded_time += this.settings.FULL_START_STOP_TIME;
+          }
         } else {
           this.report.time += this.settings.SHORT_START_STOP_TIME;
+          if (logCount > 0) {
+            this.report.driving_loaded_time += this.settings.SHORT_START_STOP_TIME;
+          } else {
+            this.report.driving_unloaded_time += this.settings.SHORT_START_STOP_TIME;
+          }
         }
       }
 
-      // Calculate time according to truck default velocity. Should not be affected by load or reverse.    
-      this.report.time = this.report.time + this.truck_settings.VELOCITY/this.map_settings.PIXELS_TO_METERS/this.settings.AVG_VELOCITY;
-
-      this.calculateFuel(logCount, true);
+      // Calculate time according to truck default velocity. Should not be affected by load or reverse.
+      var addedTime = (this.truck_settings.VELOCITY/this.map_settings.PIXELS_TO_METERS*this.settings.MOVING_TIME_FACTOR)*timedelta;
 
 
       // Update the distance moved
@@ -152,13 +156,15 @@ export default class Stats {
       if ((this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.Down) ||
           this.controls.isKeyDown(Key.W) || this.controls.isKeyDown(Key.S)) && logCount > 0) {
         this.report.driving_loaded_distance += dist;
-        this.report.driving_loaded_time += this.timeDelta(this.report.time);
+        this.report.driving_loaded_time += addedTime;
+        this.report.time += addedTime;
       } else if ((this.controls.isKeyDown(Key.Up) || this.controls.isKeyDown(Key.Down) ||
           this.controls.isKeyDown(Key.W) || this.controls.isKeyDown(Key.S)) && logCount === 0) {
         this.report.driving_unloaded_distance += dist;
-        this.report.driving_unloaded_time += this.timeDelta(this.report.time);
+        this.report.driving_unloaded_time += addedTime;
+        this.report.time += addedTime;
       }
-
+      this.calculateFuel(logCount, true);
       this.previousPoint = point;
     } else {
       // Add 3 seconds to time if truck stops moving
@@ -168,11 +174,25 @@ export default class Stats {
         this.stopTime = this.time;
         if( Math.abs(this.startTime - this.stopTime) >= 5 ) {
           this.report.time += this.settings.FULL_START_STOP_TIME;
+          if (logCount > 0) {
+            this.report.driving_loaded_time += this.settings.FULL_START_STOP_TIME;
+          } else {
+            this.report.driving_unloaded_time += this.settings.FULL_START_STOP_TIME;
+          }
         } else {
           this.report.time += this.settings.SHORT_START_STOP_TIME;
+          if (logCount > 0) {
+            this.report.driving_loaded_time += this.settings.SHORT_START_STOP_TIME;
+          } else {
+            this.report.driving_unloaded_time += this.settings.SHORT_START_STOP_TIME;
+          }
         }
+      } else {
+        this.report.time += (new Date() - this.idling)/1000;
+        this.report.idling += (new Date() - this.idling)/1000;
       }
     }
+    this.idling = new Date();
   }
 
   getReport() {
