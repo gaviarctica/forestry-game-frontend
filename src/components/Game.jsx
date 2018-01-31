@@ -14,7 +14,6 @@ export default class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timestring: '00:00:00',
       time: 0,
       distance: 0,
       cost: 0,

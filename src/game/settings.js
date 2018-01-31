@@ -51,8 +51,11 @@ export default class Settings {
       // average velocity in m/s
       AVG_VELOCITY : 3,
       LOG_DELAY : 15,
-      BASE_MILEAGE : 5,
-      LOG_FACTOR : 0.5,
+      //Idle gas consumption factor
+      BASE_MILEAGE : 25,
+      //Moving gas consumption factor
+      MOVING_MILEAGE : 60,
+      LOG_FACTOR : 1.0,
       SALARY : 20,
       HOUR : 3600,
       DIESEL_PRICE : 1.2,

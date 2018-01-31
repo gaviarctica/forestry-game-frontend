@@ -1,6 +1,7 @@
 import {distance, hasMoved} from './helpers';
 import Settings from './settings';
 import {Key} from './controls';
+import {secondsToDateFormat} from './helpers';
 
 export default class Stats {
   constructor(updateUI, controls) {
@@ -55,7 +56,7 @@ export default class Stats {
     this.report.time += 1;
     this.report.idling += 1;
     this.updateUI({
-      time: this.report.time
+      time: secondsToDateFormat(this.report.time)
     });
   }
 
@@ -95,8 +96,13 @@ export default class Stats {
     this.updateUI(formattedLogUpdate);
   }
 
-  calculateFuel(logsOnBoard) {
-    this.report.fuelUsed = this.report.fuelUsed + (((this.settings.BASE_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.timeDelta(this.report.time)) / this.settings.HOUR);
+  calculateFuel(logsOnBoard, moving) {
+
+    if (moving) {
+      this.report.fuelUsed = this.report.fuelUsed + (((this.settings.MOVING_MILEAGE + logsOnBoard * this.settings.LOG_FACTOR) * this.timeDelta(this.report.time)) / this.settings.HOUR);
+    } else {
+      this.report.fuelUsed = this.report.fuelUsed + (((this.settings.BASE_MILEAGE) * this.timeDelta(this.report.time)) / this.settings.HOUR);
+    }
     this.report.fuel_cost = this.report.fuelUsed * this.settings.DIESEL_PRICE;
   }
 
@@ -127,6 +133,9 @@ export default class Stats {
 
       // Calculate time according to truck default velocity. Should not be affected by load or reverse.    
       this.report.time = this.report.time + this.truck_settings.VELOCITY/this.map_settings.PIXELS_TO_METERS/this.settings.AVG_VELOCITY;
+
+      this.calculateFuel(logCount, true);
+
 
       // Update the distance moved
       var dist = distance(this.previousPoint, point)/this.map_settings.PIXELS_TO_METERS;
