@@ -55,6 +55,9 @@ export default class Settings {
       //Moving gas consumption factor
       MOVING_MILEAGE : 50,
       LOG_FACTOR : 1.0,
+      // Notice: If you change SALARY, HOUR or DIESEL_PICE,
+      // you also have to change them accordingly in the
+      // backend (forestry_game/models.py)
       SALARY : 20,
       HOUR : 3600,
       DIESEL_PRICE : 1.2,
